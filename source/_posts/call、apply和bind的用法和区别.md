@@ -152,7 +152,7 @@ function LateBloomer() {
 
 // 在调用bloom 1 秒钟后，调用declare
 LateBloomer.prototype.bloom = function() {
-    window.setTimeout(this.declare, 1000);
+    window.setTimeout(this.declare.bind(this), 1000);
 };
 
 LateBloomer.prototype.declare = function() {
