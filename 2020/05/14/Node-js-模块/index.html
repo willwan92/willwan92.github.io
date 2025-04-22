@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Node.js 使用 CommonJs 模块规范。CommonJs 规范由JavaScript社区发起，在Node.js上应用并得到推广。 Node.js 模块分类 核心模块（在node启动时会预先加载） 非核心模块 （包括：文件模块、第三方模块）  模块引用 通过路径   1const promise &#x3D; require(&#39;..&#x2F;fileName.js&#39;);  通过模块名 1const prom">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node.js模块">
+<meta property="og:url" content="http://yoursite.com/2020/05/14/Node-js-%E6%A8%A1%E5%9D%97/index.html">
+<meta property="og:site_name" content="Will&#39;s Blog">
+<meta property="og:description" content="Node.js 使用 CommonJs 模块规范。CommonJs 规范由JavaScript社区发起，在Node.js上应用并得到推广。 Node.js 模块分类 核心模块（在node启动时会预先加载） 非核心模块 （包括：文件模块、第三方模块）  模块引用 通过路径   1const promise &#x3D; require(&#39;..&#x2F;fileName.js&#39;);  通过模块名 1const prom">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-14T02:20:50.000Z">
+<meta property="article:modified_time" content="2022-08-02T04:07:12.000Z">
+<meta property="article:author" content="Will Wan">
+<meta property="article:tag" content="模块化">
+<meta property="article:tag" content="CommonJs 模块机制">
+<meta property="article:tag" content="ES6 模块与 CommonJS 模块的差异">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/05/14/Node-js-%E6%A8%A1%E5%9D%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Node.js模块 | Will's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Will's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where there is a will, there is a way</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/14/Node-js-%E6%A8%A1%E5%9D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Node.js模块
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-14 10:20:50" itemprop="dateCreated datePublished" datetime="2020-05-14T10:20:50+08:00">2020-05-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node-js/" itemprop="url" rel="index"><span itemprop="name">Node.js</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Node.js 使用 CommonJs 模块规范。CommonJs 规范由JavaScript社区发起，在Node.js上应用并得到推广。</p>
+<h2 id="Node-js-模块分类"><a href="#Node-js-模块分类" class="headerlink" title="Node.js 模块分类"></a>Node.js 模块分类</h2><ul>
+<li>核心模块（在node启动时会预先加载）</li>
+<li>非核心模块 （包括：文件模块、第三方模块）</li>
+</ul>
+<h2 id="模块引用"><a href="#模块引用" class="headerlink" title="模块引用"></a>模块引用</h2><ul>
+<li><p>通过路径</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promise = <span class="built_in">require</span>(<span class="string">'../fileName.js'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过模块名</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promise = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h2 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h2><h3 id="1-创建和定义模块"><a href="#1-创建和定义模块" class="headerlink" title="1. 创建和定义模块"></a>1. 创建和定义模块</h3><pre><code>在 Node.js 中，只需要创建一个js文件就创建了一个模块，通过在 exports 变量上添加属性和方法就可以在向外部暴露想要暴露的数据和方法。
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line">exports.sum = <span class="function"><span class="keyword">function</span> (<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">exports.msg = <span class="string">'hello world'</span>;</span><br></pre></td></tr></table></figure></code></pre><h3 id="2-使用模块"><a href="#2-使用模块" class="headerlink" title="2. 使用模块"></a>2. 使用模块</h3><pre><code>我们可以通过 require 方法来引用一个模块，然后就可以使用这个模块暴露出来的数据和方法。
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils.js'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> res = utils.sum(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line"><span class="built_in">console</span>.log(res); <span class="comment">// 输出 3</span></span><br></pre></td></tr></table></figure></code></pre><h2 id="CommonJs-模块机制"><a href="#CommonJs-模块机制" class="headerlink" title="CommonJs 模块机制"></a>CommonJs 模块机制</h2><h3 id="1-模块默认导出对象字面量"><a href="#1-模块默认导出对象字面量" class="headerlink" title="1. 模块默认导出对象字面量 {}"></a>1. 模块默认导出对象字面量 {}</h3><pre><code><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line"><span class="built_in">console</span>.log(exports); <span class="comment">// 输出 &#123;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils.js'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(utils); <span class="comment">// 输出 &#123;&#125;</span></span><br></pre></td></tr></table></figure></code></pre><h3 id="2-修改模块默认导出数据为其他类型"><a href="#2-修改模块默认导出数据为其他类型" class="headerlink" title="2. 修改模块默认导出数据为其他类型"></a>2. 修改模块默认导出数据为其他类型</h3><p>  通过给 module.exports 赋值可以修改模块导出的数据为字符串、函数等其他任何类型。</p>
+<p>  例如：</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line">exports.sum = <span class="function"><span class="keyword">function</span> (<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span> <span class="title">hello</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'hello'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">	<span class="built_in">console</span>.log(exports); <span class="comment">// 输出： &#123; sum: [Function] &#125;</span></span><br><span class="line">&#125;, <span class="number">200</span>);</span><br></pre></td></tr></table></figure>
+
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(utils); <span class="comment">// 输出：[Function: hello]</span></span><br></pre></td></tr></table></figure>
+
+<p>  上述代码说明 module.exports 覆盖了默认导出的 exports 变量，但是原来默认的 exports 变量在模块内部还存在。</p>
+<h3 id="3-外部require调用的结果和模块内部的exports对象是同一个引用，所以在模块外部可以修改模块暴露出来的对象"><a href="#3-外部require调用的结果和模块内部的exports对象是同一个引用，所以在模块外部可以修改模块暴露出来的对象" class="headerlink" title="3. 外部require调用的结果和模块内部的exports对象是同一个引用，所以在模块外部可以修改模块暴露出来的对象"></a>3. 外部require调用的结果和模块内部的exports对象是同一个引用，所以在模块外部可以修改模块暴露出来的对象</h3><pre><code>例如：
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils'</span>);</span><br><span class="line"></span><br><span class="line">utils.additional = <span class="string">'模块的使用者添加的属性'</span>;</span><br><span class="line"></span><br><span class="line">utils.sum = <span class="string">'改变模块内部原有的属性'</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line">exports.sum = <span class="function"><span class="keyword">function</span> (<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">	<span class="built_in">console</span>.log(exports); <span class="comment">// &#123; sum: '改变模块内部原有的属性', additional: '模块的使用者添加的属性' &#125;</span></span><br><span class="line">&#125;, <span class="number">2000</span>);</span><br></pre></td></tr></table></figure>
+
+在终端运行 index.js，输出如下：
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node index.js</span><br><span class="line">&#123; sum: <span class="string">'改变模块内部原有的属性'</span>, additional: <span class="string">'模块的使用者添加的属性'</span> &#125;。</span><br></pre></td></tr></table></figure>
+
+这就说明，在模块外部，可以修改模块暴露出来的对象。</code></pre><h3 id="模块导出的是模块内部值的拷贝"><a href="#模块导出的是模块内部值的拷贝" class="headerlink" title="模块导出的是模块内部值的拷贝"></a>模块导出的是模块内部值的拷贝</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line"><span class="keyword">let</span> count = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> setCount = <span class="function">(<span class="params">num</span>) =&gt;</span>&#123; </span><br><span class="line">  count = num;</span><br><span class="line">  <span class="built_in">console</span>.log(count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">	setCount: setCount,</span><br><span class="line">	count: count</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 1</span></span><br><span class="line">utils.setCount(<span class="number">2</span>); <span class="comment">//输出 2 （内部的count被修改为2）</span></span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 1 （暴露出来的count依然是1）</span></span><br></pre></td></tr></table></figure>
+
+<p>上述代码表明，模块一旦导出一个值，模块内部的变化不会再影响这个值。这就说明模块导出的是模块内部值的拷贝。</p>
+<h4 id="通过定义get函数可以得到内部值的改变"><a href="#通过定义get函数可以得到内部值的改变" class="headerlink" title="通过定义get函数可以得到内部值的改变"></a>通过定义get函数可以得到内部值的改变</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line"><span class="keyword">let</span> count = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> setCount = <span class="function">(<span class="params">num</span>) =&gt;</span>&#123; </span><br><span class="line">  count = num;</span><br><span class="line">  <span class="built_in">console</span>.log(count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">	setCount: setCount,</span><br><span class="line">	<span class="keyword">get</span> count() &#123;</span><br><span class="line">		<span class="keyword">return</span> count;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 1</span></span><br><span class="line">utils.setCount(<span class="number">2</span>); <span class="comment">//输出 2 （内部的count被修改为2）</span></span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="commonjs模块机制和ES模块机制的区别"><a href="#commonjs模块机制和ES模块机制的区别" class="headerlink" title="commonjs模块机制和ES模块机制的区别"></a>commonjs模块机制和ES模块机制的区别</h3><ol>
+<li><strong>commonjs模块导出的是模块内部值的拷贝，ES6模块导出的是值的引用</strong></li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line"><span class="keyword">let</span> count = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> setCount = <span class="function">(<span class="params">num</span>) =&gt;</span>&#123; </span><br><span class="line">  count = num;</span><br><span class="line">  <span class="built_in">console</span>.log(count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;</span><br><span class="line">	setCount,</span><br><span class="line">	count</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> utils <span class="keyword">from</span> (<span class="string">'./utils.js'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 1</span></span><br><span class="line">utils.setCount(<span class="number">2</span>); <span class="comment">//输出 2 （内部的count被修改为2）</span></span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// index.html</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">"en"</span>&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">  &lt;meta charset=<span class="string">"UTF-8"</span>&gt;</span><br><span class="line">  &lt;meta http-equiv=<span class="string">"X-UA-Compatible"</span> content=<span class="string">"IE=edge"</span>&gt;</span><br><span class="line">  &lt;meta name=<span class="string">"viewport"</span> content=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span><br><span class="line">  &lt;title&gt;Document&lt;<span class="regexp">/title&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">  &lt;script type=<span class="string">"module"</span> src=<span class="string">"./index.js"</span>&gt;&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>body&gt;</span><br><span class="line">&lt;<span class="regexp">/html&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：index.html需要在服务器上测试，如果本地浏览器直接打开会报跨域错误，并且引入 <code>index.js</code> 的 script 标签要添加 <code>type=&quot;module&quot;</code> 属性。</p>
+<ol start="2">
+<li>commonJS模块是运行时加载模块，ES6模块是编译时编译时输出接口。</li>
+</ol>
+<p>因为 CommonJS 加载的是一个对象（即module.exports属性），该对象只有在脚本运行完才会生成。而 ES6 模块ES6 模块的运行机制与 CommonJS 不一样。JS 引擎对脚本静态分析的时候，遇到模块加载命令import，就会生成一个只读引用。等到脚本真正执行时，再根据这个只读引用，到被加载的那个模块里面去取值。</p>
+<ol start="3">
+<li>CommonJS 模块的require()是同步加载模块，ES6 模块的import命令是异步加载，有一个独立的模块依赖的解析阶段。</li>
+</ol>
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><ul>
+<li><a href="https://es6.ruanyifeng.com/#docs/module-loader#ES6-%E6%A8%A1%E5%9D%97%E4%B8%8E-CommonJS-%E6%A8%A1%E5%9D%97%E7%9A%84%E5%B7%AE%E5%BC%82" target="_blank" rel="noopener">ES6 模块与 CommonJS 模块的差异</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%A8%A1%E5%9D%97%E5%8C%96/" rel="tag"># 模块化</a>
+              <a href="/tags/CommonJs-%E6%A8%A1%E5%9D%97%E6%9C%BA%E5%88%B6/" rel="tag"># CommonJs 模块机制</a>
+              <a href="/tags/ES6-%E6%A8%A1%E5%9D%97%E4%B8%8E-CommonJS-%E6%A8%A1%E5%9D%97%E7%9A%84%E5%B7%AE%E5%BC%82/" rel="tag"># ES6 模块与 CommonJS 模块的差异</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/21/Events-%E6%A8%A1%E5%9D%97/" rel="next" title="Events 模块">
+      Events 模块 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Node-js-模块分类"><span class="nav-number">1.</span> <span class="nav-text">Node.js 模块分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块引用"><span class="nav-number">2.</span> <span class="nav-text">模块引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块化"><span class="nav-number">3.</span> <span class="nav-text">模块化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-创建和定义模块"><span class="nav-number">3.1.</span> <span class="nav-text">1. 创建和定义模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-使用模块"><span class="nav-number">3.2.</span> <span class="nav-text">2. 使用模块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CommonJs-模块机制"><span class="nav-number">4.</span> <span class="nav-text">CommonJs 模块机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-模块默认导出对象字面量"><span class="nav-number">4.1.</span> <span class="nav-text">1. 模块默认导出对象字面量 {}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-修改模块默认导出数据为其他类型"><span class="nav-number">4.2.</span> <span class="nav-text">2. 修改模块默认导出数据为其他类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-外部require调用的结果和模块内部的exports对象是同一个引用，所以在模块外部可以修改模块暴露出来的对象"><span class="nav-number">4.3.</span> <span class="nav-text">3. 外部require调用的结果和模块内部的exports对象是同一个引用，所以在模块外部可以修改模块暴露出来的对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块导出的是模块内部值的拷贝"><span class="nav-number">4.4.</span> <span class="nav-text">模块导出的是模块内部值的拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通过定义get函数可以得到内部值的改变"><span class="nav-number">4.4.1.</span> <span class="nav-text">通过定义get函数可以得到内部值的改变</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#commonjs模块机制和ES模块机制的区别"><span class="nav-number">4.5.</span> <span class="nav-text">commonjs模块机制和ES模块机制的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考："><span class="nav-number">5.</span> <span class="nav-text">参考：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Will Wan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Will Wan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Will Wan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

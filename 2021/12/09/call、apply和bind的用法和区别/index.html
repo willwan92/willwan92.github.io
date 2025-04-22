@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="call方法call()方法使用一个指定的 this 值（this指向执行环境上下文）和单独给出的一个或多个参数来调用一个函数。 语法 fun.call(thisArg[, arg1[, arg2[, …]]])  fun：调用的函数。 thisArg：必选的。函数运行时指定的this值（this指向执行环境上下文）。 arg1, arg2, …：可选的。指定的参数列表。   注意： 指定的thi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="call、apply和bind的用法和区别">
+<meta property="og:url" content="http://yoursite.com/2021/12/09/call%E3%80%81apply%E5%92%8Cbind%E7%9A%84%E7%94%A8%E6%B3%95%E5%92%8C%E5%8C%BA%E5%88%AB/index.html">
+<meta property="og:site_name" content="Will&#39;s Blog">
+<meta property="og:description" content="call方法call()方法使用一个指定的 this 值（this指向执行环境上下文）和单独给出的一个或多个参数来调用一个函数。 语法 fun.call(thisArg[, arg1[, arg2[, …]]])  fun：调用的函数。 thisArg：必选的。函数运行时指定的this值（this指向执行环境上下文）。 arg1, arg2, …：可选的。指定的参数列表。   注意： 指定的thi">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-09T09:11:47.000Z">
+<meta property="article:modified_time" content="2022-08-02T04:07:12.000Z">
+<meta property="article:author" content="Will Wan">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2021/12/09/call%E3%80%81apply%E5%92%8Cbind%E7%9A%84%E7%94%A8%E6%B3%95%E5%92%8C%E5%8C%BA%E5%88%AB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>call、apply和bind的用法和区别 | Will's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Will's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where there is a will, there is a way</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/12/09/call%E3%80%81apply%E5%92%8Cbind%E7%9A%84%E7%94%A8%E6%B3%95%E5%92%8C%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          call、apply和bind的用法和区别
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-09 17:11:47" itemprop="dateCreated datePublished" datetime="2021-12-09T17:11:47+08:00">2021-12-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index"><span itemprop="name">javascript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="call方法"><a href="#call方法" class="headerlink" title="call方法"></a>call方法</h2><p>call()方法使用一个指定的 this 值（this指向执行环境上下文）和单独给出的一个或多个参数来<strong>调用一个函数</strong>。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><blockquote>
+<p>fun.call(thisArg[, arg1[, arg2[, …]]])</p>
+<ul>
+<li>fun：调用的函数。</li>
+<li>thisArg：必选的。函数运行时指定的this值（this指向执行环境上下文）。</li>
+<li>arg1, arg2, …：可选的。指定的参数列表。</li>
+</ul>
+</blockquote>
+<p><strong>注意：</strong> 指定的this值并不一定是该函数执行时真正的this值，如果这个函数处于非严格模式下，则指定为null和undefined的this值会自动指向全局对象(浏览器中就是window对象)，值为基本类型值(数字，字符串，布尔值)的this会指向该原始值的自动包装对象。</p>
+<h3 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h3><p>使用call方法调用函数并且指定this，<strong>借用自己没有的函数</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">speakName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'My name is '</span> + <span class="keyword">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person1 = &#123;</span><br><span class="line">    name: <span class="string">'chong'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">speakName(); <span class="comment">// speakName为全局函数，this指向全局对象window，由于全局作用域中不存在变量name，所以输出：My name is</span></span><br><span class="line">speakName.call(person1); <span class="comment">// 输出：My name is chong</span></span><br></pre></td></tr></table></figure>
+
+<p>使用call方法<strong>调用父构造函数，实现继承</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Product</span>(<span class="params">name, price</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.price = price;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (price &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">RangeError</span>(</span><br><span class="line">            <span class="string">'Cannot create product '</span> + <span class="keyword">this</span>.name + <span class="string">' with a negative price'</span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Food</span>(<span class="params">name, price</span>) </span>&#123;</span><br><span class="line">    Product.call(<span class="keyword">this</span>, name, price);</span><br><span class="line">    <span class="keyword">this</span>.category = <span class="string">'food'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 上面Food构造函数等同于以下代码</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Food</span>(<span class="params">name, price</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.price = price;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (price &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">RangeError</span>(</span><br><span class="line">            <span class="string">'Cannot create product '</span> + <span class="keyword">this</span>.name + <span class="string">' with a negative price'</span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.category = <span class="string">'food'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="apply方法"><a href="#apply方法" class="headerlink" title="apply方法"></a>apply方法</h2><p>apply() 方法用一个指定的 this 值，以及以一个数组（或类数组对象）的形式提供的参数<strong>调用一个函数</strong>。</p>
+<h3 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h3><blockquote>
+<p>func.apply(thisArg, [argsArray])</p>
+<ul>
+<li>fun：调用的函数。</li>
+<li>thisArg：必选的。函数运行时指定的this值。</li>
+<li>argsArray 可选的。一个数组或者类数组对象，其中的数组元素将作为单独的参数传给 func 函数。</li>
+</ul>
+</blockquote>
+<p><strong>apply方法用途和call方法相同，不再赘述</strong></p>
+<h2 id="bind方法"><a href="#bind方法" class="headerlink" title="bind方法"></a>bind方法</h2><p>bind() 方法<strong>用来创建一个新的函数</strong>。bind() 的第一个参数为这个新函数的 this ，其余参数将作为新函数的参数。</p>
+<h3 id="语法-2"><a href="#语法-2" class="headerlink" title="语法"></a>语法</h3><blockquote>
+<p>func.bind(thisArg[, arg1[, arg2[, …]]])</p>
+<ul>
+<li>fun：调用的函数。</li>
+<li>thisArg：必选的。<strong>调用新函数时作为新函数的 this 值。</strong>如果使用new运算符构造绑定函数，则忽略该值。当使用 bind 在 setTimeout 中创建一个函数（作为回调提供）时，作为 thisArg 传递的任何原始值都将转换为 object。如果 bind 函数的参数列表为空，或者thisArg是null或undefined，执行作用域的 this 将被视为新函数的 thisArg。</li>
+<li>arg1, arg2, …： 可选的。给新函数预设的初始参数列表。<br>返回值：<strong>返回一个原函数的拷贝，并拥有指定的 this 值和初始参数。</strong></li>
+</ul>
+</blockquote>
+<h2 id="用途-1"><a href="#用途-1" class="headerlink" title="用途"></a>用途</h2><ol>
+<li>创建绑定函数</li>
+<li>偏函数：使一个函数拥有预设的初始参数</li>
+</ol>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">9</span>;</span><br><span class="line"><span class="keyword">var</span> <span class="built_in">module</span> = &#123;</span><br><span class="line">    x: <span class="number">81</span>,</span><br><span class="line">    getX: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.x;</span><br><span class="line">    &#125;,</span><br><span class="line">    addX: <span class="function"><span class="keyword">function</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.x + n;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.getX(); <span class="comment">// 81</span></span><br><span class="line"><span class="built_in">module</span>.addX(<span class="number">9</span>); <span class="comment">// 90</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> _getX = <span class="built_in">module</span>.getX;</span><br><span class="line"><span class="keyword">var</span> _addX = <span class="built_in">module</span>.addX;</span><br><span class="line">_getX(); <span class="comment">// 返回 9, 因为函数是在全局作用域中调用的</span></span><br><span class="line">_addX(<span class="number">9</span>); <span class="comment">// 返回 18</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个新函数boundGetX，并把this绑定为module对象；</span></span><br><span class="line"><span class="keyword">var</span> boundGetX = _getX.bind(<span class="built_in">module</span>);</span><br><span class="line">boundGetX(); <span class="comment">// 81</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 创建绑定函数 boundAddX，把this绑定为module对象，并预设参数为 10；</span></span><br><span class="line"><span class="keyword">var</span> boundAddX = _addX.bind(<span class="built_in">module</span>, <span class="number">10</span>);</span><br><span class="line"><span class="comment">// 调用新函数时不用再传参数（传了也没用）</span></span><br><span class="line">boundAddX(); <span class="comment">// 91</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 创建一个新函数boundAddX，把this绑定为module对象，不预设参数；</span></span><br><span class="line"><span class="keyword">var</span> boundAddX = _addX.bind(<span class="built_in">module</span>);</span><br><span class="line"><span class="comment">// 调用新函数时需要传参数</span></span><br><span class="line">boundAddX(<span class="number">9</span>); <span class="comment">// 90</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>配合 setTimeout</li>
+</ol>
+<p>在默认情况下，使用 window.setTimeout() 时，this 关键字会指向 window （或 global）对象。当类的方法中需要 this 指向类的实例时，你可能需要显式地把 this 绑定到回调函数，就不会丢失该实例的引用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">LateBloomer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 花瓣数</span></span><br><span class="line">    <span class="keyword">this</span>.petalCount = <span class="built_in">Math</span>.ceil(<span class="built_in">Math</span>.random() * <span class="number">12</span>) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在调用bloom 1 秒钟后，调用declare</span></span><br><span class="line">LateBloomer.prototype.bloom = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">window</span>.setTimeout(<span class="keyword">this</span>.declare, <span class="number">1000</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">LateBloomer.prototype.declare = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'I am a beautiful flower with '</span> +</span><br><span class="line">    <span class="keyword">this</span>.petalCount + <span class="string">' petals!'</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flower = <span class="keyword">new</span> LateBloomer();</span><br><span class="line">flower.bloom();  <span class="comment">// 一秒钟后, 调用 'declare' 方法</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="call和apply比较"><a href="#call和apply比较" class="headerlink" title="call和apply比较"></a>call和apply比较</h3><ul>
+<li>相同点：它们都可以用一个指定的this值调用一个函数，并且可以给函数传递一个或者多个参数。<strong>简单来说，它们的用途就是一个对象调/借用自身没有的函数。如果这个函数是构造函数，就可以实现继承</strong>。</li>
+<li>不同点: 只在于传递参数的形式不同。call方法传递参数是通过参数列表，apply方法传递参数是通过数组/类数组。</li>
+</ul>
+<h3 id="call、apply和bind比较"><a href="#call、apply和bind比较" class="headerlink" title="call、apply和bind比较"></a>call、apply和bind比较</h3><ul>
+<li><p>相同点：它们都可以改变一个函数执行时的this，并且可以给函数传递一个或者多个参数。</p>
+</li>
+<li><p>不同点: bind方法返回一个新的函数，需要调用才会执行。而call和apply是立即执行。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2></li>
+<li><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/call" target="_blank" rel="noopener">Function.prototype.call()</a></p>
+</li>
+<li><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply" target="_blank" rel="noopener">Function.prototype.apply()</a></p>
+</li>
+<li><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind" target="_blank" rel="noopener">Function.prototype.bind()</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/17/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E4%B8%8A%E7%BA%BFnuxt%E9%A1%B9%E7%9B%AE/" rel="prev" title="阿里云服务器部署上线nuxt项目">
+      <i class="fa fa-chevron-left"></i> 阿里云服务器部署上线nuxt项目
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/10/position-%E5%AE%9A%E4%BD%8D%E5%B1%9E%E6%80%A7/" rel="next" title="position 定位属性">
+      position 定位属性 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#call方法"><span class="nav-number">1.</span> <span class="nav-text">call方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#语法"><span class="nav-number">1.1.</span> <span class="nav-text">语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途"><span class="nav-number">1.2.</span> <span class="nav-text">用途</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#apply方法"><span class="nav-number">2.</span> <span class="nav-text">apply方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#语法-1"><span class="nav-number">2.1.</span> <span class="nav-text">语法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bind方法"><span class="nav-number">3.</span> <span class="nav-text">bind方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#语法-2"><span class="nav-number">3.1.</span> <span class="nav-text">语法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用途-1"><span class="nav-number">4.</span> <span class="nav-text">用途</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#call和apply比较"><span class="nav-number">5.1.</span> <span class="nav-text">call和apply比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#call、apply和bind比较"><span class="nav-number">5.2.</span> <span class="nav-text">call、apply和bind比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Will Wan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Will Wan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Will Wan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="事件对象当DOM元素上的发生某个事件时， 会产生一个事件对像 event，这个对象包含着与事件有关的所有信息。事件对象作为参数传给事件监听函数。浏览器原生提供一个Event对象，所有的事件都是这个对象的实例，或者说继承了Event.prototype对象。 事件对象的跨浏览器兼容 获取事件对象  1event ? event : window.event;   获取事件目标  12var even">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js事件模型">
+<meta property="og:url" content="http://yoursite.com/2022/03/24/js%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Will&#39;s Blog">
+<meta property="og:description" content="事件对象当DOM元素上的发生某个事件时， 会产生一个事件对像 event，这个对象包含着与事件有关的所有信息。事件对象作为参数传给事件监听函数。浏览器原生提供一个Event对象，所有的事件都是这个对象的实例，或者说继承了Event.prototype对象。 事件对象的跨浏览器兼容 获取事件对象  1event ? event : window.event;   获取事件目标  12var even">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-24T03:17:00.000Z">
+<meta property="article:modified_time" content="2022-08-02T04:07:12.000Z">
+<meta property="article:author" content="Will Wan">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2022/03/24/js%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>js事件模型 | Will's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Will's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where there is a will, there is a way</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/24/js%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          js事件模型
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-24 11:17:00" itemprop="dateCreated datePublished" datetime="2022-03-24T11:17:00+08:00">2022-03-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index"><span itemprop="name">javascript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="事件对象"><a href="#事件对象" class="headerlink" title="事件对象"></a>事件对象</h2><p>当DOM元素上的发生某个事件时， 会产生一个事件对像 event，这个对象包含着与事件有关的所有信息。事件对象作为参数传给事件监听函数。浏览器原生提供一个Event对象，所有的事件都是这个对象的实例，或者说继承了Event.prototype对象。</p>
+<h3 id="事件对象的跨浏览器兼容"><a href="#事件对象的跨浏览器兼容" class="headerlink" title="事件对象的跨浏览器兼容"></a>事件对象的跨浏览器兼容</h3><ul>
+<li>获取事件对象</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event ? event : <span class="built_in">window</span>.event;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获取事件目标</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = event || <span class="built_in">window</span>.event,</span><br><span class="line">  target = event.target || event.srcElement;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>阻止事件默认事件</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = event || <span class="built_in">window</span>.event,</span><br><span class="line"><span class="keyword">if</span> (event.preventDefault)&#123;</span><br><span class="line">    event.preventDefault();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    event.returnValue = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>阻止事件冒泡</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = event || <span class="built_in">window</span>.event,</span><br><span class="line"><span class="keyword">if</span> (event.stopPropagation)&#123;</span><br><span class="line">    event.stopPropagation();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    event.cancelBubble = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="事件模型"><a href="#事件模型" class="headerlink" title="事件模型"></a>事件模型</h2><p>事件模型有三种：原始事件模型（DOM0 级）、标准事件模型（DOM2 级）、IE 事件模型</p>
+<h3 id="事件流"><a href="#事件流" class="headerlink" title="事件流"></a>事件流</h3><p>DOM 结构是一个树型结构，当一个 HTML 元素发生一个事件时，该事件会在元素结点与根结点之间的路径传播，传播路径经过的结点都会接收到该事件，这个传播过程称为 DOM 事件流。</p>
+<p>事件流共包含三个阶段：</p>
+<ul>
+<li>事件捕获阶段(capture phase)</li>
+<li>处于目标阶段(target phase)</li>
+<li>事件冒泡阶段(bubbling phase)</li>
+</ul>
+<h3 id="原始事件模型（DOM0-级）"><a href="#原始事件模型（DOM0-级）" class="headerlink" title="原始事件模型（DOM0 级）"></a>原始事件模型（DOM0 级）</h3><p>绑定事件监听函数：</p>
+<ul>
+<li>HTML 代码中直接绑定</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">onclick</span>=<span class="string">"fun()"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过 JS 代码绑定</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">".btn"</span>);</span><br><span class="line">btn.onclick = fun;</span><br></pre></td></tr></table></figure>
+
+<p>移除事件监听函数方式：只要将对应事件属性置为 null 即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">btn.onclick = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h4><ul>
+<li>绑定速度快（但由于绑定速度太快，可能页面还未完全加载出来，以至于事件可能无法正常运行）</li>
+<li>跨浏览器兼容性好</li>
+<li>只支持冒泡，不支持捕获</li>
+<li>同一个类型的事件只能绑定一次</li>
+</ul>
+<h3 id="标准事件模型（DOM2-级）"><a href="#标准事件模型（DOM2-级）" class="headerlink" title="标准事件模型（DOM2 级）"></a>标准事件模型（DOM2 级）</h3><p>在该事件模型中，一次事件共有三个阶段:</p>
+<ul>
+<li>事件捕获阶段：事件从 document 一直向下传播到目标元素, 依次检查经过的节点是否绑定了事件监听函数，如果有则执行</li>
+<li>处于目标阶段：事件到达目标元素, 触发目标元素的监听函数</li>
+<li>事件冒泡阶段：事件从目标元素冒泡到 document, 依次检查经过的节点是否绑定了事件监听函数，如果有则执行</li>
+</ul>
+<p>绑定事件监听函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">addEventListener(eventType, handler, useCapture);</span><br></pre></td></tr></table></figure>
+
+<p>移除事件监听函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">removeEventListener(eventType, handler, useCapture);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>eventType: 指定事件类型(不要加 on)</li>
+<li>handler: 事件监听函数</li>
+<li>useCapture: 布尔值，表示监听函数是否在捕获阶段（capture）触发，默认为false（监听函数只在冒泡阶段被触发）。该参数可选。一般设置为 false 与 IE 浏览器保持一致。</li>
+</ul>
+<h4 id="特性-1"><a href="#特性-1" class="headerlink" title="特性"></a>特性</h4><ul>
+<li>可以在一个 DOM 元素上绑定多个相同类型的事件监听函数</li>
+<li>可以指定事件监听函数执行时机</li>
+<li>兼容差，兼容 IE9+</li>
+</ul>
+<h3 id="IE-事件模型"><a href="#IE-事件模型" class="headerlink" title="IE 事件模型"></a>IE 事件模型</h3><p>IE 事件模型共有两个过程：</p>
+<ul>
+<li>处于目标阶段：事件到达目标元素, 触发目标元素的事件监听函数</li>
+<li>事件冒泡阶段：事件从目标元素冒泡到 document, 依次检查经过的节点是否绑定了事件监听函数，如果有则执行</li>
+</ul>
+<p>绑定事件监听函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">attachEvent(eventType, handler);</span><br></pre></td></tr></table></figure>
+
+<p>移除事件监听函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">detachEvent(eventType, handler);</span><br></pre></td></tr></table></figure>
+
+<h3 id="跨浏览器的事件监听程序"><a href="#跨浏览器的事件监听程序" class="headerlink" title="跨浏览器的事件监听程序"></a>跨浏览器的事件监听程序</h3><p>添加事件监听程序</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addHandler</span>(<span class="params">element, type, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (element.addEventListener) &#123;</span><br><span class="line">        element.addEventListener(type, handler, <span class="literal">false</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.attachEvent) &#123;</span><br><span class="line">        element.attachEvent(<span class="string">"on"</span> + type, handler);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        element[<span class="string">"on"</span> + type] = handler;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>移除事件监听程序</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">removeHandler</span>(<span class="params">element, type, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (element.removeListener) &#123;</span><br><span class="line">        element.removeListener(type, handler, <span class="literal">false</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.detachEvent) &#123;</span><br><span class="line">        element.detachEvent(<span class="string">"on"</span> + type, handler);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;    </span><br><span class="line">        element[<span class="string">"on"</span> + type] = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>this指向：事件监听函数内部的this指向触发事件的那个元素节点。</strong></p>
+<h2 id="事件的代理"><a href="#事件的代理" class="headerlink" title="事件的代理"></a>事件的代理</h2><p>由于事件会在冒泡阶段向上传播到父节点，因此可以把子节点的监听函数定义在父节点上，由父节点的监听函数统一处理多个子元素的事件。这种方法叫做事件的代理（delegation）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ul = <span class="built_in">document</span>.querySelector(<span class="string">'ul'</span>);</span><br><span class="line"></span><br><span class="line">ul.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (event.target.tagName.toLowerCase() === <span class="string">'li'</span>) &#123;</span><br><span class="line">    <span class="comment">// some code</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，click事件的监听函数定义在<code>&lt;ul&gt;</code>节点，但是实际上，它处理的是子节点<code>&lt;li&gt;</code>的click事件。</p>
+<p>事件代理的好处：<strong>只要定义一个监听函数，就能处理多个子节点的事件。而且以后再添加子节点，监听函数依然有效。</strong></p>
+<p>如果希望事件到某个节点为止，不再传播，可以使用事件对象的stopPropagation方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 事件传播到 p 元素后，就不再向下传播了</span></span><br><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.stopPropagation();</span><br><span class="line">&#125;, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 事件冒泡到 p 元素后，就不再向上冒泡了</span></span><br><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.stopPropagation();</span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，stopPropagation方法分别在捕获阶段和冒泡阶段，阻止了事件的传播。</p>
+<p><strong>但是，stopPropagation方法只会阻止事件的传播，不会阻止该事件触发<p>节点的其他click事件的监听函数。也就是说，不是彻底取消click事件。</strong></p>
+<p>如果想要彻底阻止这个事件的传播，不再触发后面所有click的监听函数，可以使用stopImmediatePropagation方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.stopImmediatePropagation();</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 不会被触发</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="自定义事件（CustomEvent）-接口"><a href="#自定义事件（CustomEvent）-接口" class="headerlink" title="自定义事件（CustomEvent） 接口"></a>自定义事件（CustomEvent） 接口</h2><p>CustomEvent 接口用于生成自定义的事件实例。那些浏览器预定义的事件，虽然可以手动生成，但是往往不能在事件上绑定数据。如果需要在触发事件的同时，传入指定的数据，就可以使用 CustomEvent 接口生成的自定义事件对象。</p>
+<p>浏览器原生提供CustomEvent()构造函数，用来生成 CustomEvent 事件实例。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> CustomEvent(type, options)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>type：事件名称，必传。</li>
+<li>options: 配置对象，可选。配置对象除了接受 Event 事件的配置属性，只有一个自己的属性。</li>
+</ul>
+<blockquote>
+<p>detail：表示事件的附带数据，默认为null。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myEvent = <span class="keyword">new</span> CustomEvent(<span class="string">'myevent'</span>, &#123;</span><br><span class="line">  detail: &#123;</span><br><span class="line">    foo: <span class="string">'bar'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  bubbles: <span class="literal">true</span>, <span class="comment">// 布尔值，可选，默认为false，表示事件对象是否冒泡。</span></span><br><span class="line">  cancelable: <span class="literal">false</span> <span class="comment">// 可选，默认为false，表示事件是否可以被取消，即能否用</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">el.addEventListener(<span class="string">'myevent'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Hello '</span> + event.detail.foo);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">el.dispatchEvent(myEvent);</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://javascript.ruanyifeng.com/dom/event.html#toc12" target="_blank" rel="noopener">阮一峰javascript事件模型</a></li>
+<li><a href="https://mp.weixin.qq.com/s/avXtM79vyywVq6Gg6ui29A" target="_blank" rel="noopener">JS每日一题javascript中的事件模型</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/08/TCP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" rel="prev" title="TCP协议的三次握手和四次挥手">
+      <i class="fa fa-chevron-left"></i> TCP协议的三次握手和四次挥手
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/04/06/vue3%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" rel="next" title="vue3项目总结">
+      vue3项目总结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#事件对象"><span class="nav-number">1.</span> <span class="nav-text">事件对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事件对象的跨浏览器兼容"><span class="nav-number">1.1.</span> <span class="nav-text">事件对象的跨浏览器兼容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件模型"><span class="nav-number">2.</span> <span class="nav-text">事件模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事件流"><span class="nav-number">2.1.</span> <span class="nav-text">事件流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原始事件模型（DOM0-级）"><span class="nav-number">2.2.</span> <span class="nav-text">原始事件模型（DOM0 级）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特性"><span class="nav-number">2.2.1.</span> <span class="nav-text">特性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标准事件模型（DOM2-级）"><span class="nav-number">2.3.</span> <span class="nav-text">标准事件模型（DOM2 级）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特性-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">特性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IE-事件模型"><span class="nav-number">2.4.</span> <span class="nav-text">IE 事件模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跨浏览器的事件监听程序"><span class="nav-number">2.5.</span> <span class="nav-text">跨浏览器的事件监听程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件的代理"><span class="nav-number">3.</span> <span class="nav-text">事件的代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义事件（CustomEvent）-接口"><span class="nav-number">4.</span> <span class="nav-text">自定义事件（CustomEvent） 接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Will Wan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Will Wan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Will Wan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
