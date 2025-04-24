@@ -156,6 +156,137 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/04/24/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/04/24/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Vue3响应式基础</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-24 14:49:42 / 修改时间：18:15:09" itemprop="dateCreated datePublished" datetime="2025-04-24T14:49:42+08:00">2025-04-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="声明响应式状态"><a href="#声明响应式状态" class="headerlink" title="声明响应式状态"></a>声明响应式状态</h2><p>在组合式 API 中，推荐使用 ref() 函数来声明响应式状态。<strong>ref() 接收参数，并将其包裹在一个带有 .value 属性的 ref 对象中返回，所以在访问ref对象的值时需要通过 <code>.value</code> 属性访问</strong>。要在组件模板中访问 ref，需要从组件的 setup() 函数中声明并返回它们。<strong>注意，在模板中使用 ref 时，不需要附加 .value。这是因为为了方便起见，当在模板中使用时，ref 会自动解包</strong> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ref &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  setup() &#123;</span><br><span class="line">    <span class="keyword">const</span> count = ref(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">increment</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="comment">// 在 JavaScript 中需要 .value</span></span><br><span class="line">      count.value++</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 不要忘记同时暴露 increment 函数</span></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      count,</span><br><span class="line">      increment</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;button @click&#x3D;&quot;increment&quot;&gt;</span><br><span class="line">  &#123;&#123; count &#125;&#125;</span><br><span class="line">&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="lt-script-setup-gt"><a href="#lt-script-setup-gt" class="headerlink" title="&lt;script setup&gt;"></a><code>&lt;script setup&gt;</code></h3><p>在 setup() 函数中手动暴露大量的状态和方法非常繁琐。所以框架提供了 <code>&lt;script setup&gt;</code> 来简化代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; ref &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const count &#x3D; ref(0)</span><br><span class="line"></span><br><span class="line">function increment() &#123;</span><br><span class="line">  count.value++</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;button @click&#x3D;&quot;increment&quot;&gt;</span><br><span class="line">    &#123;&#123; count &#125;&#125;</span><br><span class="line">  &lt;&#x2F;button&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;script setup&gt;</code> 中的顶层的导入、声明的变量和函数可在同一组件的模板中直接使用。可以简单理解为它们是在模板同一作用域内声明的。</p>
+<h3 id="为什么需要使用带有-value-的-ref？"><a href="#为什么需要使用带有-value-的-ref？" class="headerlink" title="为什么需要使用带有 .value 的 ref？"></a>为什么需要使用带有 .value 的 ref？</h3><p>为了实现响应式数据发生变化时，能自动检测到这个变化，并且相应地更新 DOM。vue要在组件首次渲染时追踪渲染过程中使用的每一个ref。然后，当一个 ref 被修改时，触发追踪它的组件的一次重新渲染。</p>
+<p>在标准的 JavaScript 中，检测普通变量的访问或修改是行不通的。不过，可以通过 ref 的 getter 和 setter 方法来拦截对象属性的 get 和 set 操作。</p>
+<p>这就给了 Vue 一个机会来检测 ref 何时被访问或修改。在其内部，Vue 在它的 getter 中执行追踪，在它的 setter 中执行触发。从概念上讲，可以将 ref 看作是一个像这样的对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 伪代码，不是真正的实现</span></span><br><span class="line"><span class="keyword">const</span> myRef = &#123;</span><br><span class="line">  _value: <span class="number">0</span>,</span><br><span class="line">  <span class="keyword">get</span> value() &#123;</span><br><span class="line">    track()</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>._value</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="keyword">set</span> value(newValue) &#123;</span><br><span class="line">    <span class="keyword">this</span>._value = newValue</span><br><span class="line">    trigger()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="深层响应性"><a href="#深层响应性" class="headerlink" title="深层响应性"></a>深层响应性</h3><p>Ref 可以持有任何类型的值，包括深层嵌套的对象、数组或者 JavaScript 内置的数据结构。</p>
+<p>Ref 会使它的值具有深层响应性。这意味着即使改变嵌套对象或数组时，变化也会被检测到：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ref &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> obj = ref(&#123;</span><br><span class="line">  nested: &#123; <span class="attr">count</span>: <span class="number">0</span> &#125;,</span><br><span class="line">  arr: [<span class="string">'foo'</span>, <span class="string">'bar'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mutateDeeply</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 以下都会按照期望工作</span></span><br><span class="line">  obj.value.nested.count++</span><br><span class="line">  obj.value.arr.push(<span class="string">'baz'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也可以通过 shallowRef() 来放弃深层响应性。对于浅层 ref，只有 .value 的访问会被追踪。<strong>浅层 ref 可以用于避免对大型数据的响应性开销来优化性能、或者有外部库管理其内部状态的情况</strong>。</p>
+<h3 id="DOM-更新时机"><a href="#DOM-更新时机" class="headerlink" title="DOM 更新时机"></a>DOM 更新时机</h3><p>修改了响应式状态时，DOM 会被自动更新。但是<strong>DOM 更新不是同步的</strong>。Vue 会在“next tick”更新周期中缓冲所有状态的修改，以确保不管进行了多少次状态修改，每个组件都只会被更新一次。</p>
+<p>如果要等待 DOM 更新完成后再执行额外的代码，可以使用 nextTick() 全局 API：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; nextTick &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">increment</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  count.value++</span><br><span class="line">  <span class="keyword">await</span> nextTick()</span><br><span class="line">  <span class="comment">// 现在 DOM 已经更新了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="reactive"><a href="#reactive" class="headerlink" title="reactive()"></a><code>reactive()</code></h2><p>另一种声明响应式状态的方式，即使用 <code>reactive()</code> API。与将内部值包装在特殊对象中的 ref 不同，<code>reactive()</code> 将使对象本身具有响应性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; reactive &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> state = reactive(&#123; <span class="attr">count</span>: <span class="number">0</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在模板中使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;button @click&#x3D;&quot;state.count++&quot;&gt;</span><br><span class="line">  &#123;&#123; state.count &#125;&#125;</span><br><span class="line">&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+
+<p>响应式对象是 <strong>JavaScript 代理</strong>，其行为就和普通对象一样。不同的是，Vue 能够拦截对响应式对象所有属性的访问和修改，以便进行依赖追踪和触发更新。</p>
+<p>reactive() 将深层地转换对象：当访问嵌套对象时，它们也会被 reactive() 包装。当 ref 的值是一个对象时，ref() 也会在内部调用它。<strong>与浅层 ref 类似，这里也有一个 shallowReactive() API 可以选择退出深层响应性。</strong></p>
+<h3 id="响应式代理对象-vs-原始对象"><a href="#响应式代理对象-vs-原始对象" class="headerlink" title="响应式代理对象 vs. 原始对象"></a>响应式代理对象 vs. 原始对象</h3><p>reactive() 返回的是一个原始对象的 Proxy，它和原始对象是不相等的。只有代理对象是响应式的，更改原始对象不会触发更新。因此，使用 Vue 的响应式系统的<strong>最佳实践是仅使用你声明对象的代理版本</strong>。</p>
+<p><strong>为保证访问代理的一致性，对同一个原始对象调用 reactive() 会总是返回同样的代理对象，而对一个已存在的代理对象调用 reactive() 会返回其本身</strong>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> raw = &#123;&#125;</span><br><span class="line"><span class="keyword">const</span> proxy = reactive(raw)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 代理对象和原始对象不是全等的</span></span><br><span class="line"><span class="built_in">console</span>.log(proxy === raw) <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在同一个对象上调用 reactive() 会返回相同的代理</span></span><br><span class="line"><span class="built_in">console</span>.log(reactive(raw) === proxy) <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在一个代理上调用 reactive() 会返回它自己</span></span><br><span class="line"><span class="built_in">console</span>.log(reactive(proxy) === proxy) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>依靠深层响应性，响应式对象内的嵌套对象依然是代理，因此响应式对象的嵌套对象和嵌套对象的原始对象也不相等。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> proxy = reactive(&#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> raw = &#123;&#125;</span><br><span class="line">proxy.nested = raw</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(proxy.nested === raw) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="reactive-的局限性"><a href="#reactive-的局限性" class="headerlink" title="reactive() 的局限性"></a>reactive() 的局限性</h3><ol>
+<li><p><strong>有限的值类型</strong>：它只能用于对象类型 (对象、数组和如 Map、Set 这样的集合类型)。</p>
+</li>
+<li><p><strong>不能替换整个对象</strong>：由于 Vue 的响应式跟踪是通过属性访问实现的，因此我们必须始终保持对响应式对象的相同引用。这意味着我们不能地“替换”响应式对象，因为这样的话与第一个引用的响应性连接将丢失。</p>
+</li>
+<li><p><strong>对解构操作不友好</strong>：当我们将响应式对象的原始类型属性解构为本地变量时，或者将该属性传递给函数时，我们将丢失响应性连接。</p>
+</li>
+</ol>
+<p>由于这些限制，<strong>建议使用 ref() 作为声明响应式状态的主要 API</strong>。</p>
+<h2 id="额外的-ref-解包细节"><a href="#额外的-ref-解包细节" class="headerlink" title="额外的 ref 解包细节"></a>额外的 ref 解包细节</h2><h3 id="ref-会在作为响应式对象的属性被访问或修改时自动解包"><a href="#ref-会在作为响应式对象的属性被访问或修改时自动解包" class="headerlink" title="ref 会在作为响应式对象的属性被访问或修改时自动解包"></a>ref 会在作为响应式对象的属性被访问或修改时自动解包</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> count = ref(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">const</span> state = reactive(&#123;</span><br><span class="line">  count</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(state.count) <span class="comment">// 0</span></span><br><span class="line"></span><br><span class="line">state.count = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(count.value) <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<p>如果将一个新的 ref 赋值给一个关联了已有 ref 的属性，那么它会替换掉旧的 ref：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> otherCount = ref(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">state.count = otherCount</span><br><span class="line"><span class="built_in">console</span>.log(state.count) <span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 原始 ref 现在已经和 state.count 失去联系</span></span><br><span class="line"><span class="built_in">console</span>.log(count.value) <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>只有当嵌套在一个深层响应式对象内时，才会发生 ref 解包</strong>。当其作为浅层响应式对象的属性被访问时不会解包。</p>
+<h2 id="当-ref-作为响应式数组或原生集合类型-如-Map-中的元素被访问时，它不会被解包"><a href="#当-ref-作为响应式数组或原生集合类型-如-Map-中的元素被访问时，它不会被解包" class="headerlink" title="当 ref 作为响应式数组或原生集合类型 (如 Map) 中的元素被访问时，它不会被解包"></a>当 ref 作为响应式数组或原生集合类型 (如 Map) 中的元素被访问时，它不会被解包</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> books = reactive([ref(<span class="string">'Vue 3 Guide'</span>)])</span><br><span class="line"><span class="comment">// 这里需要 .value</span></span><br><span class="line"><span class="built_in">console</span>.log(books[<span class="number">0</span>].value)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> map = reactive(<span class="keyword">new</span> <span class="built_in">Map</span>([[<span class="string">'count'</span>, ref(<span class="number">0</span>)]]))</span><br><span class="line"><span class="comment">// 这里需要 .value</span></span><br><span class="line"><span class="built_in">console</span>.log(map.get(<span class="string">'count'</span>).value)</span><br></pre></td></tr></table></figure>
+
+<h3 id="在模板中解包的注意事项"><a href="#在模板中解包的注意事项" class="headerlink" title="在模板中解包的注意事项"></a>在模板中解包的注意事项</h3><h4 id="在模板渲染上下文中，只有顶级的-ref-属性才会被解包"><a href="#在模板渲染上下文中，只有顶级的-ref-属性才会被解包" class="headerlink" title="在模板渲染上下文中，只有顶级的 ref 属性才会被解包"></a>在模板渲染上下文中，只有顶级的 ref 属性才会被解包</h4><p>在下面的例子中，count 和 object 是顶级属性，但 object.id 不是：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> count = ref(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">const</span> object = &#123; <span class="attr">id</span>: ref(<span class="number">1</span>) &#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此，这个表达式将不会按预期工作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; object.id + 1 &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>渲染的结果将是 [object Object]1，因为在计算表达式时 object.id 没有被解包，仍然是一个 ref 对象。为了解决这个问题，我们可以将 id 解构为一个顶级属性：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; id &#125; = object</span><br></pre></td></tr></table></figure>
+
+<h4 id="如果-ref-是文本插值的最终计算值，那么它将被解包"><a href="#如果-ref-是文本插值的最终计算值，那么它将被解包" class="headerlink" title="如果 ref 是文本插值的最终计算值，那么它将被解包"></a>如果 ref 是文本插值的最终计算值，那么它将被解包</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 以下内容将渲染为 1： --&gt;</span><br><span class="line">&#123;&#123; object.id &#125;&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/04/21/script%20setup%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -292,10 +423,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-05-23 16:37:13 / 修改时间：17:18:37" itemprop="dateCreated datePublished" datetime="2023-05-23T16:37:13+08:00">2023-05-23</time>
+              <time title="创建时间：2023-05-23 16:37:13" itemprop="dateCreated datePublished" datetime="2023-05-23T16:37:13+08:00">2023-05-23</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-04-24 18:15:09" itemprop="dateModified" datetime="2025-04-24T18:15:09+08:00">2025-04-24</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -1403,142 +1540,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/12/17/ES5%E5%AE%9E%E7%8E%B0%E7%BB%A7%E6%89%BF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/17/ES5%E5%AE%9E%E7%8E%B0%E7%BB%A7%E6%89%BF/" class="post-title-link" itemprop="url">ES5实现继承</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-17 16:39:31" itemprop="dateCreated datePublished" datetime="2021-12-17T16:39:31+08:00">2021-12-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/javascript/" itemprop="url" rel="index"><span itemprop="name">javascript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="原型链继承"><a href="#原型链继承" class="headerlink" title="原型链继承"></a>原型链继承</h2><p>把 A 类的实例赋值给 B 类的原型对象，就通过原型链实现了 B 继承了 A 类。<br>通过原型链继承，B 类可以继承 A 类的原型对象上的属性和方法，以及 A 类的实例的属性和方法。<br>例如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明父类</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperClass</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.superValue = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 为父类添加共有方法</span></span><br><span class="line">SuperClass.prototype.getSuperValue = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.superValue;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明子类</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubClass</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.subValue = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 继承父类</span></span><br><span class="line">SubClass.prototype = <span class="keyword">new</span> SuperClass();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 为子类添加共有方法</span></span><br><span class="line">SubClass.prototype.getSubValue = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.subValue;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sub_1 = <span class="keyword">new</span> SubClass();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 父类实例的属性</span></span><br><span class="line"><span class="built_in">console</span>.log(sub_1.superValue); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 父类原型对象的方法</span></span><br><span class="line"><span class="built_in">console</span>.log(sub_1.getSuperValue()); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="原型链继承的原理"><a href="#原型链继承的原理" class="headerlink" title="原型链继承的原理"></a>原型链继承的原理</h3><p>首先，父类构造函数的实例拥有父类的实例的属性和方法。此外，这个实例的原型属性 <code>_proto_</code> 指向父类的原型对象，这个实例就能通过原型属性 <em>proto</em> 访问到原型对象上的属性和方法。 然后，把这个实例赋值给子类的原型对象，而子类的原型对象是子类的所有实例所共享的，这样子类就继承了：父类的原型对象上的属性和方法，以及父类实例的属性和方法。这就是原型链继承的原理。</p>
-<h3 id="原型链继承的问题"><a href="#原型链继承的问题" class="headerlink" title="原型链继承的问题"></a>原型链继承的问题</h3><p>注意：由于子类的原型对象被赋值为父类的实例，父类的实例的原型属性指向父类的原型对象，而这个原型对象的 constructor 指向父类的构造函数，所以子<strong>类实例的 constructor 指向了父类的构造函数 SuperClas</strong>s。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 子类实例的 constructor</span></span><br><span class="line"><span class="built_in">console</span>.log(sub_1.constructor); <span class="comment">// 指向父类的构造函数 SuperClass 继承原理</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="判断原型和实例的关系"><a href="#判断原型和实例的关系" class="headerlink" title="判断原型和实例的关系"></a>判断原型和实例的关系</h3><p>通过 instanceof 操作符可以检测某个对象是否是某个构造函数的实例，具体来说<strong>instanceof 是通过检测对象的原型链上是否有某个构造函数的原型对象</strong>。</p>
-<p>例如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(sub_1 <span class="keyword">instanceof</span> SubClass); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(sub_1 <span class="keyword">instanceof</span> SuperClass); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(sub_1 <span class="keyword">instanceof</span> <span class="built_in">Object</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(SubClass <span class="keyword">instanceof</span> SuperClass); <span class="comment">// false</span></span><br><span class="line"><span class="built_in">console</span>.log(SubClass.prototype <span class="keyword">instanceof</span> SuperClass); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="原型链继承的缺点"><a href="#原型链继承的缺点" class="headerlink" title="原型链继承的缺点"></a>原型链继承的缺点</h3><p>1.引用类型属性共享问题</p>
-<p>我们知道原型链继承是通过把父类的实例赋值给子类是的原型对象实现的，而子类的原型对象中的属性和方法是子类的所有实例所共享的，所以原型对象中的属性是引用类型数据被子类实例所共用。如果子类的某个实例修改个这些引用类型数据，子类的其他实例也会受到影响。</p>
-<p>例如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperClass</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.books = [<span class="string">"html"</span>, <span class="string">"css"</span>, <span class="string">"js"</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubClass</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">SubClass.prototype = <span class="keyword">new</span> SuperClass();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sub_1 = <span class="keyword">new</span> SubClass(),</span><br><span class="line">  sub_2 = <span class="keyword">new</span> SubClass();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(sub_2.books); <span class="comment">// ["html", "css", "js"]</span></span><br><span class="line">sub_1.books.push(<span class="string">"设计模式"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(sub_2.books); <span class="comment">// ["html", "css", "js", "设计模式"]</span></span><br></pre></td></tr></table></figure>
-
-<p>2.无法在实例化子类时向父类传递参数</p>
-<p>由于上述的两个问题，实践中很少单独使用原型链继承。</p>
-<h2 id="借用构造函数实现继承"><a href="#借用构造函数实现继承" class="headerlink" title="借用构造函数实现继承"></a>借用构造函数实现继承</h2><p>为了解决原型链继承的问题，出现了借用构造函数继承的技术。在新创建的构造函数内部，利用 call()或 apply()方法调用父类的构造函数，就实现了构造函数式继承。</p>
-<p>例如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperClass</span>(<span class="params">id</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.books = [<span class="string">"html"</span>, <span class="string">"css"</span>, <span class="string">"js"</span>];</span><br><span class="line">  <span class="keyword">this</span>.id = id;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubClass</span>(<span class="params">id</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 调用父类的构造函数</span></span><br><span class="line">  SuperClass.call(<span class="keyword">this</span>, id);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sub_1 = <span class="keyword">new</span> SubClass(<span class="number">10</span>),</span><br><span class="line">  sub_2 = <span class="keyword">new</span> SubClass(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(sub_2.books); <span class="comment">// ["html", "css", "js"]</span></span><br><span class="line">sub_1.books.push(<span class="string">"设计模式"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(sub_2.books); <span class="comment">// ["html", "css", "js"]</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(sub_1.id); <span class="comment">// 10</span></span><br><span class="line"><span class="built_in">console</span>.log(sub_2.id); <span class="comment">// 20 借用构造函数继承的问题</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="借用构造函数继承的问题"><a href="#借用构造函数继承的问题" class="headerlink" title="借用构造函数继承的问题"></a>借用构造函数继承的问题</h3><p><strong>只能继承父类的实例的属性和方法，不能继承父类原型对象中定义的属性和方法</strong>，所以借用构造函数继承也很少单独使用。</p>
-<h2 id="组合继承"><a href="#组合继承" class="headerlink" title="组合继承"></a>组合继承</h2><p>组合继承是指把原型链继承和借用构造函数继承结合在一起的继承模式。实现思路是：利用原型链实现对原型属性和方法的继承，通过借用构造函数实现对实例属性的继承。</p>
-<p>例如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperClass</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="keyword">this</span>.colors = [<span class="string">"red"</span>, <span class="string">"green"</span>, <span class="string">"blue"</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">SuperClass.prototype.sayName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubClass</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 继承实例属性</span></span><br><span class="line">  SuperClass.call(<span class="keyword">this</span>, name); <span class="comment">// 第二次调用父类构造函数</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 继承原型方法</span></span><br><span class="line">SubClass.prototype = <span class="keyword">new</span> SuperClass(); <span class="comment">// 第一次调用父类构造函数</span></span><br><span class="line">SubClass.prototype.constructor = SubClass; <span class="comment">// 修正子类的 constructor</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加子类原型方法</span></span><br><span class="line">SubClass.prototype.sayAge = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.age);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sub_1 = <span class="keyword">new</span> SubClass(<span class="string">"wan"</span>, <span class="number">26</span>),</span><br><span class="line">  sub_2 = <span class="keyword">new</span> SubClass(<span class="string">"li"</span>, <span class="number">28</span>);</span><br><span class="line"></span><br><span class="line">sub_1.colors.push(<span class="string">"black"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(sub_1.colors); <span class="comment">// ["red", "green", "blue", "black"]</span></span><br><span class="line"><span class="built_in">console</span>.log(sub_2.colors); <span class="comment">// ["red", "green", "blue"]</span></span><br><span class="line"></span><br><span class="line">sub_1.sayName(); <span class="comment">// wan</span></span><br><span class="line">sub_1.sayAge(); <span class="comment">// 26</span></span><br><span class="line">sub_2.sayName(); <span class="comment">// li</span></span><br><span class="line">sub_2.sayAge(); <span class="comment">// 28</span></span><br></pre></td></tr></table></figure>
-
-<p>组合继承避免了原型链和借用构造函数继承的缺陷，融合了他们的优点，是 JavaScript 中常用的继承模式。</p>
-<h3 id="组合继承的问题：调用两次父类构造函数"><a href="#组合继承的问题：调用两次父类构造函数" class="headerlink" title="组合继承的问题：调用两次父类构造函数"></a>组合继承的问题：调用两次父类构造函数</h3><p>上面例子中，第一次调用父类构造函数，会在子类的原型上添加 name 和 colors 属性；第二次调用父类构造函数，又会在子类的实例对象上添加 name 和 colors 属性，这显然是多余的。</p>
-<h2 id="原型式继承"><a href="#原型式继承" class="headerlink" title="原型式继承"></a>原型式继承</h2><p>原型式继承是道格拉斯·克罗克福德于 2006 年提出的一种继承模式。它的思想是：不必创建自定义类的情况下，借助原型基于已有的对象创建对象。文字不太好理解，看一下它的函数实现：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritObject</span>(<span class="params">o</span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">  F.prototype = o;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> F();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="继承原理"><a href="#继承原理" class="headerlink" title="继承原理"></a>继承原理</h3><p>原型式继承的实现过程是：创建一个临时的构造函数，然后把要继承的对象赋值给构造函数的原型，最后返回构造函数的一个实例对象。因为构造函数的原型是要继承的对象，返回的构造函数的实例自然继承了它要继承的对象。原型式继承本质是生成一个以继承对象为原型的对象。</p>
-<p>应用示例：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> wan = &#123;</span><br><span class="line">  name: <span class="string">"wan"</span>,</span><br><span class="line">  friends: [<span class="string">"zhang"</span>, <span class="string">"wang"</span>],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> li = inheritObject(wan);</span><br><span class="line">li.name = <span class="string">"li"</span>;</span><br><span class="line">li.friends.push(<span class="string">"zhao"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> ban = inheritObject(wan);</span><br><span class="line">ban.name = <span class="string">"ban"</span>;</span><br><span class="line">ban.friends.push(<span class="string">"lu"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(wan.friends); <span class="comment">// ["zhang", "wang", "zhao", "lu"]</span></span><br></pre></td></tr></table></figure>
-
-<p>原型式继就是以一个对象作为基础，通过继承函数 inheritObject 创建被继承函数的副本，然后根据具体需求对得到的副本对象加以修改。</p>
-<h3 id="Object-create-方法"><a href="#Object-create-方法" class="headerlink" title="Object.create 方法"></a>Object.create 方法</h3><p>ECMAScript5 通过新增 Object.create()方法规范了原型式继承。</p>
-<blockquote>
-<p>Object.create(proto, propertiesObject) 创建一个新对象，使用现有的对象来作为新创建的对象的<strong>proto</strong>。</p>
-</blockquote>
-<ul>
-<li>proto 新创建对象的原型对象。</li>
-<li>propertiesObject 可选。要添加到新创建对象的属性。</li>
-</ul>
-<p>例如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> wan = &#123;</span><br><span class="line">  name: <span class="string">"wan"</span>,</span><br><span class="line">  friends: [<span class="string">"zhang"</span>, <span class="string">"wang"</span>],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> li = <span class="built_in">Object</span>.create(wan, &#123;</span><br><span class="line">  name: &#123;</span><br><span class="line">    value: <span class="string">"li"</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(li.name); <span class="comment">// li</span></span><br></pre></td></tr></table></figure>
-
-<p>注意：Object.create(proto, propertiesObject)兼容 IE9+。</p>
-<h3 id="原型式继承的问题"><a href="#原型式继承的问题" class="headerlink" title="原型式继承的问题"></a>原型式继承的问题</h3><p>原型式继承跟原型链继承一样，是通过构造函数的原型实现的继承，所以原型式继承也有引用类型属性共享问题。</p>
-<h2 id="寄生式继承"><a href="#寄生式继承" class="headerlink" title="寄生式继承"></a>寄生式继承</h2><p>寄生式继承的思路是封装一个仅用于实现继承过程的函数，在该函数的内部来增强对象，最后返回该对象。之所以称作寄生式继承，是因为实现继承过程的函数内部是借助其他函数实现的继承。</p>
-<p>寄生式继承示例：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> wan = &#123;</span><br><span class="line">  name: <span class="string">"wan"</span>,</span><br><span class="line">  friends: [<span class="string">"zhang"</span>, <span class="string">"wang"</span>],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createPerson</span>(<span class="params">original</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> person = inheritObject(original);</span><br><span class="line">  person.sayHi = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="string">"Hi"</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> person;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> personA = createPerson(wan);</span><br><span class="line">personA.sayHi();</span><br></pre></td></tr></table></figure>
-
-<p>注意：示例中借用的继承函数 inheritObject 不是固定的，任何能够返回新对象的函数都可以用于寄生式继承模式。</p>
-<h2 id="寄生组合式继承"><a href="#寄生组合式继承" class="headerlink" title="寄生组合式继承"></a>寄生组合式继承</h2><p><strong>所谓寄生组合式继承，就是通过借用构造函数继承父类的实例属性，通过寄生式继承来继承父类的原型。</strong></p>
-<p>寄生式继承父类原型的实现如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subType, superType</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> prototype = <span class="built_in">Object</span>.create(superType.prototype); <span class="comment">//创建对象</span></span><br><span class="line">  prototype.constructor = subType;</span><br><span class="line">  subType.prototype = prototype; <span class="comment">// 指定对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接下来，用 inheritPrototype()函数替换组合继承中为子类原型赋值的语句就实现了寄生组合式继承。代码如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="keyword">this</span>.colors = [<span class="string">"red"</span>, <span class="string">"green"</span>, <span class="string">"blue"</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">SuperType.prototype.sayName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  SuperType.call(<span class="keyword">this</span>, name, age);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">inheritPrototype(SubType, SuperType); <span class="comment">// 继承父类原型</span></span><br><span class="line"></span><br><span class="line">SubType.prototype.sayAge = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.age);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>寄生组合式继承是借用构造函数和寄生式继承结合实现继承的方式，是最理想的继承实现方式。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1610,7 +1611,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
