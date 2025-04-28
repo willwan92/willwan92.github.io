@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Props 声明一个组件需要显式声明它所接受的 props，这样 Vue 才能知道外部传入的哪些是 props，哪些是透传 attribute 。 在使用 &lt;script setup&gt; 的单文件组件中，props 可以使用 defineProps() 宏来声明： 12345&lt;script setup&gt;const props &#x3D; defineProps([&#39;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue3组件props">
+<meta property="og:url" content="http://yoursite.com/2025/04/28/Vue3%E7%BB%84%E4%BB%B6props/index.html">
+<meta property="og:site_name" content="Will&#39;s Blog">
+<meta property="og:description" content="Props 声明一个组件需要显式声明它所接受的 props，这样 Vue 才能知道外部传入的哪些是 props，哪些是透传 attribute 。 在使用 &lt;script setup&gt; 的单文件组件中，props 可以使用 defineProps() 宏来声明： 12345&lt;script setup&gt;const props &#x3D; defineProps([&#39;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-04-28T08:18:02.000Z">
+<meta property="article:modified_time" content="2025-04-28T09:10:19.036Z">
+<meta property="article:author" content="Will Wan">
+<meta property="article:tag" content="Vue3">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2025/04/28/Vue3%E7%BB%84%E4%BB%B6props/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Vue3组件props | Will's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Will's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where there is a will, there is a way</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/04/28/Vue3%E7%BB%84%E4%BB%B6props/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vue3组件props
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-28 16:18:02 / 修改时间：17:10:19" itemprop="dateCreated datePublished" datetime="2025-04-28T16:18:02+08:00">2025-04-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Props-声明"><a href="#Props-声明" class="headerlink" title="Props 声明"></a>Props 声明</h2><p>一个组件需要显式声明它所接受的 props，这样 Vue 才能知道外部传入的哪些是 props，哪些是透传 attribute 。</p>
+<p>在使用 <code>&lt;script setup&gt;</code> 的单文件组件中，props 可以使用 defineProps() 宏来声明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">const props &#x3D; defineProps([&#39;foo&#39;])</span><br><span class="line"></span><br><span class="line">console.log(props.foo)</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在没有使用 <code>&lt;script setup&gt;</code> 的组件中，props 可以使用 props 选项来声明：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  props: [<span class="string">'foo'</span>],</span><br><span class="line">  setup(props) &#123;</span><br><span class="line">    <span class="comment">// setup() 接收 props 作为第一个参数</span></span><br><span class="line">    <span class="built_in">console</span>.log(props.foo)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除了使用字符串数组来声明 props 外，还可以使用对象的形式：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 &lt;script setup&gt;</span></span><br><span class="line">defineProps(&#123;</span><br><span class="line">  title: <span class="built_in">String</span>,</span><br><span class="line">  likes: <span class="built_in">Number</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 非 &lt;script setup&gt;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  props: &#123;</span><br><span class="line">    title: <span class="built_in">String</span>,</span><br><span class="line">    likes: <span class="built_in">Number</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于以对象形式声明的每个属性，<strong>key 是 prop 的名称，而值则是该 prop 预期类型的构造函数</strong>。</p>
+<p>如果搭配 TypeScript 使用 <code>&lt;script setup&gt;</code>，也可以使用类型标注来声明 props：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup lang&#x3D;&quot;ts&quot;&gt;</span><br><span class="line">defineProps&lt;&#123;</span><br><span class="line">  title?: string</span><br><span class="line">  likes?: number</span><br><span class="line">&#125;&gt;()</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="响应式-Props-解构"><a href="#响应式-Props-解构" class="headerlink" title="响应式 Props 解构"></a>响应式 Props 解构</h2><p>Vue 的响应系统基于属性访问跟踪状态的使用情况。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; foo &#125; = defineProps([<span class="string">'foo'</span>])</span><br><span class="line"></span><br><span class="line">watchEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 在 3.5 之前只运行一次</span></span><br><span class="line">  <span class="comment">// 在 3.5+ 中在 "foo" prop 变化时重新执行</span></span><br><span class="line">  <span class="built_in">console</span>.log(foo)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在 3.4 及以下版本，foo 是一个实际的常量，永远不会改变。在 3.5 及以上版本，当在同一个 <code>&lt;script setup&gt;</code> 代码块中访问由 defineProps 解构的变量时，Vue 编译器会自动在前面添加 props.。因此，上面的代码等同于以下代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> props = defineProps([<span class="string">'foo'</span>])</span><br><span class="line"></span><br><span class="line">watchEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// `foo` 由编译器转换为 `props.foo`</span></span><br><span class="line">  <span class="built_in">console</span>.log(props.foo)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>此外，你可以使用 JavaScript 原生的默认值语法声明 props 默认值。这在使用基于类型的 props 声明时特别有用。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; foo = <span class="string">'hello'</span> &#125; = defineProps&lt;&#123; foo?: <span class="built_in">string</span> &#125;&gt;()</span><br></pre></td></tr></table></figure>
+
+<h3 id="将解构的-props-传递到函数中时注意保持响应性"><a href="#将解构的-props-传递到函数中时注意保持响应性" class="headerlink" title="将解构的 props 传递到函数中时注意保持响应性"></a>将解构的 props 传递到函数中时注意保持响应性</h3><p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; foo &#125; = defineProps([<span class="string">'foo'</span>])</span><br><span class="line"></span><br><span class="line">watch(foo, <span class="comment">/* ... */</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这并不会按预期工作，因为它等价于 watch(props.foo, …)——我们给 watch 传递的是一个值而不是响应式数据源。</p>
+<p><strong>可以通过将其包装在 getter 中来侦听解构的 prop</strong>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">watch(<span class="function"><span class="params">()</span> =&gt;</span> foo, <span class="comment">/* ... */</span>)</span><br></pre></td></tr></table></figure>
+
+<p>当我们需要传递解构的 prop 到外部函数中并保持响应性时，这也是推荐做法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useComposable(<span class="function"><span class="params">()</span> =&gt;</span> foo)</span><br></pre></td></tr></table></figure>
+
+<h2 id="传递-prop-时要注意的细节"><a href="#传递-prop-时要注意的细节" class="headerlink" title="传递 prop 时要注意的细节"></a>传递 prop 时要注意的细节</h2><h3 id="Prop-名字格式"><a href="#Prop-名字格式" class="headerlink" title="Prop 名字格式"></a>Prop 名字格式</h3><p><strong>prop 的名字应使用 camelCase 形式</strong>，因为它们是合法的 JavaScript 标识符，可以直接在模板的表达式中使用，也可以避免在作为属性 key 名时必须加上引号。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">defineProps(&#123;</span><br><span class="line">  greetingMessage: <span class="built_in">String</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>在向子组件传递 props 时，推荐将其写为 kebab-case 形式</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;MyComponent greeting-message&#x3D;&quot;hello&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="传递不同的值类型"><a href="#传递不同的值类型" class="headerlink" title="传递不同的值类型"></a>传递不同的值类型</h3><p>任何类型的值都可以作为 props 的值被传递。包括：Number、Boolean、Array、Object。</p>
+<h3 id="使用一个对象绑定多个-prop"><a href="#使用一个对象绑定多个-prop" class="headerlink" title="使用一个对象绑定多个 prop"></a>使用一个对象绑定多个 prop</h3><p>如果你想要将一个对象的所有属性都当作 props 传入，你可以使用没有参数的 v-bind。</p>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> post = &#123;</span><br><span class="line">  id: <span class="number">1</span>,</span><br><span class="line">  title: <span class="string">'My Journey with Vue'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;BlogPost v-bind&#x3D;&quot;post&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这实际上等价于：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;BlogPost :id&#x3D;&quot;post.id&quot; :title&#x3D;&quot;post.title&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="单向数据流"><a href="#单向数据流" class="headerlink" title="单向数据流"></a>单向数据流</h2><p>所有的 props 都遵循着单向绑定原则，props 因父组件的更新而变化，自然地将新的状态向下流往子组件，而不会逆向传递。这避免了子组件意外修改父组件的状态的情况，不然应用的数据流将很容易变得混乱而难以理解。</p>
+<p><strong>注意：每次父组件更新后，所有的子组件中的 props 都会被更新到最新值，不应该在子组件中去更改一个 prop</strong>。若你这么做了，Vue 会在控制台上向你抛出警告。</p>
+<p>可能更改一个 prop 的需求通常来源于以下两种场景：</p>
+<ol>
+<li>prop 被用于传入初始值；而子组件想在之后将其作为一个局部数据属性。</li>
+</ol>
+<p>在这种情况下，最好是新定义一个局部数据属性，从 props 上获取初始值即可：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> props = defineProps([<span class="string">'initialCounter'</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">// 计数器只是将 props.initialCounter 作为初始值</span></span><br><span class="line"><span class="comment">// 像下面这样做就使 prop 和后续更新无关了</span></span><br><span class="line"><span class="keyword">const</span> counter = ref(props.initialCounter)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>需要对传入的 prop 值做进一步的转换。在这种情况中，最好是基于该 prop 值定义一个计算属性：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> props = defineProps([<span class="string">'size'</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">// 该 prop 变更时计算属性也会自动更新</span></span><br><span class="line"><span class="keyword">const</span> normalizedSize = computed(<span class="function"><span class="params">()</span> =&gt;</span> props.size.trim().toLowerCase())</span><br></pre></td></tr></table></figure>
+
+<h3 id="更改对象-数组类型的-props"><a href="#更改对象-数组类型的-props" class="headerlink" title="更改对象 / 数组类型的 props"></a>更改对象 / 数组类型的 props</h3><p>当对象或数组作为 props 被传入时，虽然子组件无法更改 props 绑定，但仍然可以更改对象或数组内部的值。这是因为 JavaScript 的对象和数组是按引用传递，对 Vue 来说，阻止这种更改需要付出的代价异常昂贵。</p>
+<p>这种更改的主要缺陷是它允许了子组件以某种不明显的方式影响父组件的状态，可能会使数据流在将来变得更难以理解。<strong>在最佳实践中，你应该尽可能避免这样的更改，除非父子组件在设计上本来就需要紧密耦合。在大多数场景下，子组件应该抛出一个事件来通知父组件做出改变</strong>。</p>
+<h2 id="Prop-校验"><a href="#Prop-校验" class="headerlink" title="Prop 校验"></a>Prop 校验</h2><p>要声明对 props 的校验，你可以向 defineProps() 宏提供一个带有 props 校验选项的对象，当 prop 的校验失败后，Vue 会抛出一个控制台警告 (在开发模式下)。例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">defineProps(&#123;</span><br><span class="line">  <span class="comment">// 基础类型检查</span></span><br><span class="line">  <span class="comment">// （给出 `null` 和 `undefined` 值则会跳过任何类型检查）</span></span><br><span class="line">  propA: <span class="built_in">Number</span>,</span><br><span class="line">  <span class="comment">// 多种可能的类型</span></span><br><span class="line">  propB: [<span class="built_in">String</span>, <span class="built_in">Number</span>],</span><br><span class="line">  <span class="comment">// 必传，且为 String 类型</span></span><br><span class="line">  propC: &#123;</span><br><span class="line">    type: <span class="built_in">String</span>,</span><br><span class="line">    required: <span class="literal">true</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 必传但可为 null 的字符串</span></span><br><span class="line">  propD: &#123;</span><br><span class="line">    type: [<span class="built_in">String</span>, <span class="literal">null</span>],</span><br><span class="line">    required: <span class="literal">true</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// Number 类型的默认值</span></span><br><span class="line">  propE: &#123;</span><br><span class="line">    type: <span class="built_in">Number</span>,</span><br><span class="line">    <span class="keyword">default</span>: <span class="number">100</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 对象类型的默认值</span></span><br><span class="line">  propF: &#123;</span><br><span class="line">    type: <span class="built_in">Object</span>,</span><br><span class="line">    <span class="comment">// 对象或数组的默认值</span></span><br><span class="line">    <span class="comment">// 必须从一个工厂函数返回。</span></span><br><span class="line">    <span class="comment">// 该函数接收组件所接收到的原始 prop 作为参数。</span></span><br><span class="line">    <span class="keyword">default</span>(rawProps) &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="attr">message</span>: <span class="string">'hello'</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 自定义类型校验函数</span></span><br><span class="line">  <span class="comment">// 在 3.4+ 中完整的 props 作为第二个参数传入</span></span><br><span class="line">  propG: &#123;</span><br><span class="line">    validator(value, props) &#123;</span><br><span class="line">      <span class="comment">// The value must match one of these strings</span></span><br><span class="line">      <span class="keyword">return</span> [<span class="string">'success'</span>, <span class="string">'warning'</span>, <span class="string">'danger'</span>].includes(value)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 函数类型的默认值</span></span><br><span class="line">  propH: &#123;</span><br><span class="line">    type: <span class="built_in">Function</span>,</span><br><span class="line">    <span class="comment">// 不像对象或数组的默认，这不是一个</span></span><br><span class="line">    <span class="comment">// 工厂函数。这会是一个用来作为默认值的函数</span></span><br><span class="line">    <span class="keyword">default</span>() &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="string">'Default function'</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<ul>
+<li>defineProps() 宏中的参数不可以访问 <code>&lt;script setup&gt;</code> 中定义的其他变量，因为在编译时整个表达式都会被移到外部的函数中。</li>
+<li>所有 prop 默认都是可选的，除非声明了 required: true。</li>
+<li>除 Boolean 外的未传递的可选 prop 将会有一个默认值 undefined。</li>
+<li>Boolean 类型的未传递 prop 将被转换为 false。这可以通过为它设置 default 来更改——例如：设置为 default: undefined 将与非布尔类型的 prop 的行为保持一致。</li>
+<li>如果声明了 default 值，那么在 prop 的值被解析为 undefined 时，无论 prop 是未被传递还是显式指明的 undefined，都会改为 default 值。</li>
+</ul>
+<h3 id="运行时类型检查"><a href="#运行时类型检查" class="headerlink" title="运行时类型检查"></a>运行时类型检查</h3><p>校验选项中的 type 可以是下列这些原生构造函数：</p>
+<ul>
+<li>String</li>
+<li>Number</li>
+<li>Boolean</li>
+<li>Array</li>
+<li>Object</li>
+<li>Date</li>
+<li>Function</li>
+<li>Symbol</li>
+<li>Error</li>
+</ul>
+<p>另外，type 也可以是自定义的类或构造函数，Vue 将会通过 instanceof 来检查类型是否匹配。例如下面这个类：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(firstName, lastName) &#123;</span><br><span class="line">    <span class="keyword">this</span>.firstName = firstName</span><br><span class="line">    <span class="keyword">this</span>.lastName = lastName</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">defineProps(&#123;</span><br><span class="line">  author: Person</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="可为-null-的类型"><a href="#可为-null-的类型" class="headerlink" title="可为 null 的类型"></a>可为 null 的类型</h3><p>如果该类型是必传但可为 null 的，你可以用一个包含 null 的数组语法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">defineProps(&#123;</span><br><span class="line">  id: &#123;</span><br><span class="line">    type: [<span class="built_in">String</span>, <span class="literal">null</span>],</span><br><span class="line">    required: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>注意如果 type 仅为 null 而非使用数组语法，它将允许任何类型。</p>
+<h3 id="Boolean-类型转换"><a href="#Boolean-类型转换" class="headerlink" title="Boolean 类型转换"></a>Boolean 类型转换</h3><p>为了更贴近原生 boolean attributes 的行为，声明为 Boolean 类型的 props 有特别的类型转换规则。以带有如下声明的 <MyComponent> 组件为例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">defineProps(&#123;</span><br><span class="line">  disabled: <span class="built_in">Boolean</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>该组件可以被这样使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 等同于传入 :disabled&#x3D;&quot;true&quot; --&gt;</span><br><span class="line">&lt;MyComponent disabled &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 等同于传入 :disabled&#x3D;&quot;false&quot; --&gt;</span><br><span class="line">&lt;MyComponent &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Vue3/" rel="tag"># Vue3</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/04/25/Vue3%E4%BE%A6%E5%90%AC%E5%99%A8/" rel="prev" title="Vue3侦听器">
+      <i class="fa fa-chevron-left"></i> Vue3侦听器
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Props-声明"><span class="nav-number">1.</span> <span class="nav-text">Props 声明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#响应式-Props-解构"><span class="nav-number">2.</span> <span class="nav-text">响应式 Props 解构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#将解构的-props-传递到函数中时注意保持响应性"><span class="nav-number">2.1.</span> <span class="nav-text">将解构的 props 传递到函数中时注意保持响应性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传递-prop-时要注意的细节"><span class="nav-number">3.</span> <span class="nav-text">传递 prop 时要注意的细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prop-名字格式"><span class="nav-number">3.1.</span> <span class="nav-text">Prop 名字格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传递不同的值类型"><span class="nav-number">3.2.</span> <span class="nav-text">传递不同的值类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用一个对象绑定多个-prop"><span class="nav-number">3.3.</span> <span class="nav-text">使用一个对象绑定多个 prop</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单向数据流"><span class="nav-number">4.</span> <span class="nav-text">单向数据流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#更改对象-数组类型的-props"><span class="nav-number">4.1.</span> <span class="nav-text">更改对象 &#x2F; 数组类型的 props</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prop-校验"><span class="nav-number">5.</span> <span class="nav-text">Prop 校验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#运行时类型检查"><span class="nav-number">5.1.</span> <span class="nav-text">运行时类型检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可为-null-的类型"><span class="nav-number">5.2.</span> <span class="nav-text">可为 null 的类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Boolean-类型转换"><span class="nav-number">5.3.</span> <span class="nav-text">Boolean 类型转换</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Will Wan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Will Wan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Will Wan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

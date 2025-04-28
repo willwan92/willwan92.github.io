@@ -156,6 +156,214 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/15/vue-%E9%A1%B9%E7%9B%AE%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/15/vue-%E9%A1%B9%E7%9B%AE%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">vue 项目性能优化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-15 09:47:22" itemprop="dateCreated datePublished" datetime="2022-02-15T09:47:22+08:00">2022-02-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-23 16:34:06" itemprop="dateModified" datetime="2023-05-23T16:34:06+08:00">2023-05-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="vue-项目性能优化"><a href="#vue-项目性能优化" class="headerlink" title="vue 项目性能优化"></a>vue 项目性能优化</h1><p>性能优化可以从三个方面来进行，一是代码层面的优化，二是项目打包的优化，三是项目部署的优化。</p>
+<h2 id="代码层面的优化"><a href="#代码层面的优化" class="headerlink" title="代码层面的优化"></a>代码层面的优化</h2><h3 id="1-合理使用-v-if-和-v-show"><a href="#1-合理使用-v-if-和-v-show" class="headerlink" title="1. 合理使用 v-if 和 v-show"></a>1. 合理使用 v-if 和 v-show</h3><p>v-if 是“真正”的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。</p>
+<p>v-if 也是惰性的：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。</p>
+<p>相比之下，v-show 就简单得多——不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换。</p>
+<p>一般来说，v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。因此，<strong>如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件很少改变，则使用 v-if 较好。</strong></p>
+<h3 id="2-区分-computed、watch-和-methods-的使用场景"><a href="#2-区分-computed、watch-和-methods-的使用场景" class="headerlink" title="2. 区分 computed、watch 和 methods 的使用场景"></a>2. 区分 computed、watch 和 methods 的使用场景</h3><ul>
+<li>computed: 计算属性，是基于它们的响应式依赖进行缓存的，只在相关响应式依赖发生改变时它们才会重新求值。<strong>如果想要使用缓存，应该使用计算属性。</strong></li>
+<li>methods: 方法，调用方法都会再次执行方法。<strong>如果不想使用缓存，应该使用方法。</strong></li>
+<li>watch: 侦听属性，是另一种观察和响应 Vue 实例上的数据变动的方式。<strong>当需要在数据变化时执行异步或开销较大的操作时，应当使用侦听属性。</strong></li>
+</ul>
+<h3 id="3-避免-v-if-和-v-for-用在同一个元素上"><a href="#3-避免-v-if-和-v-for-用在同一个元素上" class="headerlink" title="3. 避免 v-if 和 v-for 用在同一个元素上"></a>3. 避免 v-if 和 v-for 用在同一个元素上</h3><p>因为当它们处于同一节点，v-for 的优先级比 v-if 更高，这意味着 v-if 将分别重复运行于每一次 v-for 循环中，这显然会影响渲染速度。<strong>如果只想渲染列表的部分项，最好使用计算属性过滤掉不想渲染的项目。如果是有条件地跳过循环的执行，那么可以将 v-if 置于外层元素 (或 <code>&lt;template&gt;</code>) 上。</strong></p>
+<p><strong>为什么 v-for 比 v-if 具有更高的优先级？</strong></p>
+<p>Vue 最终是通过 render 函数来渲染页面的，在生成 render 函数过程中，v-for 先于 v-if 判断执行，所以 v-for 比 v-if 具有更高的优先级。</p>
+<h3 id="4-给-v-for-循环项加上-key-提高-diff-计算速度"><a href="#4-给-v-for-循环项加上-key-提高-diff-计算速度" class="headerlink" title="4. 给 v-for 循环项加上 key 提高 diff 计算速度"></a>4. 给 v-for 循环项加上 key 提高 diff 计算速度</h3><p>详细原理参见 diff 计算。</p>
+<h3 id="5-利用-Object-freeze-冻结不需要响应式变化的数据"><a href="#5-利用-Object-freeze-冻结不需要响应式变化的数据" class="headerlink" title="5. 利用 Object.freeze()冻结不需要响应式变化的数据"></a>5. 利用 Object.freeze()冻结不需要响应式变化的数据</h3><p><strong>冻结原理</strong>：</p>
+<p>Vue 组件初始化过程中，会把 data 传入 observe 函数中进行数据劫持，把 data 中的数据都转换成响应式的。</p>
+<p>在 observe 函数内部调用 defineReactive 函数处理数据，配置 getter/setter 属性，转成响应式，如果使用 Object.freeze()将 data 中某些数据冻结了，也就<strong>是将其 configurable 属性（可配置）设置为 false。</strong></p>
+<p><strong>defineReactive 函数中检测数据上某个 key 对应的值的 configurable 属性是否为 false，若是就直接返回</strong>，若不是继续配置 getter/setter 属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">defineReactive</span>(<span class="params">obj, key, val, customSetter, shallow</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">  <span class="keyword">const</span> property = <span class="built_in">Object</span>.getOwnPropertyDescriptor(obj, key); <span class="comment">//获取obj[key]的属性</span></span><br><span class="line">  <span class="keyword">if</span> (property &amp;&amp; property.configurable === <span class="literal">false</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-利用-v-once-处理只会渲染一次的元素或组件"><a href="#6-利用-v-once-处理只会渲染一次的元素或组件" class="headerlink" title="6. 利用 v-once 处理只会渲染一次的元素或组件"></a>6. 利用 v-once 处理只会渲染一次的元素或组件</h3><p>如果某个组件包含了大量静态内容，可以在根元素上添加 v-once 指令以确保这些内容只计算一次然后缓存起来。<strong>注意：和 v-if（优先级较高） 一起使用时，v-once 不生效。在 v-for 循环内的元素或组件上使用，必须加上 key</strong></p>
+<p>v-once 只渲染一次元素或组件实现原理：</p>
+<p>如果某个虚拟 DOM 节点的缓存存在，且虚拟 DOM 节点不是在 v-for 中直接返回该虚拟 DOM 节点缓存，如果该虚拟 DOM 节点没有缓存，则调用 genStatic 方法中存在 staticRenderFns 数组中的渲染函数，渲染出虚拟 DOM 节点且存在 cached ，以便下次不用重新渲染直接返回该虚拟 DOM 节点，并同时调用 markOnce 方法在该虚拟 DOM 节点上加上 isOnce 标志，值为 true。</p>
+<p>如果有定义 v-for ，最终会调用 _o(${genElement(el, state)},${state.onceId++},${key}) ,其中_o 方法就是 src\core\instance\render-helpers\render-static.js 中的 markOnce 方法，其作用是在生成的虚拟 DOM 节点上加上 isOnce 标志，为 true 代表该虚拟 DOM 节点是静态节点，当 patch 时，会判断 vnode.isOnce 是否为 true，为 true 时，直接返回旧节点，不进行比对，相当实现渲染一次。</p>
+<h3 id="7-提前过滤掉后端返回的非必须数据，优化-data-选项中的数据结构"><a href="#7-提前过滤掉后端返回的非必须数据，优化-data-选项中的数据结构" class="headerlink" title="7.提前过滤掉后端返回的非必须数据，优化 data 选项中的数据结构"></a>7.提前过滤掉后端返回的非必须数据，优化 data 选项中的数据结构</h3><p>接收服务端传来的数据，常常会有一些渲染页面时用不到的数据。所以要先把服务端传来的数据中那些渲染页面用不到的数据先过滤掉。然后再赋值到 data 中。可以避免去劫持那些渲染页面不需要的数据，从而提高渲染速度。</p>
+<h3 id="8-避免在-v-for-循环中读取-data-中数组类型的数据，在需要读取时，取出数组中要用的数据再复值给-data"><a href="#8-避免在-v-for-循环中读取-data-中数组类型的数据，在需要读取时，取出数组中要用的数据再复值给-data" class="headerlink" title="8. 避免在 v-for 循环中读取 data 中数组类型的数据，在需要读取时，取出数组中要用的数据再复值给 data"></a>8. 避免在 v-for 循环中读取 data 中数组类型的数据，在需要读取时，取出数组中要用的数据再复值给 data</h3><p>原因：在组件 data 初始化的过程中，defineReactive 函数给每个数据的 getter 函数中定义了每个次读取该数据进行的依赖收集。如果是一个数组类型的数据，就遍历数组中的元素对其进行依赖收集，所以会造成多余的循环，从而影响性能。</p>
+<h3 id="9-防抖和节流"><a href="#9-防抖和节流" class="headerlink" title="9. 防抖和节流"></a>9. 防抖和节流</h3><p>防抖（debounce）和节流(throttle)是针对用户操作的优化。防抖可以用在 input, keyup，click 等用户可能频繁触发的事件中，节流一般用在比 input, keyup 更频繁触发的事件中，如：resize, touchmove, mousemove, scroll 等。</p>
+<h3 id="10-图片懒加载"><a href="#10-图片懒加载" class="headerlink" title="10. 图片懒加载"></a>10. 图片懒加载</h3><p>安装 vue-lazyload 插件。在 main.js 中引入：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> VueLazyload <span class="keyword">from</span> <span class="string">"vue-lazyload"</span>;</span><br><span class="line">Vue.use(VueLazyload, &#123;</span><br><span class="line">  preLoad: <span class="number">1.3</span>, <span class="comment">//预载高度比例</span></span><br><span class="line">  error: <span class="string">"dist/error.png"</span>, <span class="comment">//加载失败显示图片</span></span><br><span class="line">  loading: <span class="string">"dist/loading.gif"</span>, <span class="comment">//加载过程中显示图片</span></span><br><span class="line">  attempt: <span class="number">1</span>, <span class="comment">//尝试次数</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>在项目中使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img v-lazy&#x3D;&quot;&#x2F;static&#x2F;img&#x2F;1.png&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-第三方依赖按需加载"><a href="#11-第三方依赖按需加载" class="headerlink" title="11. 第三方依赖按需加载"></a>11. 第三方依赖按需加载</h3><p>第三方依赖按需加载的方法，一般相应文档都有介绍。例如：</p>
+<ul>
+<li><a href="https://www.antdv.com/docs/vue/getting-started-cn/#%E6%8C%89%E9%9C%80%E5%8A%A0%E8%BD%BD" target="_blank" rel="noopener">ant-design-vue按需加载</a></li>
+</ul>
+<h3 id="12-利用挂载节点会被替换的特性优化白屏问题"><a href="#12-利用挂载节点会被替换的特性优化白屏问题" class="headerlink" title="12. 利用挂载节点会被替换的特性优化白屏问题"></a>12. 利用挂载节点会被替换的特性优化白屏问题</h3><p>白屏问题：Vue 项目有个缺点，首次渲染会有一段时间的白屏。原因是首次渲染时需要加载很多资源，如 js、css、图片。但是如果遇上网络慢的情况，首先加载是 index.html 页面，其是没有内容，就会出现白屏。</p>
+<p>Vue 选项中的 render 函数若存在，则 Vue 构造函数不会从 template 选项或通过 el 选项指定的挂载元素中提取出的 HTML 模板编译渲染函数。也就是说渲染时，会直接用 render 渲染出来的内容替换 <code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import Vue from &#39;vue&#39; import App from &#39;.&#x2F;App.vue&#39; new Vue(&#123; render: h &#x3D;&gt; h(App)</span><br><span class="line">&#125;).$mount(&#39;#app&#39;)</span><br></pre></td></tr></table></figure>
+
+<p>如果 <code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code> 里面有内容，就不会出现白屏。所以我们可以在 <code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code> 里添加首屏的静态页面。等真正的首屏加载出来后就会把<code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code> 这块结构都替换掉，给人一种视觉上的误差，就不会产生白屏。</p>
+<h2 id="项目打包的优化"><a href="#项目打包的优化" class="headerlink" title="项目打包的优化"></a>项目打包的优化</h2><h3 id="常用打包优化手段"><a href="#常用打包优化手段" class="headerlink" title="常用打包优化手段"></a>常用打包优化手段</h3><p>主要包括：</p>
+<ul>
+<li>路由组件懒加载和聚合打包</li>
+<li>第三方依赖：分包通过CDN引入或者代码分割以利用客户端缓存</li>
+<li>js、css、图片等静态资源的合并压缩</li>
+<li>Prefetch（预获取）和Preload（预加载）模块</li>
+<li>开启gzip压缩</li>
+</ul>
+<h3 id="1-路由组件懒加载和聚合打包"><a href="#1-路由组件懒加载和聚合打包" class="headerlink" title="1. 路由组件懒加载和聚合打包"></a>1. 路由组件懒加载和聚合打包</h3><p><strong>路由组件懒加载：</strong>利用 import()异步引入组件实现路由组件懒加载，在访问相应的页面时再去加载对应页面的js文件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> routes = [</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">'/'</span>, <span class="attr">component</span>: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'./Dashboard.vue'</span>) &#125;</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">'/contact'</span>, <span class="attr">component</span>: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'./Contact.vue'</span>) &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p><strong>聚合打包：</strong>一般我们的一个页面的bundle可能非常的小，我们可以把一个模块的所有路由的页面都打包到一个bundle中来减少HTTP请求次数，在import函数加入 <code>/* webpackChunkName:&#39;group-superAdmin&#39; */</code> ，其中webpackChunkName的名称 group-superAdmin 是自己定义的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> router = [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'superAdminAccountList'</span>,</span><br><span class="line">    name: <span class="string">'SuperAdminAccountList'</span>,</span><br><span class="line">    component: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="comment">/* webpackChunkName:'group-superAdmin' */</span> <span class="string">'@/activity/superAdmin/AccountList'</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'superAdminCreateAccount'</span>,</span><br><span class="line">    name: <span class="string">'SuperAdminCreateAccount'</span>,</span><br><span class="line">    component: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="comment">/* webpackChunkName:'group-superAdmin' */</span> <span class="string">'@/activity/superAdmin/CreateAccount'</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'superAdminRoleList'</span>,</span><br><span class="line">    name: <span class="string">'SuperAdminRoleList'</span>,</span><br><span class="line">    component: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="comment">/* webpackChunkName:'group-superAdmin' */</span> <span class="string">'@/activity/superAdmin/RoleList'</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'superAdminCreateRole/:id?/:look?'</span>,</span><br><span class="line">    name: <span class="string">'SuperAdminCreateRole'</span>,</span><br><span class="line">    component: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="comment">/* webpackChunkName:'group-superAdmin' */</span> <span class="string">'@/activity/superAdmin/CreateRole'</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-利用externals分离出第三方依赖并用CDN引入"><a href="#2-利用externals分离出第三方依赖并用CDN引入" class="headerlink" title="2. 利用externals分离出第三方依赖并用CDN引入"></a>2. 利用externals分离出第三方依赖并用CDN引入</h3><p>很多我们引入的第三份依赖文件是可以利用 CDN 上的资源的，这样可以大大加快我们访问这些资源的速度，同时减轻我们服务器的压力。但是也存在 CDN 服务器故障的风险。</p>
+<p>具体配置方式见：<a href="https://webpack.docschina.org/configuration/externals/#externals" target="_blank" rel="noopener">https://webpack.docschina.org/configuration/externals/#externals</a></p>
+<h3 id="3-代码分割（vue-cli4-项目默认已经配置）"><a href="#3-代码分割（vue-cli4-项目默认已经配置）" class="headerlink" title="3. 代码分割（vue-cli4 项目默认已经配置）"></a>3. 代码分割（vue-cli4 项目默认已经配置）</h3><p>代码分割是 webpack 中最引人注目的特性之一。此特性能够把代码分割到不同的 bundle 中。代码分割可以用于获取更小的 bundle，以及控制资源加载优先级和充分利用浏览器的缓存机制。</p>
+<p>上面第2项通过CDN使用是第三方依赖，具有不稳定性，万一CDN突然挂了，系统也就崩了，有一定的风险。也可以用SplitChunks实现代码分割，第三方依赖还可以在自己服务器上，减少风险。</p>
+<p>这部分 vue-cli4 项目默认已经配置。具体配置如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">optimization: &#123;</span><br><span class="line">    splitChunks: &#123;</span><br><span class="line">      cacheGroups: &#123;</span><br><span class="line">        vendors: &#123;</span><br><span class="line">          name: <span class="string">'chunk-vendors'</span>,</span><br><span class="line">          test: <span class="regexp">/[\\/]node_modules[\\/]/</span>,</span><br><span class="line">          priority: <span class="number">-10</span>,</span><br><span class="line">          chunks: <span class="string">'initial'</span></span><br><span class="line">        &#125;,</span><br><span class="line">        common: &#123;</span><br><span class="line">          name: <span class="string">'chunk-common'</span>,</span><br><span class="line">          minChunks: <span class="number">2</span>,</span><br><span class="line">          priority: <span class="number">-20</span>,</span><br><span class="line">          chunks: <span class="string">'initial'</span>,</span><br><span class="line">          reuseExistingChunk: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果需要修改配置，可参考 <a href="https://webpack.docschina.org/plugins/split-chunks-plugin/#defaults" target="_blank" rel="noopener">SplitChunksPlugin配置</a></p>
+<h3 id="4-利用-MiniCssExtractPlugin-插件提取-组件内-css-到单独的文件（vue-cli4-项目默认已经配置）"><a href="#4-利用-MiniCssExtractPlugin-插件提取-组件内-css-到单独的文件（vue-cli4-项目默认已经配置）" class="headerlink" title="4. 利用 MiniCssExtractPlugin 插件提取 组件内 css 到单独的文件（vue-cli4 项目默认已经配置）"></a>4. 利用 MiniCssExtractPlugin 插件提取 组件内 css 到单独的文件（vue-cli4 项目默认已经配置）</h3><p>MiniCssExtractPlugin：该插件将 CSS 提取到单独的文件中。它为每个包含 CSS 的 JS 文件创建一个 CSS 文件。它支持 CSS 和 SourceMaps 的按需加载。</p>
+<p>在用 Vue Cli4 搭建的 Vue 项目中是用 css.extract 来控制 MiniCssExtractPlugin 插件是否启用，在生产环境中，css.extract 默认是开启的。</p>
+<h3 id="5-利用-OptimizeCssnanoPlugin-插件压缩和去重-css-样式文件（vue-cli4-项目默认已经配置）"><a href="#5-利用-OptimizeCssnanoPlugin-插件压缩和去重-css-样式文件（vue-cli4-项目默认已经配置）" class="headerlink" title="5. 利用 OptimizeCssnanoPlugin 插件压缩和去重 css 样式文件（vue-cli4 项目默认已经配置）"></a>5. 利用 OptimizeCssnanoPlugin 插件压缩和去重 css 样式文件（vue-cli4 项目默认已经配置）</h3><p>在用Vue Cli4搭建的Vue项目中默认使用OptimizeCssnanoPlugin插件来压缩和去重css样式文件。</p>
+<h3 id="6-开启optimization-minimize来压缩js代码（vue-cli4-项目默认已经配置）"><a href="#6-开启optimization-minimize来压缩js代码（vue-cli4-项目默认已经配置）" class="headerlink" title="6. 开启optimization.minimize来压缩js代码（vue-cli4 项目默认已经配置）"></a>6. 开启optimization.minimize来压缩js代码（vue-cli4 项目默认已经配置）</h3><p>optimization.minimize 选项有两个值true 和false ，为 true开启压缩js代码，为false 关闭压缩js代码。</p>
+<p>在生产环境中默认为 true ，在开发环境中默认为false 。</p>
+<p>在vue-cli4 项目中默认用TerserPlugin插件来压缩js代码。<br>默认的配置已经很好了，如果想修改TerserPlugin插件的配置，可以参考<a href="https://cli.vuejs.org/zh/guide/webpack.html#%E4%BF%AE%E6%94%B9%E6%8F%92%E4%BB%B6%E9%80%89%E9%A1%B9" target="_blank" rel="noopener">vue-cli修改插件配置文档</a>和<a href="https://www.npmjs.com/package/terser" target="_blank" rel="noopener">插件文档</a>：</p>
+<p>如果想用其它插件来压缩js代码，可以在 optimization.minimizer 选项中添加，其值为数组。</p>
+<p>用chainWebpack来添加，其中WebpackPlugin为插件名称，args为插件参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> WebpackPlugin = <span class="built_in">require</span>(插件名称)</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    chainWebpack: <span class="function"><span class="params">config</span> =&gt;</span>&#123;</span><br><span class="line">        config.optimization</span><br><span class="line">            .minimizer(name)</span><br><span class="line">            .use(WebpackPlugin, args)</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="7-利用image-webpack-loader进行压缩图片"><a href="#7-利用image-webpack-loader进行压缩图片" class="headerlink" title="7. 利用image-webpack-loader进行压缩图片"></a>7. 利用image-webpack-loader进行压缩图片</h3><p>用Vue Cli4搭建的Vue项目中，图片是没进行压缩就直接用url-loader和file-loader处理的。<strong>可以用image-webpack-loader进行压缩图片后再给url-loader和file-loader处理。</strong></p>
+<p>先安装 image-webpack-loader。<strong>注意：如果用yarn或npm 安装可能会失败（包括修改安装源），此时可以用cnpm安装</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 先安装cnpm</span><br><span class="line">npm install cnpm -g --registry=https://registry.npm.taobao.org</span><br><span class="line"></span><br><span class="line">// 安装image-webpack-loader</span><br><span class="line">cnpm install --save-dev  image-webpack-loader</span><br></pre></td></tr></table></figure>
+
+<p>在vue.config.js种添加配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    chainWebpack: <span class="function"><span class="params">config</span> =&gt;</span>&#123;</span><br><span class="line">        config.module</span><br><span class="line">            .rule(<span class="string">'images'</span>)</span><br><span class="line">            .use(<span class="string">'imageWebpackLoader'</span>)</span><br><span class="line">            .loader(<span class="string">'image-webpack-loader'</span>)</span><br><span class="line">            .options(&#123;</span><br><span class="line">                <span class="comment">// 生产环境禁用压缩，默认启用。</span></span><br><span class="line">                disable: process.env.NODE_ENV === <span class="string">'development'</span>,</span><br><span class="line">                <span class="comment">// 控制压缩JPEG图像的配置</span></span><br><span class="line">                mozjpeg:&#123;</span><br><span class="line">                    quality:<span class="number">75</span> <span class="comment">// 压缩质量，范围0（最差）至100（最好）</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="comment">// 控制压缩PNG图像的配置，默认启用。</span></span><br><span class="line">                optipng:&#123;</span><br><span class="line">                    OptimizationLevel:<span class="number">3</span> <span class="comment">// 优化级别，0-7，数值越高，压缩质量越好，但是速度越慢，默认为3。</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="comment">// 控制压缩PNG图像的配置，默认启用。</span></span><br><span class="line">                pngquant:&#123;</span><br><span class="line">                    speed:<span class="number">4</span>,</span><br><span class="line">                    quality:[<span class="number">0.2</span>,<span class="number">0.5</span>]</span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="comment">// 控制压缩GIF图像的配置，默认启用。</span></span><br><span class="line">                gifsicle:&#123;</span><br><span class="line">                    OptimizationLevel:<span class="number">1</span> <span class="comment">// 优化级别，1-3；较高的水平需要更长的时间，但可能会有更好的效果。</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="comment">// 将JPG和PNG图像压缩为WEBP，默认不启用，需要配置后才启用。启用后，可以将JPG和PNG图像压缩输出大小更小的图片，但比用mozjpeg、optipng、pngquant压缩更耗时</span></span><br><span class="line">                webp:&#123;</span><br><span class="line">                    quality:<span class="number">75</span>, <span class="comment">// 品质，0-100，默认为75，值越高品质越好。</span></span><br><span class="line">                    lossless:<span class="literal">true</span>, <span class="comment">// 是否无损压缩，默认为false</span></span><br><span class="line">                    nearLossless:<span class="number">75</span> <span class="comment">// nearLossless 使用额外的有损预处理步骤进行无损编码 0-100</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="8-Prefetch（预获取）和Preload（预加载）资源（vue-cli4-项目默认已经配置）"><a href="#8-Prefetch（预获取）和Preload（预加载）资源（vue-cli4-项目默认已经配置）" class="headerlink" title="8. Prefetch（预获取）和Preload（预加载）资源（vue-cli4 项目默认已经配置）"></a>8. Prefetch（预获取）和Preload（预加载）资源（vue-cli4 项目默认已经配置）</h3><p>Webpack v4.6.0+ 增加了对预获取和预加载的支持。</p>
+<p>在声明 import 时，使用下面这些内置指令，可以让 webpack 输出 “resource hint(资源提示)”，来告知浏览器：</p>
+<ul>
+<li>prefetch(预获取)：将来某些导航下可能需要的资源</li>
+<li>preload(预加载)：当前导航下可能需要资源</li>
+</ul>
+<p>prefetch 和 preload 的不同之处：</p>
+<p><strong>preload chunk 会在父 chunk 加载时，以并行方式立即开始加载。prefetch chunk 会在父 chunk 加载结束后浏览器闲置时开始加载。</strong></p>
+<p>具体配置详见：<a href="https://webpack.docschina.org/guides/code-splitting/#prefetchingpreloading-modules。" target="_blank" rel="noopener">https://webpack.docschina.org/guides/code-splitting/#prefetchingpreloading-modules。</a></p>
+<p>vue-cli4 项目默认使用了 preload-webpack-plugin 来自动处理模块的预加载和预获取。配置如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">plugins: [</span><br><span class="line">  <span class="comment">/* config.plugin('preload') */</span></span><br><span class="line">    <span class="keyword">new</span> PreloadPlugin(</span><br><span class="line">      &#123;</span><br><span class="line">        rel: <span class="string">'preload'</span>,</span><br><span class="line">        include: <span class="string">'initial'</span>, <span class="comment">// 初始模块（同步）</span></span><br><span class="line">        fileBlacklist: [</span><br><span class="line">          /\.map$/,</span><br><span class="line">          /hot-update\.js$/</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ),</span><br><span class="line">    <span class="comment">/* config.plugin('prefetch') */</span></span><br><span class="line">    <span class="keyword">new</span> PreloadPlugin(</span><br><span class="line">      &#123;</span><br><span class="line">        rel: <span class="string">'prefetch'</span>,</span><br><span class="line">        include: <span class="string">'asyncChunks'</span> <span class="comment">// 异步模块</span></span><br><span class="line">      &#125;</span><br><span class="line">    ),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>上述配置意为：把初始模块配置为预加载资源，把异步模块配置为预获取资源。更多配置见：<a href="https://www.npmjs.com/package/@vue/preload-webpack-plugin" target="_blank" rel="noopener">插件文档</a></p>
+<h3 id="9-在Webpack上开启gzip压缩"><a href="#9-在Webpack上开启gzip压缩" class="headerlink" title="9. 在Webpack上开启gzip压缩"></a>9. 在Webpack上开启gzip压缩</h3><p>首先安装 compression-webpack-plugin，<strong>这里要注意和webpack版本的兼容性，如果是webpack4请安装<a href="mailto:compression-webpack-plugin@4.0.0">compression-webpack-plugin@4.0.0</a></strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i compression-webpack-plugin -D</span><br></pre></td></tr></table></figure>
+
+<p>然后在 vue.config.js 中添加配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CompressionPlugin = <span class="built_in">require</span>(<span class="string">'compression-webpack-plugin'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    configureWebpack: <span class="function"><span class="params">config</span> =&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            plugins: [</span><br><span class="line">                <span class="keyword">new</span> CompressionPlugin(&#123;</span><br><span class="line">                    algorithm: <span class="string">'gzip'</span>,<span class="comment">// 压缩算法</span></span><br><span class="line">                    test: <span class="regexp">/\.js$|\.html$|\.css$/</span>, <span class="comment">// 匹配文件类型</span></span><br><span class="line">                    threshold: <span class="number">10240</span>, <span class="comment">// 对超过10k的数据压缩</span></span><br><span class="line">                    deleteOriginalAssets: <span class="literal">false</span> <span class="comment">// 是否删除源文件</span></span><br><span class="line">                &#125;)</span><br><span class="line">            ],</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行 npm run build 命令后，打开 dist 文件，会发现多出很多后缀为 .gz 的文件，这就是用gzip压缩后的文件。</p>
+<p>该插件的具体配置项见：<a href="https://www.npmjs.com/package/compression-webpack-plugin" target="_blank" rel="noopener">https://www.npmjs.com/package/compression-webpack-plugin</a></p>
+<h3 id="10-打包后的文件分析和优化"><a href="#10-打包后的文件分析和优化" class="headerlink" title="10. 打包后的文件分析和优化"></a>10. 打包后的文件分析和优化</h3><p>此外，项目打包后的文件大小直接影响我们访问页面的加载速度，所以我们要知道哪些打包后的文件最大，最影响性能。</p>
+<p>用<a href="https://www.npmjs.com/package/webpack-bundle-analyzer" target="_blank" rel="noopener">webpack-bundle-analyzer</a>插件来生成一个报告。</p>
+<p>用 vue-cli4 创建的项目 可以直接在 package.json 的 script 中添加如下配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"build-report"</span>: <span class="string">"vue-cli-service build --report"</span></span><br></pre></td></tr></table></figure>
+
+<p>然后，在命令行中运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build-report</span><br></pre></td></tr></table></figure>
+
+<p>打包完成后会在dist文件中生成一个report.html文件，我们在浏览器中打开它就能看到打包后的文件大小分析报告图。通过分析报告图我们可以清晰直观的看出每个打包后文件的大小，进一步对比较大和依赖包进行分析看是否能够优化。</p>
+<p>比如：</p>
+<p>在我的项目中用到ant-design-vue的部分图标，我发现被全部图标都被打包进项目了，此时就可以参考这两个链接进行按需引入图标：<a href="https://github.com/vueComponent/pro-components/blob/v2/examples/vue.config.js#L39-L43" target="_blank" rel="noopener">vue.config.js#L39-L43</a>、<a href="https://github.com/vueComponent/pro-layout/blob/master/examples/src/core/antd/icons.js" target="_blank" rel="noopener">icons.js</a></p>
+<p>还有我们常用的moment.js，默认是包含很多语言包的，这些语言包默认也被打包尽我们的代码里了。通过在vue.config.js添加如下配置，我们可以把这些语言包从打包文件中剔除：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vue.config.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// vue.config.js</span></span><br><span class="line"><span class="keyword">const</span> vueConfig = &#123;</span><br><span class="line">  configureWebpack: &#123;</span><br><span class="line">    plugins: [</span><br><span class="line">      <span class="comment">// Ignore all locale files of moment.js</span></span><br><span class="line">      <span class="keyword">new</span> webpack.IgnorePlugin(<span class="regexp">/^\.\/locale$/</span>, /moment$/)</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="项目部署的优化"><a href="#项目部署的优化" class="headerlink" title="项目部署的优化"></a>项目部署的优化</h2><h3 id="1-在Nginx上开启gzip压缩"><a href="#1-在Nginx上开启gzip压缩" class="headerlink" title="1. 在Nginx上开启gzip压缩"></a>1. 在Nginx上开启gzip压缩</h3><p>在nginx的配置文件种添加如下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    # 开启|关闭（off） gzip</span><br><span class="line">    gzip on; </span><br><span class="line"></span><br><span class="line">    # 开启后如果能找到 .gz 文件，直接返回该文件，不会启用服务端压缩。</span><br><span class="line">    gzip_static on; </span><br><span class="line"></span><br><span class="line">    # 文件大于指定 size 才压缩，以 kb 为单位。</span><br><span class="line">    gzip_min_length 1k; </span><br><span class="line"></span><br><span class="line">    # 压缩级别，1-9，值越大压缩比越大，但更加占用 CPU，且压缩效率越来越低。</span><br><span class="line">    gzip_comp_level 5; </span><br><span class="line"></span><br><span class="line">    # 要压缩的文件类型。</span><br><span class="line">    gzip_types application&#x2F;javascript image&#x2F;png image&#x2F;gif image&#x2F;jpeg text&#x2F;css text&#x2F;plain;</span><br><span class="line">    </span><br><span class="line">    # 请求压缩的缓冲区数量和大小，以 4k 为单位，32 为倍数。</span><br><span class="line">    gzip_buffers 32 4k;</span><br><span class="line">    </span><br><span class="line">    gzip_http_version 1.1;</span><br><span class="line"></span><br><span class="line">    # 是否添加响应头 Vary: Accept-Encoding 建议开启。</span><br><span class="line">    gzip_vary on;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Nginx和Webpack开启gzip压缩的区别"><a href="#Nginx和Webpack开启gzip压缩的区别" class="headerlink" title="Nginx和Webpack开启gzip压缩的区别"></a>Nginx和Webpack开启gzip压缩的区别</h4><p>webpack 开启 gzip 压缩：只是在打包的时候生成相应地gz压缩文件，如果 Nginx 没有开启 gzip，浏览器在获取相应的文件是还是获取未进行 gzip 压缩的文件。<br>nginx 服务器开启 gzip 压缩：会将静态资源在服务端进行压缩，压缩包传输给浏览器后，浏览器再进行解压使用，这大大提高了网络传输的效率。</p>
+<p><strong>总结：建议Nginx和Webpack压缩都开启压缩，且在Nginx加上gzip_static on; 的配置，减少服务器的CPU的使用。</strong></p>
+<h3 id="2-静态资源配置缓存策略"><a href="#2-静态资源配置缓存策略" class="headerlink" title="2.静态资源配置缓存策略"></a>2.静态资源配置缓存策略</h3><p>主要包括强缓存和弱缓存（协商缓存），具体配置有待研究。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://www.jianshu.com/p/ef44aaa41fe8" target="_blank" rel="noopener">前端面试如何说解vue项目性能优化，你确定不来看看吗？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/421604906" target="_blank" rel="noopener">Vue项目性能优化实战总结，7个实用方法</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/395587041" target="_blank" rel="noopener">基于vue-cli创建的项目进行打包优化</a></li>
+<li><a href="https://segmentfault.com/a/1190000022750932" target="_blank" rel="noopener">Vue-cli3脚手架3的webpack打包优化压缩</a></li>
+<li><a href="https://pro.antdv.com/docs/faq#%E7%BC%96%E8%AF%91%E5%90%8E%E4%BD%93%E7%A7%AF%E5%BE%88%E5%A4%A7%EF%BC%9F" target="_blank" rel="noopener">ant-design-pro-vue常见问题——编译后体积很大</a></li>
+<li><a href="https://cli.vuejs.org/zh/guide" target="_blank" rel="noopener">Vue CLI 指南</a></li>
+<li><a href="https://webpack.docschina.org/configuration/" target="_blank" rel="noopener">Webpack 中文文档</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/08/XSS%E6%94%BB%E5%87%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1289,101 +1497,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/08/RPC-%E8%B0%83%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/08/RPC-%E8%B0%83%E7%94%A8/" class="post-title-link" itemprop="url">RPC 调用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-06-08 17:21:13" itemprop="dateCreated datePublished" datetime="2021-06-08T17:21:13+08:00">2021-06-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HTTP/" itemprop="url" rel="index"><span itemprop="name">HTTP</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="RPC-调用的概念"><a href="#RPC-调用的概念" class="headerlink" title="RPC 调用的概念"></a>RPC 调用的概念</h2><p>RPC 全称：Remote Procedure Call (远程过程调用)。</p>
-<h3 id="和-Ajax-对比"><a href="#和-Ajax-对比" class="headerlink" title="和 Ajax 对比"></a>和 Ajax 对比</h3><p>和Ajax相同点：</p>
-<ul>
-<li>都是两个计算机之间的网络通信</li>
-<li>都需要双方约定一个数据格式</li>
-</ul>
-<p>和Ajax不同点：</p>
-<ul>
-<li>不一定使用DNS作为寻址服务（使用特有服务进行寻址。例如：阿里使用VIP(虚拟IP)）</li>
-<li>应用层协议一般不用HTTP</li>
-<li>基于TCP或UDP</li>
-</ul>
-<h2 id="RPC-调用的通信方式"><a href="#RPC-调用的通信方式" class="headerlink" title="RPC 调用的通信方式"></a>RPC 调用的通信方式</h2><ul>
-<li>单工通信（单向通信，也就是只能一方向另一方发送数据）</li>
-<li>半双工通信（可双向通信，但是同一时段只能单向通信）</li>
-<li>全双工通信（双向通信）</li>
-</ul>
-<h2 id="RPC-调用使用二进制协议"><a href="#RPC-调用使用二进制协议" class="headerlink" title="RPC 调用使用二进制协议"></a>RPC 调用使用二进制协议</h2><p>使用二进制协议的优势：</p>
-<ul>
-<li>更小的数据包体积</li>
-<li>更快的编解码速率</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1455,7 +1568,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
