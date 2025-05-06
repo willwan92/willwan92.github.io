@@ -156,6 +156,222 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/03/%E5%BE%AA%E7%8E%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/03/%E5%BE%AA%E7%8E%AF/" class="post-title-link" itemprop="url">循环</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-03 17:15:27" itemprop="dateCreated datePublished" datetime="2020-09-03T17:15:27+08:00">2020-09-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Python的循环有两种，一种是for…in循环，另一种是while 循环。</p>
+<h2 id="for…in-循环"><a href="#for…in-循环" class="headerlink" title="for…in 循环"></a>for…in 循环</h2><p>迭代字符串</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> letter <span class="keyword">in</span> <span class="string">'Python'</span>:</span><br><span class="line">  print(<span class="string">'当前字母 :'</span>, letter)</span><br></pre></td></tr></table></figure>
+
+<p>迭代列表</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fruits = [<span class="string">'banana'</span>, <span class="string">'apple'</span>,  <span class="string">'mango'</span>]</span><br><span class="line"><span class="keyword">for</span> fruit <span class="keyword">in</span> fruits:</span><br><span class="line">  print(<span class="string">'当前水果 :'</span>, fruit)</span><br></pre></td></tr></table></figure>
+
+<p>通过序列索引迭代</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> index <span class="keyword">in</span> range(len(fruits)):</span><br><span class="line">  print(<span class="string">'当前水果 :'</span>, fruits[index])</span><br></pre></td></tr></table></figure>
+
+<h2 id="while-循环"><a href="#while-循环" class="headerlink" title="while 循环"></a>while 循环</h2><p>第二种循环是while循环，只要条件满足，就不断循环，条件不满足时退出循环。</p>
+<p>例如：打印出 2 - 100 之间所有的素数（质数）</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">i = <span class="number">2</span></span><br><span class="line"><span class="keyword">while</span>(i &lt; <span class="number">100</span>): <span class="comment"># 迭代 2 - 100 之间的整数</span></span><br><span class="line">  j = <span class="number">2</span></span><br><span class="line">  <span class="keyword">while</span>(j &lt;= (i/j)): <span class="comment"># 内层循环：寻找 i 的因数，因数最大只需要迭代到  i 的平方根，如：16 只需要迭代到 4，13 只需要迭代到 3 </span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span>(i%j): <span class="keyword">break</span> <span class="comment"># 找到一个因数，即 i 能被 j 整除，立即跳出循环</span></span><br><span class="line">    j = j + <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> (j &gt; i/j) : print(i, <span class="string">" 是素数"</span>) <span class="comment"># 如果 j &gt; i/j，说明内层循环没有找到 i 的因数，那么 i 就是素数。</span></span><br><span class="line">  i = i + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="循环使用-else-语句"><a href="#循环使用-else-语句" class="headerlink" title="循环使用 else 语句"></a>循环使用 else 语句</h2><p>for … else语句：else 中的语句会在循环正常执行完（即 for 不是通过 break 跳出而中断的）的情况下执行，while … else 也是一样。</p>
+<p>例如，判断10-20之间的数是不是质数：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> num <span class="keyword">in</span> range(<span class="number">10</span>,<span class="number">20</span>):  <span class="comment"># 迭代 10 到 20 之间的数字</span></span><br><span class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>,num): <span class="comment"># 根据因子迭代</span></span><br><span class="line">    <span class="keyword">if</span> num%i == <span class="number">0</span>:      <span class="comment"># 确定第一个因子</span></span><br><span class="line">      j=num/i          <span class="comment"># 计算第二个因子</span></span><br><span class="line">      print(<span class="string">'%d 等于 %d * %d'</span> % (num,i,j))</span><br><span class="line">      <span class="keyword">break</span>            <span class="comment"># 跳出当前循环</span></span><br><span class="line">  <span class="keyword">else</span>:                  <span class="comment"># 循环的 else 部分</span></span><br><span class="line">    print(num, <span class="string">'是一个质数'</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="break语句"><a href="#break语句" class="headerlink" title="break语句"></a>break语句</h2><p>break语句用在while和for循环中，用来终止循环语句，即循环条件没有False条件或者序列还没被完全递归完，也会停止执行循环语句。</p>
+<p>如果您使用嵌套循环，break语句将停止执行最深层的循环</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var = <span class="number">10</span></span><br><span class="line"><span class="keyword">while</span> var &gt; <span class="number">0</span>:              </span><br><span class="line">  print(<span class="string">'当前变量值 :'</span>, var)</span><br><span class="line">  var = var <span class="number">-1</span></span><br><span class="line">  <span class="keyword">if</span> var == <span class="number">5</span>:   <span class="comment"># 当变量 var 等于 5 时退出循环</span></span><br><span class="line">    <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="continue语句"><a href="#continue语句" class="headerlink" title="continue语句"></a>continue语句</h2><p>continue语句用在while和for循环中，用来跳出本次循环，然后继续进行下一轮循环，而break跳出整个循环。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">num = <span class="number">10</span></span><br><span class="line"><span class="keyword">while</span> num &gt; <span class="number">0</span>:</span><br><span class="line">  num -= <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> (num == <span class="number">5</span>): <span class="keyword">continue</span></span><br><span class="line">  print(<span class="string">'当前变量num值：'</span>, num)</span><br></pre></td></tr></table></figure>
+
+<h2 id="pass-语句"><a href="#pass-语句" class="headerlink" title="pass 语句"></a>pass 语句</h2><p>pass 是空语句，不做任何事情，一般用做占位语句，是为了保持程序结构的完整性。</p>
+<p>例如，输出 Python 的每个字母：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> letter <span class="keyword">in</span> <span class="string">'Python'</span>:</span><br><span class="line">  <span class="keyword">if</span> letter == <span class="string">'h'</span>:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    print(<span class="string">'当前字母 :'</span>, letter)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/03/%E5%88%97%E8%A1%A8%E5%92%8C%E5%85%83%E7%BB%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/03/%E5%88%97%E8%A1%A8%E5%92%8C%E5%85%83%E7%BB%84/" class="post-title-link" itemprop="url">列表和元组</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-03 15:11:52" itemprop="dateCreated datePublished" datetime="2020-09-03T15:11:52+08:00">2020-09-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>list（列表）是Python内置的一种数据类型（和js中的数组一样）。</p>
+<p>比如，列出班里所有同学的名字，就可以用一个list表示：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>classmates = [<span class="string">'Michael'</span>, <span class="string">'Bob'</span>, <span class="string">'Tracy'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>classmates</span><br><span class="line">[<span class="string">'Michael'</span>, <span class="string">'Bob'</span>, <span class="string">'Tracy'</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="和js相同的地方"><a href="#和js相同的地方" class="headerlink" title="和js相同的地方"></a>和js相同的地方</h3><ul>
+<li>可以通过索引获取和设置元素</li>
+<li>元素可以是不同类型的数据，包括列表等。</li>
+</ul>
+<h3 id="列表的常用方法"><a href="#列表的常用方法" class="headerlink" title="列表的常用方法"></a>列表的常用方法</h3><h4 id="len"><a href="#len" class="headerlink" title="len()"></a>len()</h4><p>len函数可以获得list元素的个数：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>len(classmates)</span><br><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="append"><a href="#append" class="headerlink" title="append()"></a>append()</h4><p>往list中追加元素到末尾：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>classmates.append(<span class="string">'Adam'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>classmates</span><br><span class="line">[<span class="string">'Michael'</span>, <span class="string">'Bob'</span>, <span class="string">'Tracy'</span>, <span class="string">'Adam'</span>]</span><br></pre></td></tr></table></figure>
+
+<h4 id="insert"><a href="#insert" class="headerlink" title="insert()"></a>insert()</h4><p>把元素插入到指定的位置</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>classmates.insert(<span class="number">1</span>, <span class="string">'Jack'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>classmates</span><br><span class="line">[<span class="string">'Michael'</span>, <span class="string">'Jack'</span>, <span class="string">'Bob'</span>, <span class="string">'Tracy'</span>, <span class="string">'Adam'</span>]</span><br></pre></td></tr></table></figure>
+
+<h4 id="pop-删除元素"><a href="#pop-删除元素" class="headerlink" title="pop() 删除元素"></a>pop() 删除元素</h4><p>删除list末尾的元素</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>classmates.pop()</span><br><span class="line"><span class="string">'Adam'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>classmates</span><br><span class="line">[<span class="string">'Michael'</span>, <span class="string">'Jack'</span>, <span class="string">'Bob'</span>, <span class="string">'Tracy'</span>]</span><br></pre></td></tr></table></figure>
+
+<p>删除指定位置的元素：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>classmates.pop(<span class="number">1</span>)</span><br><span class="line"><span class="string">'Jack'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>classmates</span><br><span class="line">[<span class="string">'Michael'</span>, <span class="string">'Bob'</span>, <span class="string">'Tracy'</span>]</span><br></pre></td></tr></table></figure>
+
+<h2 id="元组（tuple）"><a href="#元组（tuple）" class="headerlink" title="元组（tuple）"></a>元组（tuple）</h2><p>元组是另一种有序列表。tuple和list非常类似，只是tuple一旦初始化就不能修改，比如同样是列出同学的名字：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>classmates = (<span class="string">'Michael'</span>, <span class="string">'Bob'</span>, <span class="string">'Tracy'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>现在，classmates这个tuple不能变了，它也没有append()，insert()这样的方法。其他获取元素的方法和list是一样的。</p>
+<h3 id="不可变的tuple的意义"><a href="#不可变的tuple的意义" class="headerlink" title="不可变的tuple的意义"></a>不可变的tuple的意义</h3><p>因为tuple不可变，所以代码更安全。如果可能，能用tuple代替list就尽量用tuple。</p>
+<h3 id="tuple的陷阱"><a href="#tuple的陷阱" class="headerlink" title="tuple的陷阱"></a>tuple的陷阱</h3><p>当你定义一个tuple时，tuple的元素就必须被确定下来。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>t = (<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t</span><br><span class="line">(<span class="number">1</span>, <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>但是，要定义一个只有1个元素的tuple，如果你这么定义：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>t = (<span class="number">1</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t</span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>定义的不是tuple，是1这个数！这是因为括号()既可以表示tuple，又可以表示数学公式中的小括号，这就产生了歧义，因此，Python规定，这种情况下，按小括号进行计算。</p>
+<p>所以，<strong>只有1个元素的tuple定义时必须加一个逗号“,”</strong>，来消除歧义：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>t = (<span class="number">1</span>,)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t</span><br><span class="line">(<span class="number">1</span>,)</span><br></pre></td></tr></table></figure>
+
+<h3 id="tuple所谓的“不变”是说，tuple的每个元素的指向永远不变"><a href="#tuple所谓的“不变”是说，tuple的每个元素的指向永远不变" class="headerlink" title="tuple所谓的“不变”是说，tuple的每个元素的指向永远不变"></a>tuple所谓的“不变”是说，tuple的每个元素的指向永远不变</h3><p>来看一个“可变的”tuple：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>t = (<span class="string">'a'</span>, <span class="string">'b'</span>, [<span class="string">'A'</span>, <span class="string">'B'</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t[<span class="number">2</span>][<span class="number">0</span>] = <span class="string">'X'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t[<span class="number">2</span>][<span class="number">1</span>] = <span class="string">'Y'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t</span><br><span class="line">(<span class="string">'a'</span>, <span class="string">'b'</span>, [<span class="string">'X'</span>, <span class="string">'Y'</span>])</span><br></pre></td></tr></table></figure>
+
+<p>当我们把list的元素’A’和’B’修改为’X’和’Y’后，tuple就变了。所以，tuple所谓的“不变”是说，tuple的每个元素，指向永远不变。即指向’a’，就不能改成指向’b’，指向一个list，就不能改成指向其他对象，但指向的这个list本身是可变的！</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/03/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E7%BC%96%E7%A0%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1093,142 +1309,10 @@ func() <span class="comment">// 不报错</span></code></pre>
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/14/Node-js-%E6%A8%A1%E5%9D%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/14/Node-js-%E6%A8%A1%E5%9D%97/" class="post-title-link" itemprop="url">Node.js模块</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-14 10:20:50" itemprop="dateCreated datePublished" datetime="2020-05-14T10:20:50+08:00">2020-05-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Node-js/" itemprop="url" rel="index"><span itemprop="name">Node.js</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Node.js 使用 CommonJs 模块规范。CommonJs 规范由JavaScript社区发起，在Node.js上应用并得到推广。</p>
-<h2 id="Node-js-模块分类"><a href="#Node-js-模块分类" class="headerlink" title="Node.js 模块分类"></a>Node.js 模块分类</h2><ul>
-<li>核心模块（在node启动时会预先加载）</li>
-<li>非核心模块 （包括：文件模块、第三方模块）</li>
-</ul>
-<h2 id="模块引用"><a href="#模块引用" class="headerlink" title="模块引用"></a>模块引用</h2><ul>
-<li><p>通过路径</p>
-  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promise = <span class="built_in">require</span>(<span class="string">'../fileName.js'</span>);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>通过模块名</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promise = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h2 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h2><h3 id="1-创建和定义模块"><a href="#1-创建和定义模块" class="headerlink" title="1. 创建和定义模块"></a>1. 创建和定义模块</h3><pre><code>在 Node.js 中，只需要创建一个js文件就创建了一个模块，通过在 exports 变量上添加属性和方法就可以在向外部暴露想要暴露的数据和方法。
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line">exports.sum = <span class="function"><span class="keyword">function</span> (<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">exports.msg = <span class="string">'hello world'</span>;</span><br></pre></td></tr></table></figure></code></pre><h3 id="2-使用模块"><a href="#2-使用模块" class="headerlink" title="2. 使用模块"></a>2. 使用模块</h3><pre><code>我们可以通过 require 方法来引用一个模块，然后就可以使用这个模块暴露出来的数据和方法。
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils.js'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> res = utils.sum(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line"><span class="built_in">console</span>.log(res); <span class="comment">// 输出 3</span></span><br></pre></td></tr></table></figure></code></pre><h2 id="CommonJs-模块机制"><a href="#CommonJs-模块机制" class="headerlink" title="CommonJs 模块机制"></a>CommonJs 模块机制</h2><h3 id="1-模块默认导出对象字面量"><a href="#1-模块默认导出对象字面量" class="headerlink" title="1. 模块默认导出对象字面量 {}"></a>1. 模块默认导出对象字面量 {}</h3><pre><code><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line"><span class="built_in">console</span>.log(exports); <span class="comment">// 输出 &#123;&#125;</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils.js'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(utils); <span class="comment">// 输出 &#123;&#125;</span></span><br></pre></td></tr></table></figure></code></pre><h3 id="2-修改模块默认导出数据为其他类型"><a href="#2-修改模块默认导出数据为其他类型" class="headerlink" title="2. 修改模块默认导出数据为其他类型"></a>2. 修改模块默认导出数据为其他类型</h3><p>  通过给 module.exports 赋值可以修改模块导出的数据为字符串、函数等其他任何类型。</p>
-<p>  例如：</p>
-  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line">exports.sum = <span class="function"><span class="keyword">function</span> (<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span> <span class="title">hello</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'hello'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">	<span class="built_in">console</span>.log(exports); <span class="comment">// 输出： &#123; sum: [Function] &#125;</span></span><br><span class="line">&#125;, <span class="number">200</span>);</span><br></pre></td></tr></table></figure>
-
-  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(utils); <span class="comment">// 输出：[Function: hello]</span></span><br></pre></td></tr></table></figure>
-
-<p>  上述代码说明 module.exports 覆盖了默认导出的 exports 变量，但是原来默认的 exports 变量在模块内部还存在。</p>
-<h3 id="3-外部require调用的结果和模块内部的exports对象是同一个引用，所以在模块外部可以修改模块暴露出来的对象"><a href="#3-外部require调用的结果和模块内部的exports对象是同一个引用，所以在模块外部可以修改模块暴露出来的对象" class="headerlink" title="3. 外部require调用的结果和模块内部的exports对象是同一个引用，所以在模块外部可以修改模块暴露出来的对象"></a>3. 外部require调用的结果和模块内部的exports对象是同一个引用，所以在模块外部可以修改模块暴露出来的对象</h3><pre><code>例如：
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils'</span>);</span><br><span class="line"></span><br><span class="line">utils.additional = <span class="string">'模块的使用者添加的属性'</span>;</span><br><span class="line"></span><br><span class="line">utils.sum = <span class="string">'改变模块内部原有的属性'</span>;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line">exports.sum = <span class="function"><span class="keyword">function</span> (<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">	<span class="built_in">console</span>.log(exports); <span class="comment">// &#123; sum: '改变模块内部原有的属性', additional: '模块的使用者添加的属性' &#125;</span></span><br><span class="line">&#125;, <span class="number">2000</span>);</span><br></pre></td></tr></table></figure>
-
-在终端运行 index.js，输出如下：
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node index.js</span><br><span class="line">&#123; sum: <span class="string">'改变模块内部原有的属性'</span>, additional: <span class="string">'模块的使用者添加的属性'</span> &#125;。</span><br></pre></td></tr></table></figure>
-
-这就说明，在模块外部，可以修改模块暴露出来的对象。</code></pre><h3 id="模块导出的是模块内部值的拷贝"><a href="#模块导出的是模块内部值的拷贝" class="headerlink" title="模块导出的是模块内部值的拷贝"></a>模块导出的是模块内部值的拷贝</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line"><span class="keyword">let</span> count = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> setCount = <span class="function">(<span class="params">num</span>) =&gt;</span>&#123; </span><br><span class="line">  count = num;</span><br><span class="line">  <span class="built_in">console</span>.log(count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">	setCount: setCount,</span><br><span class="line">	count: count</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 1</span></span><br><span class="line">utils.setCount(<span class="number">2</span>); <span class="comment">//输出 2 （内部的count被修改为2）</span></span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 1 （暴露出来的count依然是1）</span></span><br></pre></td></tr></table></figure>
-
-<p>上述代码表明，模块一旦导出一个值，模块内部的变化不会再影响这个值。这就说明模块导出的是模块内部值的拷贝。</p>
-<h4 id="通过定义get函数可以得到内部值的改变"><a href="#通过定义get函数可以得到内部值的改变" class="headerlink" title="通过定义get函数可以得到内部值的改变"></a>通过定义get函数可以得到内部值的改变</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line"><span class="keyword">let</span> count = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> setCount = <span class="function">(<span class="params">num</span>) =&gt;</span>&#123; </span><br><span class="line">  count = num;</span><br><span class="line">  <span class="built_in">console</span>.log(count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">	setCount: setCount,</span><br><span class="line">	<span class="keyword">get</span> count() &#123;</span><br><span class="line">		<span class="keyword">return</span> count;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'./utils'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 1</span></span><br><span class="line">utils.setCount(<span class="number">2</span>); <span class="comment">//输出 2 （内部的count被修改为2）</span></span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 2</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="commonjs模块机制和ES模块机制的区别"><a href="#commonjs模块机制和ES模块机制的区别" class="headerlink" title="commonjs模块机制和ES模块机制的区别"></a>commonjs模块机制和ES模块机制的区别</h3><ol>
-<li><strong>commonjs模块导出的是模块内部值的拷贝，ES6模块导出的是值的引用</strong></li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils.js</span></span><br><span class="line"><span class="keyword">let</span> count = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> setCount = <span class="function">(<span class="params">num</span>) =&gt;</span>&#123; </span><br><span class="line">  count = num;</span><br><span class="line">  <span class="built_in">console</span>.log(count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;</span><br><span class="line">	setCount,</span><br><span class="line">	count</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> utils <span class="keyword">from</span> (<span class="string">'./utils.js'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 1</span></span><br><span class="line">utils.setCount(<span class="number">2</span>); <span class="comment">//输出 2 （内部的count被修改为2）</span></span><br><span class="line"><span class="built_in">console</span>.log(utils.count); <span class="comment">//输出 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// index.html</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">"en"</span>&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">  &lt;meta charset=<span class="string">"UTF-8"</span>&gt;</span><br><span class="line">  &lt;meta http-equiv=<span class="string">"X-UA-Compatible"</span> content=<span class="string">"IE=edge"</span>&gt;</span><br><span class="line">  &lt;meta name=<span class="string">"viewport"</span> content=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span><br><span class="line">  &lt;title&gt;Document&lt;<span class="regexp">/title&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">  &lt;script type=<span class="string">"module"</span> src=<span class="string">"./index.js"</span>&gt;&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>body&gt;</span><br><span class="line">&lt;<span class="regexp">/html&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>注意：index.html需要在服务器上测试，如果本地浏览器直接打开会报跨域错误，并且引入 <code>index.js</code> 的 script 标签要添加 <code>type=&quot;module&quot;</code> 属性。</p>
-<ol start="2">
-<li>commonJS模块是运行时加载模块，ES6模块是编译时编译时输出接口。</li>
-</ol>
-<p>因为 CommonJS 加载的是一个对象（即module.exports属性），该对象只有在脚本运行完才会生成。而 ES6 模块ES6 模块的运行机制与 CommonJS 不一样。JS 引擎对脚本静态分析的时候，遇到模块加载命令import，就会生成一个只读引用。等到脚本真正执行时，再根据这个只读引用，到被加载的那个模块里面去取值。</p>
-<ol start="3">
-<li>CommonJS 模块的require()是同步加载模块，ES6 模块的import命令是异步加载，有一个独立的模块依赖的解析阶段。</li>
-</ol>
-<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><ul>
-<li><a href="https://es6.ruanyifeng.com/#docs/module-loader#ES6-%E6%A8%A1%E5%9D%97%E4%B8%8E-CommonJS-%E6%A8%A1%E5%9D%97%E7%9A%84%E5%B7%AE%E5%BC%82" target="_blank" rel="noopener">ES6 模块与 CommonJS 模块的差异</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1296,7 +1380,7 @@ func() <span class="comment">// 不报错</span></code></pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
