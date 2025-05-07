@@ -156,6 +156,248 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/05/07/Vue3%E6%8F%92%E6%A7%BDSlots/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/05/07/Vue3%E6%8F%92%E6%A7%BDSlots/" class="post-title-link" itemprop="url">Vue3插槽Slots</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-05-07 19:10:01 / 修改时间：19:41:22" itemprop="dateCreated datePublished" datetime="2025-05-07T19:10:01+08:00">2025-05-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>插槽的作用是为子组件传递一些模板片段，让子组件在它们的组件中渲染这些片段。</p>
+<h2 id="插槽内容与出口"><a href="#插槽内容与出口" class="headerlink" title="插槽内容与出口"></a>插槽内容与出口</h2><p>例如：这里有一个 <code>&lt;FancyButton&gt;</code> 组件，可以像这样使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;FancyButton&gt;</span><br><span class="line">  Click me! &lt;!-- 插槽内容 --&gt;</span><br><span class="line">&lt;&#x2F;FancyButton&gt;</span><br></pre></td></tr></table></figure>
+
+<p>而 <FancyButton> 的模板是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;button class&#x3D;&quot;fancy-btn&quot;&gt;</span><br><span class="line">  &lt;slot&gt;&lt;&#x2F;slot&gt; &lt;!-- 插槽出口 --&gt;</span><br><span class="line">&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;slot&gt;</code> 元素是一个插槽出口 (slot outlet)，标示了父元素提供的插槽内容 (slot content) 将在哪里被渲染。</p>
+<p><strong>插槽内容可以是任意合法的模板内容，不局限于文本。通过使用插槽，组件更加灵活和具有可复用性。</strong></p>
+<h2 id="渲染作用域"><a href="#渲染作用域" class="headerlink" title="渲染作用域"></a>渲染作用域</h2><p>插槽内容可以访问到父组件的数据作用域，无法访问子组件的数据。</p>
+<h2 id="默认内容"><a href="#默认内容" class="headerlink" title="默认内容"></a>默认内容</h2><p>在外部没有提供任何内容的情况下，可以为插槽指定默认内容。只需要将默认内容写在 <code>&lt;slot&gt;</code> 标签之间来作为默认内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;button type&#x3D;&quot;submit&quot;&gt;</span><br><span class="line">  &lt;slot&gt;</span><br><span class="line">    Submit &lt;!-- 默认内容 --&gt;</span><br><span class="line">  &lt;&#x2F;slot&gt;</span><br><span class="line">&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果我们提供了插槽内容，如果我们提供了插槽内容。</p>
+<h2 id="具名插槽"><a href="#具名插槽" class="headerlink" title="具名插槽"></a>具名插槽</h2><p>如果需要在一个组件中包含多个插槽出口，那么就需要用到具名插槽。</p>
+<p>例如：在一个 <code>&lt;BaseLayout&gt;</code> 组件中，有如下模板：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class&#x3D;&quot;container&quot;&gt;</span><br><span class="line">  &lt;header&gt;</span><br><span class="line">    &lt;!-- 标题内容放这里 --&gt;</span><br><span class="line">  &lt;&#x2F;header&gt;</span><br><span class="line">  &lt;main&gt;</span><br><span class="line">    &lt;!-- 主要内容放这里 --&gt;</span><br><span class="line">  &lt;&#x2F;main&gt;</span><br><span class="line">  &lt;footer&gt;</span><br><span class="line">    &lt;!-- 底部内容放这里 --&gt;</span><br><span class="line">  &lt;&#x2F;footer&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>对于这种场景，<code>&lt;slot&gt;</code> 元素可以有一个特殊的 attribute <code>name</code>，用来给各个插槽分配唯一的 ID，以确定每一处要渲染的内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class&#x3D;&quot;container&quot;&gt;</span><br><span class="line">  &lt;header&gt;</span><br><span class="line">    &lt;slot name&#x3D;&quot;header&quot;&gt;&lt;&#x2F;slot&gt;</span><br><span class="line">  &lt;&#x2F;header&gt;</span><br><span class="line">  &lt;main&gt;</span><br><span class="line">    &lt;slot&gt;&lt;&#x2F;slot&gt;</span><br><span class="line">  &lt;&#x2F;main&gt;</span><br><span class="line">  &lt;footer&gt;</span><br><span class="line">    &lt;slot name&#x3D;&quot;footer&quot;&gt;&lt;&#x2F;slot&gt;</span><br><span class="line">  &lt;&#x2F;footer&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这类带 name 的插槽被称为具名插槽 (named slots)。没有提供 name 的 <code>&lt;slot&gt;</code> 出口会隐式地命名为“default”。</p>
+<p>要为具名插槽传入内容，我们需要使用一个含 v-slot 指令的 <code>&lt;template&gt;</code> 元素，并将目标插槽的名字传给该指令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;BaseLayout&gt;</span><br><span class="line">  &lt;template v-slot:header&gt;</span><br><span class="line">    &lt;h1&gt;Here might be a page title&lt;&#x2F;h1&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template v-slot:default&gt;</span><br><span class="line">    &lt;p&gt;A paragraph for the main content.&lt;&#x2F;p&gt;</span><br><span class="line">    &lt;p&gt;And another one.&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template v-slot:footer&gt;</span><br><span class="line">    &lt;p&gt;Here&#39;s some contact info&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;BaseLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<p>v-slot 有对应的简写 #，因此 <code>&lt;template v-slot:header&gt;</code> 可以简写为 <code>&lt;template #header&gt;</code>。</p>
+<p>当一个组件同时接收默认插槽和具名插槽时，所有位于顶级的非 <code>&lt;template&gt;</code> 节点都被隐式地视为默认插槽的内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;BaseLayout&gt;</span><br><span class="line">  &lt;template #header&gt;</span><br><span class="line">    &lt;h1&gt;Here might be a page title&lt;&#x2F;h1&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- 隐式的默认插槽 --&gt;</span><br><span class="line">  &lt;p&gt;A paragraph for the main content.&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;p&gt;And another one.&lt;&#x2F;p&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template #footer&gt;</span><br><span class="line">    &lt;p&gt;Here&#39;s some contact info&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;BaseLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="条件插槽"><a href="#条件插槽" class="headerlink" title="条件插槽"></a>条件插槽</h2><p>条件插槽的使用场景是：需要根据内容是否被传入了插槽来渲染某些内容。</p>
+<p>在下面的示例中，我们定义了一个卡片组件，它拥有三个条件插槽：header、footer 和 default。 当 header、footer 或 default 的内容存在时，我们希望包装它以提供额外的样式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;card&quot;&gt;</span><br><span class="line">    &lt;div v-if&#x3D;&quot;$slots.header&quot; class&#x3D;&quot;card-header&quot;&gt;</span><br><span class="line">      &lt;slot name&#x3D;&quot;header&quot; &#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;div v-if&#x3D;&quot;$slots.default&quot; class&#x3D;&quot;card-content&quot;&gt;</span><br><span class="line">      &lt;slot &#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;div v-if&#x3D;&quot;$slots.footer&quot; class&#x3D;&quot;card-footer&quot;&gt;</span><br><span class="line">      &lt;slot name&#x3D;&quot;footer&quot; &#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="动态插槽名"><a href="#动态插槽名" class="headerlink" title="动态插槽名"></a>动态插槽名</h2><p>动态指令参数在 v-slot 上也是有效的，即可以定义下面这样的动态插槽名：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;base-layout&gt;</span><br><span class="line">  &lt;template v-slot:[dynamicSlotName]&gt;</span><br><span class="line">    ...</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- 缩写为 --&gt;</span><br><span class="line">  &lt;template #[dynamicSlotName]&gt;</span><br><span class="line">    ...</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;base-layout&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="作用域插槽"><a href="#作用域插槽" class="headerlink" title="作用域插槽"></a>作用域插槽</h2><p>在某些场景下插槽的内容可能想要同时使用父组件域内和子组件域内的数据。这时可以像对组件传递 props 那样，向一个插槽的出口上传递 attributes：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- &lt;MyComponent&gt; 的模板 --&gt;</span><br><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;slot :text&#x3D;&quot;greetingMessage&quot; :count&#x3D;&quot;1&quot;&gt;&lt;&#x2F;slot&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当需要接收插槽 props 时，默认插槽和具名插槽的使用方式有一些区别。</p>
+<h2 id="默认插槽接受-props"><a href="#默认插槽接受-props" class="headerlink" title="默认插槽接受 props"></a>默认插槽接受 props</h2><p>默认插槽通过子组件标签上的 v-slot 指令，直接接收到了一个插槽 props 对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;MyComponent v-slot&#x3D;&quot;slotProps&quot;&gt;</span><br><span class="line">  &#123;&#123; slotProps.text &#125;&#125; &#123;&#123; slotProps.count &#125;&#125;</span><br><span class="line">&lt;&#x2F;MyComponent&gt;</span><br></pre></td></tr></table></figure>
+
+<p>和函数的参数类似，我们也可以在 v-slot 中使用解构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;MyComponent v-slot&#x3D;&quot;&#123; text, count &#125;&quot;&gt;</span><br><span class="line">  &#123;&#123; text &#125;&#125; &#123;&#123; count &#125;&#125;</span><br><span class="line">&lt;&#x2F;MyComponent&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="具名作用域插槽接受-props"><a href="#具名作用域插槽接受-props" class="headerlink" title="具名作用域插槽接受 props"></a>具名作用域插槽接受 props</h2><p>具名作用域插槽的工作方式也是类似的，插槽 props 可以作为 v-slot 指令的值被访问到：<code>v-slot:name=&quot;slotProps&quot;</code>。当使用缩写时是这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;MyComponent&gt;</span><br><span class="line">  &lt;template #header&#x3D;&quot;headerProps&quot;&gt;</span><br><span class="line">    &#123;&#123; headerProps &#125;&#125;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template #default&#x3D;&quot;defaultProps&quot;&gt;</span><br><span class="line">    &#123;&#123; defaultProps &#125;&#125;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template #footer&#x3D;&quot;footerProps&quot;&gt;</span><br><span class="line">    &#123;&#123; footerProps &#125;&#125;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;MyComponent&gt;</span><br></pre></td></tr></table></figure>
+
+<p>向具名插槽中传入 props：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;slot name&#x3D;&quot;header&quot; message&#x3D;&quot;hello&quot;&gt;&lt;&#x2F;slot&gt;</span><br></pre></td></tr></table></figure>
+
+<p>注意插槽上的 name 是一个 Vue 特别保留的 attribute，不会作为 props 传递给插槽。</p>
+<p>如果你同时使用了具名插槽与默认插槽，则需要为默认插槽使用显式的 <code>&lt;template&gt;</code> 标签。尝试直接为组件添加 v-slot 指令将导致编译错误。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- &lt;MyComponent&gt; template --&gt;</span><br><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;slot :message&#x3D;&quot;hello&quot;&gt;&lt;&#x2F;slot&gt;</span><br><span class="line">  &lt;slot name&#x3D;&quot;footer&quot; &#x2F;&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 该模板无法编译 --&gt;</span><br><span class="line">&lt;MyComponent v-slot&#x3D;&quot;&#123; message &#125;&quot;&gt;</span><br><span class="line">  &lt;p&gt;&#123;&#123; message &#125;&#125;&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;template #footer&gt;</span><br><span class="line">    &lt;!-- message 属于默认插槽，此处不可用 --&gt;</span><br><span class="line">    &lt;p&gt;&#123;&#123; message &#125;&#125;&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;MyComponent&gt;</span><br></pre></td></tr></table></figure>
+
+<p>为默认插槽使用显式的 <code>&lt;template&gt;</code> 标签有助于更清晰地指出 message 属性在其他插槽中不可用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;MyComponent&gt;</span><br><span class="line">  &lt;!-- 使用显式的默认插槽 --&gt;</span><br><span class="line">  &lt;template #default&#x3D;&quot;&#123; message &#125;&quot;&gt;</span><br><span class="line">    &lt;p&gt;&#123;&#123; message &#125;&#125;&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template #footer&gt;</span><br><span class="line">    &lt;p&gt;Here&#39;s some contact info&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;MyComponent&gt;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/05/07/Vue3%E7%BB%84%E4%BB%B6Attributes%E7%BB%A7%E6%89%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/05/07/Vue3%E7%BB%84%E4%BB%B6Attributes%E7%BB%A7%E6%89%BF/" class="post-title-link" itemprop="url">Vue3组件Attributes继承</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-05-07 15:27:08 / 修改时间：16:22:27" itemprop="dateCreated datePublished" datetime="2025-05-07T15:27:08+08:00">2025-05-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="透传-attribute"><a href="#透传-attribute" class="headerlink" title="透传 attribute"></a>透传 attribute</h2><p><strong>透传 attribute 指的是传递给一个组件，却没有被该组件声明为 props 或 emits 的 attribute 或者 v-on 事件监听器</strong>。最常见的例子就是 class、style 和 id。</p>
+<p><strong>当一个组件以单个元素为根作渲染时，透传的 attribute 会自动被添加到根元素上。</strong></p>
+<p>例如：有一个 <code>&lt;MyButton&gt;</code> 组件，它的模板长这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- &lt;MyButton&gt; 的模板 --&gt;</span><br><span class="line">&lt;button&gt;Click Me&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+
+<p>一个父组件使用了这个组件，并且传入了 class：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;MyButton class&#x3D;&quot;large&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>最后渲染出的 DOM 结果是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;button class&#x3D;&quot;large&quot;&gt;Click Me&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>透传的 class 、 style 和 事件监听器会和子组件根元素的合并。</strong></p>
+<h2 id="深层组件继承"><a href="#深层组件继承" class="headerlink" title="深层组件继承"></a>深层组件继承</h2><p>有些情况下一个组件会在根节点上渲染另一个组件。例如，我们重构一下 <code>&lt;MyButton&gt;</code>，让它在根节点上渲染 <code>&lt;BaseButton&gt;</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- &lt;MyButton&#x2F;&gt; 的模板，只是渲染另一个组件 --&gt;</span><br><span class="line">&lt;BaseButton &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>此时 <MyButton> 接收的透传 attribute 会直接继续传给 <BaseButton>。</p>
+<p>注意点：</p>
+<ol>
+<li><p>透传的 attribute 不会包含 <code>&lt;MyButton&gt;</code> 上声明过的 props 或是针对 emits 声明事件的 v-on 侦听函数。</p>
+</li>
+<li><p>透传的 attribute 若符合声明，也可以作为 props 传入 <code>&lt;BaseButton&gt;</code>。</p>
+</li>
+</ol>
+<h2 id="禁用-Attributes-继承"><a href="#禁用-Attributes-继承" class="headerlink" title="禁用 Attributes 继承"></a>禁用 Attributes 继承</h2><p>如果不想要一个组件自动地继承 attribute，你可以在组件选项中设置 <code>inheritAttrs: false</code>。</p>
+<p>从 3.3 开始你也可以直接在 <code>&lt;script setup&gt;</code> 中使用 defineOptions：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">defineOptions(&#123;</span><br><span class="line">  inheritAttrs: false</span><br><span class="line">&#125;)</span><br><span class="line">&#x2F;&#x2F; ...setup 逻辑</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>最常见的需要禁用 attribute 继承的场景就是 attribute 需要应用在根节点以外的其他元素上</strong>。通过设置 inheritAttrs 选项为 false，可以完全控制透传进来的 attribute 被如何使用。这些透传进来的 attribute 可以在模板的表达式中直接用 $attrs 访问到。</p>
+<p>例如：现在我们要再次使用一下之前小节中的 <MyButton> 组件例子。有时候我们可能为了样式，需要在 <code>&lt;button&gt;</code> 元素外包装一层 <code>&lt;div&gt;</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class&#x3D;&quot;btn-wrapper&quot;&gt;</span><br><span class="line">  &lt;button class&#x3D;&quot;btn&quot;&gt;Click Me&lt;&#x2F;button&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我们想要所有像 class 和 v-on 监听器这样的透传 attribute 都应用在内部的 <code>&lt;button&gt;</code> 上而不是外层的 <code>&lt;div&gt;</code> 上。我们可以通过设定 inheritAttrs: false 和使用 v-bind=”$attrs” 来实现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class&#x3D;&quot;btn-wrapper&quot;&gt;</span><br><span class="line">  &lt;button class&#x3D;&quot;btn&quot; v-bind&#x3D;&quot;$attrs&quot;&gt;Click Me&lt;&#x2F;button&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>注意点：</p>
+<ol>
+<li><p><strong>和 props 有所不同，透传 attributes 在 JavaScript 中保留了它们原始的大小写</strong>，所以像 foo-bar 这样的一个 attribute 需要通过 $attrs[‘foo-bar’] 来访问。</p>
+</li>
+<li><p>像 @click 这样的一个 v-on 事件监听器将在此对象下被暴露为一个函数 $attrs.onClick。</p>
+</li>
+</ol>
+<h2 id="多根节点的-Attributes-继承"><a href="#多根节点的-Attributes-继承" class="headerlink" title="多根节点的 Attributes 继承"></a>多根节点的 Attributes 继承</h2><p>和单根节点组件有所不同，<strong>有着多个根节点的组件没有自动 attribute 透传行为</strong>。如果 $attrs 没有被显式绑定，将会抛出一个运行时警告。</p>
+<h2 id="在-JavaScript-中访问透传-Attributes"><a href="#在-JavaScript-中访问透传-Attributes" class="headerlink" title="在 JavaScript 中访问透传 Attributes"></a>在 JavaScript 中访问透传 Attributes</h2><p>如果需要，<strong>可以在 <code>&lt;script setup&gt;</code> 中使用 useAttrs() API 来访问一个组件的所有透传 attribute</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; useAttrs &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const attrs &#x3D; useAttrs()</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果没有使用 <code>&lt;script setup&gt;</code>，attrs 会作为 setup() 上下文对象的一个属性暴露：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export default &#123;</span><br><span class="line">  setup(props, ctx) &#123;</span><br><span class="line">    &#x2F;&#x2F; 透传 attribute 被暴露为 ctx.attrs</span><br><span class="line">    console.log(ctx.attrs)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：attrs 对象是最新的透传 attribute，但它并不是响应式的 (考虑到性能因素)</strong>。你不能通过侦听器去监听它的变化。如果你需要响应性，可以使用 prop。或者你也可以使用 onUpdated() 使得在每次更新时结合最新的 attrs 执行副作用。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/05/06/Vue3%E7%BB%84%E4%BB%B6v-model/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1267,263 +1509,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/24/js%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/24/js%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">js事件模型</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-24 11:17:00" itemprop="dateCreated datePublished" datetime="2022-03-24T11:17:00+08:00">2022-03-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/javascript/" itemprop="url" rel="index"><span itemprop="name">javascript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="事件对象"><a href="#事件对象" class="headerlink" title="事件对象"></a>事件对象</h2><p>当DOM元素上的发生某个事件时， 会产生一个事件对像 event，这个对象包含着与事件有关的所有信息。事件对象作为参数传给事件监听函数。浏览器原生提供一个Event对象，所有的事件都是这个对象的实例，或者说继承了Event.prototype对象。</p>
-<h3 id="事件对象的跨浏览器兼容"><a href="#事件对象的跨浏览器兼容" class="headerlink" title="事件对象的跨浏览器兼容"></a>事件对象的跨浏览器兼容</h3><ul>
-<li>获取事件对象</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event ? event : <span class="built_in">window</span>.event;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>获取事件目标</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = event || <span class="built_in">window</span>.event,</span><br><span class="line">  target = event.target || event.srcElement;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>阻止事件默认事件</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = event || <span class="built_in">window</span>.event,</span><br><span class="line"><span class="keyword">if</span> (event.preventDefault)&#123;</span><br><span class="line">    event.preventDefault();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    event.returnValue = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>阻止事件冒泡</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = event || <span class="built_in">window</span>.event,</span><br><span class="line"><span class="keyword">if</span> (event.stopPropagation)&#123;</span><br><span class="line">    event.stopPropagation();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    event.cancelBubble = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="事件模型"><a href="#事件模型" class="headerlink" title="事件模型"></a>事件模型</h2><p>事件模型有三种：原始事件模型（DOM0 级）、标准事件模型（DOM2 级）、IE 事件模型</p>
-<h3 id="事件流"><a href="#事件流" class="headerlink" title="事件流"></a>事件流</h3><p>DOM 结构是一个树型结构，当一个 HTML 元素发生一个事件时，该事件会在元素结点与根结点之间的路径传播，传播路径经过的结点都会接收到该事件，这个传播过程称为 DOM 事件流。</p>
-<p>事件流共包含三个阶段：</p>
-<ul>
-<li>事件捕获阶段(capture phase)</li>
-<li>处于目标阶段(target phase)</li>
-<li>事件冒泡阶段(bubbling phase)</li>
-</ul>
-<h3 id="原始事件模型（DOM0-级）"><a href="#原始事件模型（DOM0-级）" class="headerlink" title="原始事件模型（DOM0 级）"></a>原始事件模型（DOM0 级）</h3><p>绑定事件监听函数：</p>
-<ul>
-<li>HTML 代码中直接绑定</li>
-</ul>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">onclick</span>=<span class="string">"fun()"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>通过 JS 代码绑定</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">".btn"</span>);</span><br><span class="line">btn.onclick = fun;</span><br></pre></td></tr></table></figure>
-
-<p>移除事件监听函数方式：只要将对应事件属性置为 null 即可</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">btn.onclick = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
-
-<h4 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h4><ul>
-<li>绑定速度快（但由于绑定速度太快，可能页面还未完全加载出来，以至于事件可能无法正常运行）</li>
-<li>跨浏览器兼容性好</li>
-<li>只支持冒泡，不支持捕获</li>
-<li>同一个类型的事件只能绑定一次</li>
-</ul>
-<h3 id="标准事件模型（DOM2-级）"><a href="#标准事件模型（DOM2-级）" class="headerlink" title="标准事件模型（DOM2 级）"></a>标准事件模型（DOM2 级）</h3><p>在该事件模型中，一次事件共有三个阶段:</p>
-<ul>
-<li>事件捕获阶段：事件从 document 一直向下传播到目标元素, 依次检查经过的节点是否绑定了事件监听函数，如果有则执行</li>
-<li>处于目标阶段：事件到达目标元素, 触发目标元素的监听函数</li>
-<li>事件冒泡阶段：事件从目标元素冒泡到 document, 依次检查经过的节点是否绑定了事件监听函数，如果有则执行</li>
-</ul>
-<p>绑定事件监听函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">addEventListener(eventType, handler, useCapture);</span><br></pre></td></tr></table></figure>
-
-<p>移除事件监听函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">removeEventListener(eventType, handler, useCapture);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>eventType: 指定事件类型(不要加 on)</li>
-<li>handler: 事件监听函数</li>
-<li>useCapture: 布尔值，表示监听函数是否在捕获阶段（capture）触发，默认为false（监听函数只在冒泡阶段被触发）。该参数可选。一般设置为 false 与 IE 浏览器保持一致。</li>
-</ul>
-<h4 id="特性-1"><a href="#特性-1" class="headerlink" title="特性"></a>特性</h4><ul>
-<li>可以在一个 DOM 元素上绑定多个相同类型的事件监听函数</li>
-<li>可以指定事件监听函数执行时机</li>
-<li>兼容差，兼容 IE9+</li>
-</ul>
-<h3 id="IE-事件模型"><a href="#IE-事件模型" class="headerlink" title="IE 事件模型"></a>IE 事件模型</h3><p>IE 事件模型共有两个过程：</p>
-<ul>
-<li>处于目标阶段：事件到达目标元素, 触发目标元素的事件监听函数</li>
-<li>事件冒泡阶段：事件从目标元素冒泡到 document, 依次检查经过的节点是否绑定了事件监听函数，如果有则执行</li>
-</ul>
-<p>绑定事件监听函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">attachEvent(eventType, handler);</span><br></pre></td></tr></table></figure>
-
-<p>移除事件监听函数</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">detachEvent(eventType, handler);</span><br></pre></td></tr></table></figure>
-
-<h3 id="跨浏览器的事件监听程序"><a href="#跨浏览器的事件监听程序" class="headerlink" title="跨浏览器的事件监听程序"></a>跨浏览器的事件监听程序</h3><p>添加事件监听程序</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addHandler</span>(<span class="params">element, type, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (element.addEventListener) &#123;</span><br><span class="line">        element.addEventListener(type, handler, <span class="literal">false</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.attachEvent) &#123;</span><br><span class="line">        element.attachEvent(<span class="string">"on"</span> + type, handler);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        element[<span class="string">"on"</span> + type] = handler;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>移除事件监听程序</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">removeHandler</span>(<span class="params">element, type, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (element.removeListener) &#123;</span><br><span class="line">        element.removeListener(type, handler, <span class="literal">false</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.detachEvent) &#123;</span><br><span class="line">        element.detachEvent(<span class="string">"on"</span> + type, handler);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;    </span><br><span class="line">        element[<span class="string">"on"</span> + type] = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>this指向：事件监听函数内部的this指向触发事件的那个元素节点。</strong></p>
-<h2 id="事件的代理"><a href="#事件的代理" class="headerlink" title="事件的代理"></a>事件的代理</h2><p>由于事件会在冒泡阶段向上传播到父节点，因此可以把子节点的监听函数定义在父节点上，由父节点的监听函数统一处理多个子元素的事件。这种方法叫做事件的代理（delegation）。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ul = <span class="built_in">document</span>.querySelector(<span class="string">'ul'</span>);</span><br><span class="line"></span><br><span class="line">ul.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (event.target.tagName.toLowerCase() === <span class="string">'li'</span>) &#123;</span><br><span class="line">    <span class="comment">// some code</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>上面代码中，click事件的监听函数定义在<code>&lt;ul&gt;</code>节点，但是实际上，它处理的是子节点<code>&lt;li&gt;</code>的click事件。</p>
-<p>事件代理的好处：<strong>只要定义一个监听函数，就能处理多个子节点的事件。而且以后再添加子节点，监听函数依然有效。</strong></p>
-<p>如果希望事件到某个节点为止，不再传播，可以使用事件对象的stopPropagation方法。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 事件传播到 p 元素后，就不再向下传播了</span></span><br><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.stopPropagation();</span><br><span class="line">&#125;, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 事件冒泡到 p 元素后，就不再向上冒泡了</span></span><br><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.stopPropagation();</span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
-
-<p>上面代码中，stopPropagation方法分别在捕获阶段和冒泡阶段，阻止了事件的传播。</p>
-<p><strong>但是，stopPropagation方法只会阻止事件的传播，不会阻止该事件触发<p>节点的其他click事件的监听函数。也就是说，不是彻底取消click事件。</strong></p>
-<p>如果想要彻底阻止这个事件的传播，不再触发后面所有click的监听函数，可以使用stopImmediatePropagation方法。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.stopImmediatePropagation();</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 不会被触发</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="自定义事件（CustomEvent）-接口"><a href="#自定义事件（CustomEvent）-接口" class="headerlink" title="自定义事件（CustomEvent） 接口"></a>自定义事件（CustomEvent） 接口</h2><p>CustomEvent 接口用于生成自定义的事件实例。那些浏览器预定义的事件，虽然可以手动生成，但是往往不能在事件上绑定数据。如果需要在触发事件的同时，传入指定的数据，就可以使用 CustomEvent 接口生成的自定义事件对象。</p>
-<p>浏览器原生提供CustomEvent()构造函数，用来生成 CustomEvent 事件实例。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> CustomEvent(type, options)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>type：事件名称，必传。</li>
-<li>options: 配置对象，可选。配置对象除了接受 Event 事件的配置属性，只有一个自己的属性。</li>
-</ul>
-<blockquote>
-<p>detail：表示事件的附带数据，默认为null。</p>
-</blockquote>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myEvent = <span class="keyword">new</span> CustomEvent(<span class="string">'myevent'</span>, &#123;</span><br><span class="line">  detail: &#123;</span><br><span class="line">    foo: <span class="string">'bar'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  bubbles: <span class="literal">true</span>, <span class="comment">// 布尔值，可选，默认为false，表示事件对象是否冒泡。</span></span><br><span class="line">  cancelable: <span class="literal">false</span> <span class="comment">// 可选，默认为false，表示事件是否可以被取消，即能否用</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">el.addEventListener(<span class="string">'myevent'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Hello '</span> + event.detail.foo);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">el.dispatchEvent(myEvent);</span><br></pre></td></tr></table></figure>
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://javascript.ruanyifeng.com/dom/event.html#toc12" target="_blank" rel="noopener">阮一峰javascript事件模型</a></li>
-<li><a href="https://mp.weixin.qq.com/s/avXtM79vyywVq6Gg6ui29A" target="_blank" rel="noopener">JS每日一题javascript中的事件模型</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/08/TCP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/08/TCP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" class="post-title-link" itemprop="url">TCP协议的三次握手和四次挥手</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-08 09:50:43" itemprop="dateCreated datePublished" datetime="2022-03-08T09:50:43+08:00">2022-03-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>地址：<a href="https://github.com/jawil/blog/issues/14" target="_blank" rel="noopener">https://github.com/jawil/blog/issues/14</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1595,7 +1580,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

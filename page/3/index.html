@@ -156,6 +156,260 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/11/17/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E4%B8%8A%E7%BA%BFnuxt%E9%A1%B9%E7%9B%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/17/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E4%B8%8A%E7%BA%BFnuxt%E9%A1%B9%E7%9B%AE/" class="post-title-link" itemprop="url">阿里云服务器部署上线nuxt项目</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-17 16:21:59" itemprop="dateCreated datePublished" datetime="2021-11-17T16:21:59+08:00">2021-11-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nuxt/" itemprop="url" rel="index"><span itemprop="name">nuxt</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近公司重新开发的企业官网，考虑企业官网对SEO有一定要求，所以考虑使用服务端渲染（ssr），采用了vue.js官网推荐的nuxt.js框架进行开发。nuxt 项目和单页应用（spa）项目除了开发上有一些区别之外，部署上线也相对复杂一些，本文对部署上线流程做一下简单的记录。</p>
+<h4 id="系统环境"><a href="#系统环境" class="headerlink" title="系统环境"></a>系统环境</h4><p>服务器系统版本：CentOS Linux release 7.6.1810 (Core)</p>
+<h2 id="安装nodejs-由于yum可以安装的nodejs版本较老，这里我们自己下载安装"><a href="#安装nodejs-由于yum可以安装的nodejs版本较老，这里我们自己下载安装" class="headerlink" title="安装nodejs (由于yum可以安装的nodejs版本较老，这里我们自己下载安装)"></a>安装nodejs (由于yum可以安装的nodejs版本较老，这里我们自己下载安装)</h2><h3 id="1-下载"><a href="#1-下载" class="headerlink" title="1. 下载"></a>1. 下载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://cdn.npm.taobao.org/dist/node/v14.16.0/node-v14.16.0-linux-x64.tar.xz -P /opt/</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-解压tar包"><a href="#2-解压tar包" class="headerlink" title="2. 解压tar包"></a>2. 解压tar包</h3><p>进入第一步下载到的文件夹，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br></pre></td></tr></table></figure>
+
+<p>解压</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xf node-v14.16.0-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-配置环境变量"><a href="#3-配置环境变量" class="headerlink" title="3. 配置环境变量"></a>3. 配置环境变量</h3><h4 id="3-1-配置软连接（方便使用）"><a href="#3-1-配置软连接（方便使用）" class="headerlink" title="3.1 配置软连接（方便使用）"></a>3.1 配置软连接（方便使用）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s node-v14.16.0-linux-x64 node</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-配置环境变量"><a href="#3-2-配置环境变量" class="headerlink" title="3.2 配置环境变量"></a>3.2 配置环境变量</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"PATH=/opt/node/bin/:<span class="variable">$PATH</span>"</span> &gt;&gt; /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-使配置文件生效"><a href="#4-使配置文件生效" class="headerlink" title="4. 使配置文件生效"></a>4. 使配置文件生效</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-测试，在任意目录下执行-node-v，能打印出版本号就说明安装配置成功"><a href="#5-测试，在任意目录下执行-node-v，能打印出版本号就说明安装配置成功" class="headerlink" title="5. 测试，在任意目录下执行 node -v，能打印出版本号就说明安装配置成功"></a>5. 测试，在任意目录下执行 <code>node -v</code>，能打印出版本号就说明安装配置成功</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="安装yarn"><a href="#安装yarn" class="headerlink" title="安装yarn"></a>安装yarn</h2><p>由于我的项目使用yarn管理项目依赖，所以需要安装yarn，如果你使用npm或者其他包管理工具，可以跳过此步骤不必安装，<strong>注意：如果使用npm，后面打包，安装依赖和运行项目要替换成对应的命令</strong>。</p>
+<h3 id="1-下载-1"><a href="#1-下载-1" class="headerlink" title="1. 下载"></a>1. 下载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-安装（yum安装会自动配置好环境变量）"><a href="#2-安装（yum安装会自动配置好环境变量）" class="headerlink" title="2. 安装（yum安装会自动配置好环境变量）"></a>2. 安装（yum安装会自动配置好环境变量）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install yarn</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-测试（同样打印出版本号就说明安装成功）"><a href="#3-测试（同样打印出版本号就说明安装成功）" class="headerlink" title="3. 测试（同样打印出版本号就说明安装成功）"></a>3. 测试（同样打印出版本号就说明安装成功）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn -v</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="打包部署"><a href="#打包部署" class="headerlink" title="打包部署"></a>打包部署</h2><h3 id="1-打包"><a href="#1-打包" class="headerlink" title="1. 打包"></a>1. 打包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn build</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-部署，打包完成之后把下列文件和文件夹上传到服务器-我是放在-var-www"><a href="#2-部署，打包完成之后把下列文件和文件夹上传到服务器-我是放在-var-www" class="headerlink" title="2. 部署，打包完成之后把下列文件和文件夹上传到服务器(我是放在/var/www/)"></a>2. 部署，打包完成之后把下列文件和文件夹上传到服务器(我是放在/var/www/)</h3><ul>
+<li>.nuxt/ 文件夹</li>
+<li>static/ 文件夹</li>
+<li>package.json</li>
+<li>nuxt.config.js</li>
+</ul>
+<h3 id="3-安装项目依赖"><a href="#3-安装项目依赖" class="headerlink" title="3. 安装项目依赖"></a>3. 安装项目依赖</h3><p>首先，进入到上传到的服务器目录，然后执行安装命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-运行项目"><a href="#4-运行项目" class="headerlink" title="4. 运行项目"></a>4. 运行项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn start</span><br></pre></td></tr></table></figure>
+
+<p>项目默认运行在<code>127.0.0.1:3000</code>（如果开发过程中修改了端口配置，访问时也要修改），此时在服务器本地可以访问项目页面了。但是外部还不能通过网络访问，下面我们通过nginx做一个反向代理让我们的网页可以通过网络访问。</p>
+<h2 id="使用nginx做反向代理"><a href="#使用nginx做反向代理" class="headerlink" title="使用nginx做反向代理"></a>使用nginx做反向代理</h2><h3 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-测试"><a href="#2-测试" class="headerlink" title="2. 测试"></a>2. 测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-启动nginx"><a href="#3-启动nginx" class="headerlink" title="3. 启动nginx"></a>3. 启动nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx</span><br></pre></td></tr></table></figure>
+
+<p>启动之后就可以使用服务器ip访问nginx服务器欢迎页面了，默认启动在80端口，如果无法访问欢迎页面，请检查服务安全规则或者防火墙配置，看相应端口是否开放。</p>
+<h3 id="4-修改nginx配置，反向代理到nuxt项目页面"><a href="#4-修改nginx配置，反向代理到nuxt项目页面" class="headerlink" title="4. 修改nginx配置，反向代理到nuxt项目页面"></a>4. 修改nginx配置，反向代理到nuxt项目页面</h3><p>修改nginx.conf文件(按上述安装方式，该文件在/etc/nginx/目录下)。在 server 中添加如下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">    expires 1h;</span><br><span class="line"></span><br><span class="line">    proxy_redirect                      off;</span><br><span class="line">    proxy_set_header Host               $host;</span><br><span class="line">    proxy_set_header X-Real-IP          $remote_addr;</span><br><span class="line">    proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;</span><br><span class="line">    proxy_set_header X-Forwarded-Proto  $scheme;</span><br><span class="line">    proxy_read_timeout          1m;</span><br><span class="line">    proxy_connect_timeout       1m;</span><br><span class="line">    proxy_pass                          http:&#x2F;&#x2F;127.0.0.1:3000; # nuxt项目运行的地址</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-测试配置是否正确"><a href="#5-测试配置是否正确" class="headerlink" title="5. 测试配置是否正确"></a>5. 测试配置是否正确</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-重启nginx"><a href="#6-重启nginx" class="headerlink" title="6. 重启nginx"></a>6. 重启nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<p>重启之后就可以通过服务器IP访问到nuxt项目网页了。例如：<a href="http://56.121.30.89，默认是80端口。如果修改了端口号，需要加上端口号访问。例如：http://56.121.30.89:81。">http://56.121.30.89，默认是80端口。如果修改了端口号，需要加上端口号访问。例如：http://56.121.30.89:81。</a><br><strong>注意：此时nuxt项目要在运行中才能访问，如果上面打包部署完运行项目把nuxt项目停止运行了，要重新运行起来。</strong></p>
+<p>到现在虽然我们可以访问nuxt开发的项目了，但是如果我们关掉执行运行nuxt项目命令的窗口，那么nuxt项目就会停止运行，这样我们就没法访问了。所以下面我们要安装一个守护进程管理器——pm2（PM2 是一个守护进程管理器，它将帮助您管理和保持您的应用程序在线）。</p>
+<h2 id="使用PM2守护程序"><a href="#使用PM2守护程序" class="headerlink" title="使用PM2守护程序"></a>使用PM2守护程序</h2><h3 id="安装pm2"><a href="#安装pm2" class="headerlink" title="安装pm2"></a>安装pm2</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn global add pm2</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用PM2守护nuxt项目程序"><a href="#使用PM2守护nuxt项目程序" class="headerlink" title="使用PM2守护nuxt项目程序"></a>使用PM2守护nuxt项目程序</h3><p>进入nuxt项目部署目录，执行以下命令（project-name请替换成具体项目名称，意为指定进程名称）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start npm --name <span class="string">'project-name'</span> -- run start</span><br></pre></td></tr></table></figure>
+
+<p>查看进程，输入一下命令输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 list</span><br></pre></td></tr></table></figure>
+
+<p>┌─────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐<br>│ id  │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │<br>├─────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤<br>│ 0   │ project-name       │ default     │ N/A     │ fork    │ 6007     │ 54m    │ 0    │ online    │ 0%       │ 29.9mb   │ root     │ disabled │<br>└─────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘</p>
+<p>此时我们可以看到，我们的项目已经在运行了。更过pm2命令，请参考<a href="https://pm2.keymetrics.io/docs/usage/quick-start/" target="_blank" rel="noopener">pm2文档</a>。</p>
+<p>这样我们就完成了整个项目部署上线。</p>
+<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><ul>
+<li><a href="https://www.cnblogs.com/zezhou/p/14432439.html" target="_blank" rel="noopener">nuxt项目上线</a></li>
+<li><a href="https://yarn.bootcss.com/docs/install/#centos-stable" target="_blank" rel="noopener">yarn安装</a></li>
+<li><a href="https://www.nuxtjs.cn/faq/nginx-proxy" target="_blank" rel="noopener">nuxt中文官网常见问题——nginx 代理</a></li>
+<li><a href="https://pm2.keymetrics.io/docs/usage/quick-start/" target="_blank" rel="noopener">pm2文档</a></li>
+<li><a href="https://segmentfault.com/a/1190000012774650" target="_blank" rel="noopener">next.js、nuxt.js等服务端渲染框架构建的项目部署到服务器，并用PM2守护程序</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/29/%E9%97%AD%E5%8C%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/29/%E9%97%AD%E5%8C%85/" class="post-title-link" itemprop="url">闭包</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-29 13:42:18" itemprop="dateCreated datePublished" datetime="2021-07-29T13:42:18+08:00">2021-07-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index"><span itemprop="name">javascript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="闭包的概念"><a href="#闭包的概念" class="headerlink" title="闭包的概念"></a>闭包的概念</h2><p>一个函数和对其周围状态（lexical environment，词法环境）的引用组合在一起，就是闭包（closure）。闭包让我们可以在一个内层函数中访问到其外层函数的作用域。</p>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeFunc</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name = <span class="string">"Mozilla"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">displayName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        alert(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> displayName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myFunc = makeFunc();</span><br><span class="line">myFunc();</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="闭包的作用"><a href="#闭包的作用" class="headerlink" title="闭包的作用"></a>闭包的作用</h2><ul>
+<li>用闭包模拟私有方法</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> makeCounter = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> privateCounter = <span class="number">0</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">changeBy</span>(<span class="params">val</span>) </span>&#123;</span><br><span class="line">    privateCounter += val;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    increment: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      changeBy(<span class="number">1</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    decrement: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      changeBy(<span class="number">-1</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> privateCounter;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> Counter1 = makeCounter();</span><br><span class="line"><span class="keyword">var</span> Counter2 = makeCounter();</span><br><span class="line"><span class="built_in">console</span>.log(Counter1.value()); <span class="comment">/* logs 0 */</span></span><br><span class="line">Counter1.increment();</span><br><span class="line">Counter1.increment();</span><br><span class="line"><span class="built_in">console</span>.log(Counter1.value()); <span class="comment">/* logs 2 */</span></span><br><span class="line">Counter1.decrement();</span><br><span class="line"><span class="built_in">console</span>.log(Counter1.value()); <span class="comment">/* logs 1 */</span></span><br><span class="line"><span class="built_in">console</span>.log(Counter2.value()); <span class="comment">/* logs 0 */</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="使用闭包的时应注意的问题"><a href="#使用闭包的时应注意的问题" class="headerlink" title="使用闭包的时应注意的问题"></a>使用闭包的时应注意的问题</h2><ol>
+<li>在循环中创建闭包的常见错误–闭包只能取得它的包含函数（外层函数）的中变量的最后一个值</li>
+</ol>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFunctions</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> <span class="built_in">Array</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">        result[i] = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个函数返回一个函数数组，由于数组中的函数中都保存着变量i，在createFunctions()函数执行完毕时，变量i的值是10，所以每个函数都返回10。</p>
+<p><strong>如果想让每个函数都返回其对应的索引值，可使用立即执行匿名函数(也是闭包)达到目的：</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFunctions</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> <span class="built_in">Array</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">        result[i] = (<span class="function"><span class="keyword">function</span> (<span class="params">n</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> n;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果不想使用过多的闭包，也可以用ES2015引入的let关键词：</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFunctions</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> <span class="built_in">Array</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">        result[i] = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子使用let而不是var，因此每个闭包都绑定了块作用域的变量，这样就不再需要额外的闭包。</p>
+<ol start="2">
+<li>闭包中的this</li>
+</ol>
+<p>this对象是指函数的执行环境对象，也就是函数的调用者。闭包函数中this同样指向它的调用者，但是我们常常不经意间就编写了一个闭包函数，这时候如果我们在闭包函数中使用了this，就容易和闭包的外层函数的this混淆。</p>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">'the window'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name,                                  </span><br><span class="line">    <span class="keyword">this</span>.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo(<span class="string">'my name'</span>);</span><br><span class="line">alert(obj.getName()()); <span class="comment">//'the window'(非严格模式下)</span></span><br></pre></td></tr></table></figure>
+
+<p>上述例子中的this指向window，但是我们很容易认为this指向obj，这很容易给我们的程序带来问题。为了避免这种问题。我们可以这样：</p>
+<p>留在北京：两年后，在北京买个两居室，可乐在北京上幼儿园，房子装修。再过几年在天津买个房子，可乐可以在北京或者天津上小学，如果在天津上，需要有人在天津照顾，应该会选择在北京上直到初中转学去天津参加中考和上高中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">'the window'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name,</span><br><span class="line">    <span class="keyword">this</span>.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> self = <span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> self.name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo(<span class="string">'my name'</span>);</span><br><span class="line">alert(obj.getName()()); <span class="comment">//'my name'</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/29/%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1149,235 +1403,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/05/%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/05/%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">定义函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-09-05 11:16:23" itemprop="dateCreated datePublished" datetime="2020-09-05T11:16:23+08:00">2020-09-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在Python中，定义一个函数要使用def语句，依次写出函数名、括号、括号中的参数和冒号:，然后，在缩进块中编写函数体，函数的返回值用return语句返回。</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_abs</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> x &gt;= <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> -x</span><br></pre></td></tr></table></figure>
-
-<p>如果没有return语句，函数执行完毕后也会返回结果，只是结果为None。return None可以简写为return。</p>
-<h2 id="空函数"><a href="#空函数" class="headerlink" title="空函数"></a>空函数</h2><p>如果想定义一个什么事也不做的空函数，可以用pass语句。比如现在还没想好怎么写函数的代码，就可以先放一个pass，让代码能运行起来：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">nop</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="参数检查"><a href="#参数检查" class="headerlink" title="参数检查"></a>参数检查</h2><p>调用函数时，如果参数个数不对，Python解释器会自动检查出来，并抛出 <code>TypeError</code>:</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>my_abs(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">TypeError: my_abs() takes <span class="number">1</span> positional argument but <span class="number">2</span> were given</span><br></pre></td></tr></table></figure>
-
-<p>但是如果参数类型不对，Python解释器就无法帮我们检查。</p>
-<p>可以修改一下my_abs的定义，对参数类型做检查，只允许整数和浮点数类型的参数。数据类型检查可以用内置函数isinstance()实现：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_abs</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> isinstance(x, (int, float)):</span><br><span class="line">        <span class="keyword">raise</span> TypeError(<span class="string">'bad operand type'</span>)</span><br><span class="line">    <span class="keyword">if</span> x &gt;= <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> -x</span><br></pre></td></tr></table></figure>
-
-<p>添加了参数检查后，如果传入错误的参数类型，函数就可以抛出一个错误：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>my_abs(<span class="string">'a'</span>)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">3</span>, <span class="keyword">in</span> my_abs</span><br><span class="line">TypeError: bad operand type</span><br></pre></td></tr></table></figure>
-
-<h2 id="返回多个值"><a href="#返回多个值" class="headerlink" title="返回多个值"></a>返回多个值</h2><p>Python的函数返回多值其实就是返回一个tuple，但是，在语法上，返回一个tuple可以省略括号，写起来更方便。</p>
-<p>比如在游戏中经常需要从一个点移动到另一个点，给出坐标、位移和角度，就可以计算出新的坐标：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move</span><span class="params">(x, y, step, angle=<span class="number">0</span>)</span>:</span></span><br><span class="line">    nx = x + step * math.cos(angle)</span><br><span class="line">    ny = y - step * math.sin(angle)</span><br><span class="line">    <span class="keyword">return</span> nx, ny</span><br></pre></td></tr></table></figure>
-
-<p>然后，我们就可以同时获得返回值：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>x, y = move(<span class="number">100</span>, <span class="number">100</span>, <span class="number">60</span>, math.pi / <span class="number">6</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(x, y)</span><br><span class="line"><span class="number">151.96152422706632</span> <span class="number">70.0</span></span><br></pre></td></tr></table></figure>
-
-<p>在语法上，多个变量可以同时接收一个tuple，按位置赋给对应的值，类似于js的解构赋值。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
-<li><p>定义函数时，如果有必要，可以先对参数的数据类型做检查；</p>
-</li>
-<li><p>函数执行完毕也没有return语句时，自动return None。</p>
-</li>
-<li><p>函数可以同时返回多个值，但其实就是一个tuple。</p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/04/%E5%AD%97%E5%85%B8%E5%92%8C%E9%9B%86%E5%90%88/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/04/%E5%AD%97%E5%85%B8%E5%92%8C%E9%9B%86%E5%90%88/" class="post-title-link" itemprop="url">字典和集合</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-09-04 10:04:52" itemprop="dateCreated datePublished" datetime="2020-09-04T10:04:52+08:00">2020-09-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="字典（dict）"><a href="#字典（dict）" class="headerlink" title="字典（dict）"></a>字典（dict）</h2><p>python中的字典类型，使用键-值（key-value）存储数据，具有极快的查找速度。和js中的对象一样，在其他语言中也称为map。例如：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>d = &#123;<span class="string">'Michael'</span>: <span class="number">95</span>, <span class="string">'Bob'</span>: <span class="number">75</span>, <span class="string">'Tracy'</span>: <span class="number">85</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>d[<span class="string">'Michael'</span>]</span><br><span class="line"><span class="number">95</span></span><br></pre></td></tr></table></figure>
-
-<p>dict可以用在需要高速查找的很多地方，正确使用dict非常重要，需要牢记的第一条就是<strong>dict的key必须是不可变对象</strong>。这是因为dict根据key来计算value的存储位置，这个通过key计算位置的算法称为哈希算法（Hash）。</p>
-<p><strong>在Python中，字符串、整数等都是不可变的</strong>，因此，可以放心地作为key。而list是可变的，就不能作为key。</p>
-<h3 id="和js对象的相同点"><a href="#和js对象的相同点" class="headerlink" title="和js对象的相同点"></a>和js对象的相同点</h3><ul>
-<li>通过键名可以获取和设置键值（如果key不存在会报错）</li>
-<li>通过新的键名可以添加新的属性</li>
-<li>dict内部存放的顺序和key放入的顺序是没有关系的</li>
-</ul>
-<h3 id="和list比较，dict有以下特点："><a href="#和list比较，dict有以下特点：" class="headerlink" title="和list比较，dict有以下特点："></a>和list比较，dict有以下特点：</h3><ul>
-<li>查找和插入的速度极快，不会随着key的增加而变慢；</li>
-<li>需要占用大量的内存，内存浪费多。</li>
-</ul>
-<h3 id="字典的常用方法"><a href="#字典的常用方法" class="headerlink" title="字典的常用方法"></a>字典的常用方法</h3><ul>
-<li>in 运算符：判断 key 是否存在</li>
-</ul>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">'Thomas'</span> <span class="keyword">in</span> d</span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>get() 方法：通过键名获取键值。如果键名不存在，返回 None，同时可以通过第二个参数设置键值。如果键名存在，则不可以通过第二个参数设置键值。</li>
-</ul>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>d.get(<span class="string">'Thomas'</span>) <span class="comment"># 返回None的时候Python的交互环境不显示结果。</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>d.get(<span class="string">'Bob'</span>)</span><br><span class="line"><span class="number">75</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>d.get(<span class="string">'Bob'</span>, <span class="number">60</span>)</span><br><span class="line"><span class="number">75</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>d.get(<span class="string">'Thomas'</span>, <span class="number">60</span>)</span><br><span class="line"><span class="number">60</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>pop(key) 方法：删除一个key，对应的value也会从dict中删除。</li>
-</ul>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>d.pop(<span class="string">'Bob'</span>)</span><br><span class="line"><span class="number">75</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>d</span><br><span class="line">&#123;<span class="string">'Michael'</span>: <span class="number">95</span>, <span class="string">'Tracy'</span>: <span class="number">85</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="集合（set）"><a href="#集合（set）" class="headerlink" title="集合（set）"></a>集合（set）</h2><p>set和dict类似，也是一组key的集合，但不存储value。由于key不能重复，所以，在set中，没有重复的key。</p>
-<p>set和dict的唯一区别仅在于没有存储对应的value，但是，set的原理和dict一样，所以，同样不可以放入可变对象，因为无法判断两个可变对象是否相等，也就无法保证set内部“不会有重复元素”。</p>
-<h3 id="创建集合"><a href="#创建集合" class="headerlink" title="创建集合"></a>创建集合</h3><p>创建一个set，需要提供一个list作为输入集合：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>s = set([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s</span><br><span class="line">&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意</strong>：传入的参数[1, 2, 3]是一个list，而显示的{1, 2, 3}只是告诉你这个set内部有1，2，3这3个元素，<strong>显示的顺序也不表示set是有序的</strong>。</p>
-<p>重复元素在set中自动被过滤：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>s = set([<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s</span><br><span class="line">&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="添加和删除元素"><a href="#添加和删除元素" class="headerlink" title="添加和删除元素"></a>添加和删除元素</h3><p>通过<strong>add(key)</strong>方法可以添加元素到set中，可以重复添加，但不会有效果：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>s.add(<span class="number">4</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s</span><br><span class="line">&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s.add(<span class="number">4</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s</span><br><span class="line">&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>通过<strong>remove(key)</strong>方法可以删除元素：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>s.remove(<span class="number">4</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s</span><br><span class="line">&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="交集和并集"><a href="#交集和并集" class="headerlink" title="交集和并集"></a>交集和并集</h3><p><strong>set可以看成数学意义上的无序和无重复元素的集合</strong>，因此，两个set可以做数学意义上的交集、并集等操作：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>s1 = set([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s2 = set([<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s1 &amp; s2</span><br><span class="line">&#123;<span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s1 | s2</span><br><span class="line">&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017104324028448" target="_blank" rel="noopener">廖雪峰Python教程——使用dict和set</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1449,7 +1474,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

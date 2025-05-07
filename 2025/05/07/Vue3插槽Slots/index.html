@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="插槽的作用是为子组件传递一些模板片段，让子组件在它们的组件中渲染这些片段。 插槽内容与出口例如：这里有一个 &lt;FancyButton&gt; 组件，可以像这样使用： 123&lt;FancyButton&gt;  Click me! &lt;!-- 插槽内容 --&gt;&lt;&#x2F;FancyButton&gt;  而  的模板是这样的： 123&lt;button class&amp;#x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue3插槽Slots">
+<meta property="og:url" content="http://yoursite.com/2025/05/07/Vue3%E6%8F%92%E6%A7%BDSlots/index.html">
+<meta property="og:site_name" content="Will&#39;s Blog">
+<meta property="og:description" content="插槽的作用是为子组件传递一些模板片段，让子组件在它们的组件中渲染这些片段。 插槽内容与出口例如：这里有一个 &lt;FancyButton&gt; 组件，可以像这样使用： 123&lt;FancyButton&gt;  Click me! &lt;!-- 插槽内容 --&gt;&lt;&#x2F;FancyButton&gt;  而  的模板是这样的： 123&lt;button class&amp;#x">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-07T11:10:01.000Z">
+<meta property="article:modified_time" content="2025-05-07T11:41:22.058Z">
+<meta property="article:author" content="Will Wan">
+<meta property="article:tag" content="Vue3">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2025/05/07/Vue3%E6%8F%92%E6%A7%BDSlots/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Vue3插槽Slots | Will's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Will's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where there is a will, there is a way</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/05/07/Vue3%E6%8F%92%E6%A7%BDSlots/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vue3插槽Slots
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-05-07 19:10:01 / 修改时间：19:41:22" itemprop="dateCreated datePublished" datetime="2025-05-07T19:10:01+08:00">2025-05-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>插槽的作用是为子组件传递一些模板片段，让子组件在它们的组件中渲染这些片段。</p>
+<h2 id="插槽内容与出口"><a href="#插槽内容与出口" class="headerlink" title="插槽内容与出口"></a>插槽内容与出口</h2><p>例如：这里有一个 <code>&lt;FancyButton&gt;</code> 组件，可以像这样使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;FancyButton&gt;</span><br><span class="line">  Click me! &lt;!-- 插槽内容 --&gt;</span><br><span class="line">&lt;&#x2F;FancyButton&gt;</span><br></pre></td></tr></table></figure>
+
+<p>而 <FancyButton> 的模板是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;button class&#x3D;&quot;fancy-btn&quot;&gt;</span><br><span class="line">  &lt;slot&gt;&lt;&#x2F;slot&gt; &lt;!-- 插槽出口 --&gt;</span><br><span class="line">&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;slot&gt;</code> 元素是一个插槽出口 (slot outlet)，标示了父元素提供的插槽内容 (slot content) 将在哪里被渲染。</p>
+<p><strong>插槽内容可以是任意合法的模板内容，不局限于文本。通过使用插槽，组件更加灵活和具有可复用性。</strong></p>
+<h2 id="渲染作用域"><a href="#渲染作用域" class="headerlink" title="渲染作用域"></a>渲染作用域</h2><p>插槽内容可以访问到父组件的数据作用域，无法访问子组件的数据。</p>
+<h2 id="默认内容"><a href="#默认内容" class="headerlink" title="默认内容"></a>默认内容</h2><p>在外部没有提供任何内容的情况下，可以为插槽指定默认内容。只需要将默认内容写在 <code>&lt;slot&gt;</code> 标签之间来作为默认内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;button type&#x3D;&quot;submit&quot;&gt;</span><br><span class="line">  &lt;slot&gt;</span><br><span class="line">    Submit &lt;!-- 默认内容 --&gt;</span><br><span class="line">  &lt;&#x2F;slot&gt;</span><br><span class="line">&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果我们提供了插槽内容，如果我们提供了插槽内容。</p>
+<h2 id="具名插槽"><a href="#具名插槽" class="headerlink" title="具名插槽"></a>具名插槽</h2><p>如果需要在一个组件中包含多个插槽出口，那么就需要用到具名插槽。</p>
+<p>例如：在一个 <code>&lt;BaseLayout&gt;</code> 组件中，有如下模板：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class&#x3D;&quot;container&quot;&gt;</span><br><span class="line">  &lt;header&gt;</span><br><span class="line">    &lt;!-- 标题内容放这里 --&gt;</span><br><span class="line">  &lt;&#x2F;header&gt;</span><br><span class="line">  &lt;main&gt;</span><br><span class="line">    &lt;!-- 主要内容放这里 --&gt;</span><br><span class="line">  &lt;&#x2F;main&gt;</span><br><span class="line">  &lt;footer&gt;</span><br><span class="line">    &lt;!-- 底部内容放这里 --&gt;</span><br><span class="line">  &lt;&#x2F;footer&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>对于这种场景，<code>&lt;slot&gt;</code> 元素可以有一个特殊的 attribute <code>name</code>，用来给各个插槽分配唯一的 ID，以确定每一处要渲染的内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class&#x3D;&quot;container&quot;&gt;</span><br><span class="line">  &lt;header&gt;</span><br><span class="line">    &lt;slot name&#x3D;&quot;header&quot;&gt;&lt;&#x2F;slot&gt;</span><br><span class="line">  &lt;&#x2F;header&gt;</span><br><span class="line">  &lt;main&gt;</span><br><span class="line">    &lt;slot&gt;&lt;&#x2F;slot&gt;</span><br><span class="line">  &lt;&#x2F;main&gt;</span><br><span class="line">  &lt;footer&gt;</span><br><span class="line">    &lt;slot name&#x3D;&quot;footer&quot;&gt;&lt;&#x2F;slot&gt;</span><br><span class="line">  &lt;&#x2F;footer&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这类带 name 的插槽被称为具名插槽 (named slots)。没有提供 name 的 <code>&lt;slot&gt;</code> 出口会隐式地命名为“default”。</p>
+<p>要为具名插槽传入内容，我们需要使用一个含 v-slot 指令的 <code>&lt;template&gt;</code> 元素，并将目标插槽的名字传给该指令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;BaseLayout&gt;</span><br><span class="line">  &lt;template v-slot:header&gt;</span><br><span class="line">    &lt;h1&gt;Here might be a page title&lt;&#x2F;h1&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template v-slot:default&gt;</span><br><span class="line">    &lt;p&gt;A paragraph for the main content.&lt;&#x2F;p&gt;</span><br><span class="line">    &lt;p&gt;And another one.&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template v-slot:footer&gt;</span><br><span class="line">    &lt;p&gt;Here&#39;s some contact info&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;BaseLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<p>v-slot 有对应的简写 #，因此 <code>&lt;template v-slot:header&gt;</code> 可以简写为 <code>&lt;template #header&gt;</code>。</p>
+<p>当一个组件同时接收默认插槽和具名插槽时，所有位于顶级的非 <code>&lt;template&gt;</code> 节点都被隐式地视为默认插槽的内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;BaseLayout&gt;</span><br><span class="line">  &lt;template #header&gt;</span><br><span class="line">    &lt;h1&gt;Here might be a page title&lt;&#x2F;h1&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- 隐式的默认插槽 --&gt;</span><br><span class="line">  &lt;p&gt;A paragraph for the main content.&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;p&gt;And another one.&lt;&#x2F;p&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template #footer&gt;</span><br><span class="line">    &lt;p&gt;Here&#39;s some contact info&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;BaseLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="条件插槽"><a href="#条件插槽" class="headerlink" title="条件插槽"></a>条件插槽</h2><p>条件插槽的使用场景是：需要根据内容是否被传入了插槽来渲染某些内容。</p>
+<p>在下面的示例中，我们定义了一个卡片组件，它拥有三个条件插槽：header、footer 和 default。 当 header、footer 或 default 的内容存在时，我们希望包装它以提供额外的样式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;card&quot;&gt;</span><br><span class="line">    &lt;div v-if&#x3D;&quot;$slots.header&quot; class&#x3D;&quot;card-header&quot;&gt;</span><br><span class="line">      &lt;slot name&#x3D;&quot;header&quot; &#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;div v-if&#x3D;&quot;$slots.default&quot; class&#x3D;&quot;card-content&quot;&gt;</span><br><span class="line">      &lt;slot &#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;div v-if&#x3D;&quot;$slots.footer&quot; class&#x3D;&quot;card-footer&quot;&gt;</span><br><span class="line">      &lt;slot name&#x3D;&quot;footer&quot; &#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="动态插槽名"><a href="#动态插槽名" class="headerlink" title="动态插槽名"></a>动态插槽名</h2><p>动态指令参数在 v-slot 上也是有效的，即可以定义下面这样的动态插槽名：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;base-layout&gt;</span><br><span class="line">  &lt;template v-slot:[dynamicSlotName]&gt;</span><br><span class="line">    ...</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- 缩写为 --&gt;</span><br><span class="line">  &lt;template #[dynamicSlotName]&gt;</span><br><span class="line">    ...</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;base-layout&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="作用域插槽"><a href="#作用域插槽" class="headerlink" title="作用域插槽"></a>作用域插槽</h2><p>在某些场景下插槽的内容可能想要同时使用父组件域内和子组件域内的数据。这时可以像对组件传递 props 那样，向一个插槽的出口上传递 attributes：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- &lt;MyComponent&gt; 的模板 --&gt;</span><br><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;slot :text&#x3D;&quot;greetingMessage&quot; :count&#x3D;&quot;1&quot;&gt;&lt;&#x2F;slot&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当需要接收插槽 props 时，默认插槽和具名插槽的使用方式有一些区别。</p>
+<h2 id="默认插槽接受-props"><a href="#默认插槽接受-props" class="headerlink" title="默认插槽接受 props"></a>默认插槽接受 props</h2><p>默认插槽通过子组件标签上的 v-slot 指令，直接接收到了一个插槽 props 对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;MyComponent v-slot&#x3D;&quot;slotProps&quot;&gt;</span><br><span class="line">  &#123;&#123; slotProps.text &#125;&#125; &#123;&#123; slotProps.count &#125;&#125;</span><br><span class="line">&lt;&#x2F;MyComponent&gt;</span><br></pre></td></tr></table></figure>
+
+<p>和函数的参数类似，我们也可以在 v-slot 中使用解构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;MyComponent v-slot&#x3D;&quot;&#123; text, count &#125;&quot;&gt;</span><br><span class="line">  &#123;&#123; text &#125;&#125; &#123;&#123; count &#125;&#125;</span><br><span class="line">&lt;&#x2F;MyComponent&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="具名作用域插槽接受-props"><a href="#具名作用域插槽接受-props" class="headerlink" title="具名作用域插槽接受 props"></a>具名作用域插槽接受 props</h2><p>具名作用域插槽的工作方式也是类似的，插槽 props 可以作为 v-slot 指令的值被访问到：<code>v-slot:name=&quot;slotProps&quot;</code>。当使用缩写时是这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;MyComponent&gt;</span><br><span class="line">  &lt;template #header&#x3D;&quot;headerProps&quot;&gt;</span><br><span class="line">    &#123;&#123; headerProps &#125;&#125;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template #default&#x3D;&quot;defaultProps&quot;&gt;</span><br><span class="line">    &#123;&#123; defaultProps &#125;&#125;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template #footer&#x3D;&quot;footerProps&quot;&gt;</span><br><span class="line">    &#123;&#123; footerProps &#125;&#125;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;MyComponent&gt;</span><br></pre></td></tr></table></figure>
+
+<p>向具名插槽中传入 props：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;slot name&#x3D;&quot;header&quot; message&#x3D;&quot;hello&quot;&gt;&lt;&#x2F;slot&gt;</span><br></pre></td></tr></table></figure>
+
+<p>注意插槽上的 name 是一个 Vue 特别保留的 attribute，不会作为 props 传递给插槽。</p>
+<p>如果你同时使用了具名插槽与默认插槽，则需要为默认插槽使用显式的 <code>&lt;template&gt;</code> 标签。尝试直接为组件添加 v-slot 指令将导致编译错误。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- &lt;MyComponent&gt; template --&gt;</span><br><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;slot :message&#x3D;&quot;hello&quot;&gt;&lt;&#x2F;slot&gt;</span><br><span class="line">  &lt;slot name&#x3D;&quot;footer&quot; &#x2F;&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 该模板无法编译 --&gt;</span><br><span class="line">&lt;MyComponent v-slot&#x3D;&quot;&#123; message &#125;&quot;&gt;</span><br><span class="line">  &lt;p&gt;&#123;&#123; message &#125;&#125;&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;template #footer&gt;</span><br><span class="line">    &lt;!-- message 属于默认插槽，此处不可用 --&gt;</span><br><span class="line">    &lt;p&gt;&#123;&#123; message &#125;&#125;&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;MyComponent&gt;</span><br></pre></td></tr></table></figure>
+
+<p>为默认插槽使用显式的 <code>&lt;template&gt;</code> 标签有助于更清晰地指出 message 属性在其他插槽中不可用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;MyComponent&gt;</span><br><span class="line">  &lt;!-- 使用显式的默认插槽 --&gt;</span><br><span class="line">  &lt;template #default&#x3D;&quot;&#123; message &#125;&quot;&gt;</span><br><span class="line">    &lt;p&gt;&#123;&#123; message &#125;&#125;&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template #footer&gt;</span><br><span class="line">    &lt;p&gt;Here&#39;s some contact info&lt;&#x2F;p&gt;</span><br><span class="line">  &lt;&#x2F;template&gt;</span><br><span class="line">&lt;&#x2F;MyComponent&gt;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Vue3/" rel="tag"># Vue3</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/05/07/Vue3%E7%BB%84%E4%BB%B6Attributes%E7%BB%A7%E6%89%BF/" rel="prev" title="Vue3组件Attributes继承">
+      <i class="fa fa-chevron-left"></i> Vue3组件Attributes继承
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#插槽内容与出口"><span class="nav-number">1.</span> <span class="nav-text">插槽内容与出口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#渲染作用域"><span class="nav-number">2.</span> <span class="nav-text">渲染作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#默认内容"><span class="nav-number">3.</span> <span class="nav-text">默认内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具名插槽"><span class="nav-number">4.</span> <span class="nav-text">具名插槽</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#条件插槽"><span class="nav-number">5.</span> <span class="nav-text">条件插槽</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态插槽名"><span class="nav-number">6.</span> <span class="nav-text">动态插槽名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域插槽"><span class="nav-number">7.</span> <span class="nav-text">作用域插槽</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#默认插槽接受-props"><span class="nav-number">8.</span> <span class="nav-text">默认插槽接受 props</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具名作用域插槽接受-props"><span class="nav-number">9.</span> <span class="nav-text">具名作用域插槽接受 props</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Will Wan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Will Wan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Will Wan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

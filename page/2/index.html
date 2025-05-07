@@ -156,6 +156,263 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/24/js%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/24/js%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">js事件模型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-24 11:17:00" itemprop="dateCreated datePublished" datetime="2022-03-24T11:17:00+08:00">2022-03-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index"><span itemprop="name">javascript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="事件对象"><a href="#事件对象" class="headerlink" title="事件对象"></a>事件对象</h2><p>当DOM元素上的发生某个事件时， 会产生一个事件对像 event，这个对象包含着与事件有关的所有信息。事件对象作为参数传给事件监听函数。浏览器原生提供一个Event对象，所有的事件都是这个对象的实例，或者说继承了Event.prototype对象。</p>
+<h3 id="事件对象的跨浏览器兼容"><a href="#事件对象的跨浏览器兼容" class="headerlink" title="事件对象的跨浏览器兼容"></a>事件对象的跨浏览器兼容</h3><ul>
+<li>获取事件对象</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event ? event : <span class="built_in">window</span>.event;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获取事件目标</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = event || <span class="built_in">window</span>.event,</span><br><span class="line">  target = event.target || event.srcElement;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>阻止事件默认事件</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = event || <span class="built_in">window</span>.event,</span><br><span class="line"><span class="keyword">if</span> (event.preventDefault)&#123;</span><br><span class="line">    event.preventDefault();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    event.returnValue = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>阻止事件冒泡</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = event || <span class="built_in">window</span>.event,</span><br><span class="line"><span class="keyword">if</span> (event.stopPropagation)&#123;</span><br><span class="line">    event.stopPropagation();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    event.cancelBubble = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="事件模型"><a href="#事件模型" class="headerlink" title="事件模型"></a>事件模型</h2><p>事件模型有三种：原始事件模型（DOM0 级）、标准事件模型（DOM2 级）、IE 事件模型</p>
+<h3 id="事件流"><a href="#事件流" class="headerlink" title="事件流"></a>事件流</h3><p>DOM 结构是一个树型结构，当一个 HTML 元素发生一个事件时，该事件会在元素结点与根结点之间的路径传播，传播路径经过的结点都会接收到该事件，这个传播过程称为 DOM 事件流。</p>
+<p>事件流共包含三个阶段：</p>
+<ul>
+<li>事件捕获阶段(capture phase)</li>
+<li>处于目标阶段(target phase)</li>
+<li>事件冒泡阶段(bubbling phase)</li>
+</ul>
+<h3 id="原始事件模型（DOM0-级）"><a href="#原始事件模型（DOM0-级）" class="headerlink" title="原始事件模型（DOM0 级）"></a>原始事件模型（DOM0 级）</h3><p>绑定事件监听函数：</p>
+<ul>
+<li>HTML 代码中直接绑定</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">onclick</span>=<span class="string">"fun()"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过 JS 代码绑定</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">".btn"</span>);</span><br><span class="line">btn.onclick = fun;</span><br></pre></td></tr></table></figure>
+
+<p>移除事件监听函数方式：只要将对应事件属性置为 null 即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">btn.onclick = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h4><ul>
+<li>绑定速度快（但由于绑定速度太快，可能页面还未完全加载出来，以至于事件可能无法正常运行）</li>
+<li>跨浏览器兼容性好</li>
+<li>只支持冒泡，不支持捕获</li>
+<li>同一个类型的事件只能绑定一次</li>
+</ul>
+<h3 id="标准事件模型（DOM2-级）"><a href="#标准事件模型（DOM2-级）" class="headerlink" title="标准事件模型（DOM2 级）"></a>标准事件模型（DOM2 级）</h3><p>在该事件模型中，一次事件共有三个阶段:</p>
+<ul>
+<li>事件捕获阶段：事件从 document 一直向下传播到目标元素, 依次检查经过的节点是否绑定了事件监听函数，如果有则执行</li>
+<li>处于目标阶段：事件到达目标元素, 触发目标元素的监听函数</li>
+<li>事件冒泡阶段：事件从目标元素冒泡到 document, 依次检查经过的节点是否绑定了事件监听函数，如果有则执行</li>
+</ul>
+<p>绑定事件监听函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">addEventListener(eventType, handler, useCapture);</span><br></pre></td></tr></table></figure>
+
+<p>移除事件监听函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">removeEventListener(eventType, handler, useCapture);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>eventType: 指定事件类型(不要加 on)</li>
+<li>handler: 事件监听函数</li>
+<li>useCapture: 布尔值，表示监听函数是否在捕获阶段（capture）触发，默认为false（监听函数只在冒泡阶段被触发）。该参数可选。一般设置为 false 与 IE 浏览器保持一致。</li>
+</ul>
+<h4 id="特性-1"><a href="#特性-1" class="headerlink" title="特性"></a>特性</h4><ul>
+<li>可以在一个 DOM 元素上绑定多个相同类型的事件监听函数</li>
+<li>可以指定事件监听函数执行时机</li>
+<li>兼容差，兼容 IE9+</li>
+</ul>
+<h3 id="IE-事件模型"><a href="#IE-事件模型" class="headerlink" title="IE 事件模型"></a>IE 事件模型</h3><p>IE 事件模型共有两个过程：</p>
+<ul>
+<li>处于目标阶段：事件到达目标元素, 触发目标元素的事件监听函数</li>
+<li>事件冒泡阶段：事件从目标元素冒泡到 document, 依次检查经过的节点是否绑定了事件监听函数，如果有则执行</li>
+</ul>
+<p>绑定事件监听函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">attachEvent(eventType, handler);</span><br></pre></td></tr></table></figure>
+
+<p>移除事件监听函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">detachEvent(eventType, handler);</span><br></pre></td></tr></table></figure>
+
+<h3 id="跨浏览器的事件监听程序"><a href="#跨浏览器的事件监听程序" class="headerlink" title="跨浏览器的事件监听程序"></a>跨浏览器的事件监听程序</h3><p>添加事件监听程序</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addHandler</span>(<span class="params">element, type, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (element.addEventListener) &#123;</span><br><span class="line">        element.addEventListener(type, handler, <span class="literal">false</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.attachEvent) &#123;</span><br><span class="line">        element.attachEvent(<span class="string">"on"</span> + type, handler);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        element[<span class="string">"on"</span> + type] = handler;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>移除事件监听程序</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">removeHandler</span>(<span class="params">element, type, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (element.removeListener) &#123;</span><br><span class="line">        element.removeListener(type, handler, <span class="literal">false</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.detachEvent) &#123;</span><br><span class="line">        element.detachEvent(<span class="string">"on"</span> + type, handler);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;    </span><br><span class="line">        element[<span class="string">"on"</span> + type] = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>this指向：事件监听函数内部的this指向触发事件的那个元素节点。</strong></p>
+<h2 id="事件的代理"><a href="#事件的代理" class="headerlink" title="事件的代理"></a>事件的代理</h2><p>由于事件会在冒泡阶段向上传播到父节点，因此可以把子节点的监听函数定义在父节点上，由父节点的监听函数统一处理多个子元素的事件。这种方法叫做事件的代理（delegation）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ul = <span class="built_in">document</span>.querySelector(<span class="string">'ul'</span>);</span><br><span class="line"></span><br><span class="line">ul.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (event.target.tagName.toLowerCase() === <span class="string">'li'</span>) &#123;</span><br><span class="line">    <span class="comment">// some code</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，click事件的监听函数定义在<code>&lt;ul&gt;</code>节点，但是实际上，它处理的是子节点<code>&lt;li&gt;</code>的click事件。</p>
+<p>事件代理的好处：<strong>只要定义一个监听函数，就能处理多个子节点的事件。而且以后再添加子节点，监听函数依然有效。</strong></p>
+<p>如果希望事件到某个节点为止，不再传播，可以使用事件对象的stopPropagation方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 事件传播到 p 元素后，就不再向下传播了</span></span><br><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.stopPropagation();</span><br><span class="line">&#125;, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 事件冒泡到 p 元素后，就不再向上冒泡了</span></span><br><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.stopPropagation();</span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，stopPropagation方法分别在捕获阶段和冒泡阶段，阻止了事件的传播。</p>
+<p><strong>但是，stopPropagation方法只会阻止事件的传播，不会阻止该事件触发<p>节点的其他click事件的监听函数。也就是说，不是彻底取消click事件。</strong></p>
+<p>如果想要彻底阻止这个事件的传播，不再触发后面所有click的监听函数，可以使用stopImmediatePropagation方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.stopImmediatePropagation();</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">p.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 不会被触发</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="自定义事件（CustomEvent）-接口"><a href="#自定义事件（CustomEvent）-接口" class="headerlink" title="自定义事件（CustomEvent） 接口"></a>自定义事件（CustomEvent） 接口</h2><p>CustomEvent 接口用于生成自定义的事件实例。那些浏览器预定义的事件，虽然可以手动生成，但是往往不能在事件上绑定数据。如果需要在触发事件的同时，传入指定的数据，就可以使用 CustomEvent 接口生成的自定义事件对象。</p>
+<p>浏览器原生提供CustomEvent()构造函数，用来生成 CustomEvent 事件实例。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> CustomEvent(type, options)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>type：事件名称，必传。</li>
+<li>options: 配置对象，可选。配置对象除了接受 Event 事件的配置属性，只有一个自己的属性。</li>
+</ul>
+<blockquote>
+<p>detail：表示事件的附带数据，默认为null。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myEvent = <span class="keyword">new</span> CustomEvent(<span class="string">'myevent'</span>, &#123;</span><br><span class="line">  detail: &#123;</span><br><span class="line">    foo: <span class="string">'bar'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  bubbles: <span class="literal">true</span>, <span class="comment">// 布尔值，可选，默认为false，表示事件对象是否冒泡。</span></span><br><span class="line">  cancelable: <span class="literal">false</span> <span class="comment">// 可选，默认为false，表示事件是否可以被取消，即能否用</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">el.addEventListener(<span class="string">'myevent'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Hello '</span> + event.detail.foo);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">el.dispatchEvent(myEvent);</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://javascript.ruanyifeng.com/dom/event.html#toc12" target="_blank" rel="noopener">阮一峰javascript事件模型</a></li>
+<li><a href="https://mp.weixin.qq.com/s/avXtM79vyywVq6Gg6ui29A" target="_blank" rel="noopener">JS每日一题javascript中的事件模型</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/08/TCP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/08/TCP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" class="post-title-link" itemprop="url">TCP协议的三次握手和四次挥手</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-08 09:50:43" itemprop="dateCreated datePublished" datetime="2022-03-08T09:50:43+08:00">2022-03-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>地址：<a href="https://github.com/jawil/blog/issues/14" target="_blank" rel="noopener">https://github.com/jawil/blog/issues/14</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/07/API%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1167,260 +1424,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/11/17/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E4%B8%8A%E7%BA%BFnuxt%E9%A1%B9%E7%9B%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/17/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E4%B8%8A%E7%BA%BFnuxt%E9%A1%B9%E7%9B%AE/" class="post-title-link" itemprop="url">阿里云服务器部署上线nuxt项目</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-11-17 16:21:59" itemprop="dateCreated datePublished" datetime="2021-11-17T16:21:59+08:00">2021-11-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/nuxt/" itemprop="url" rel="index"><span itemprop="name">nuxt</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近公司重新开发的企业官网，考虑企业官网对SEO有一定要求，所以考虑使用服务端渲染（ssr），采用了vue.js官网推荐的nuxt.js框架进行开发。nuxt 项目和单页应用（spa）项目除了开发上有一些区别之外，部署上线也相对复杂一些，本文对部署上线流程做一下简单的记录。</p>
-<h4 id="系统环境"><a href="#系统环境" class="headerlink" title="系统环境"></a>系统环境</h4><p>服务器系统版本：CentOS Linux release 7.6.1810 (Core)</p>
-<h2 id="安装nodejs-由于yum可以安装的nodejs版本较老，这里我们自己下载安装"><a href="#安装nodejs-由于yum可以安装的nodejs版本较老，这里我们自己下载安装" class="headerlink" title="安装nodejs (由于yum可以安装的nodejs版本较老，这里我们自己下载安装)"></a>安装nodejs (由于yum可以安装的nodejs版本较老，这里我们自己下载安装)</h2><h3 id="1-下载"><a href="#1-下载" class="headerlink" title="1. 下载"></a>1. 下载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://cdn.npm.taobao.org/dist/node/v14.16.0/node-v14.16.0-linux-x64.tar.xz -P /opt/</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-解压tar包"><a href="#2-解压tar包" class="headerlink" title="2. 解压tar包"></a>2. 解压tar包</h3><p>进入第一步下载到的文件夹，</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br></pre></td></tr></table></figure>
-
-<p>解压</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xf node-v14.16.0-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-配置环境变量"><a href="#3-配置环境变量" class="headerlink" title="3. 配置环境变量"></a>3. 配置环境变量</h3><h4 id="3-1-配置软连接（方便使用）"><a href="#3-1-配置软连接（方便使用）" class="headerlink" title="3.1 配置软连接（方便使用）"></a>3.1 配置软连接（方便使用）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s node-v14.16.0-linux-x64 node</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-2-配置环境变量"><a href="#3-2-配置环境变量" class="headerlink" title="3.2 配置环境变量"></a>3.2 配置环境变量</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"PATH=/opt/node/bin/:<span class="variable">$PATH</span>"</span> &gt;&gt; /etc/profile</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-使配置文件生效"><a href="#4-使配置文件生效" class="headerlink" title="4. 使配置文件生效"></a>4. 使配置文件生效</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-测试，在任意目录下执行-node-v，能打印出版本号就说明安装配置成功"><a href="#5-测试，在任意目录下执行-node-v，能打印出版本号就说明安装配置成功" class="headerlink" title="5. 测试，在任意目录下执行 node -v，能打印出版本号就说明安装配置成功"></a>5. 测试，在任意目录下执行 <code>node -v</code>，能打印出版本号就说明安装配置成功</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="安装yarn"><a href="#安装yarn" class="headerlink" title="安装yarn"></a>安装yarn</h2><p>由于我的项目使用yarn管理项目依赖，所以需要安装yarn，如果你使用npm或者其他包管理工具，可以跳过此步骤不必安装，<strong>注意：如果使用npm，后面打包，安装依赖和运行项目要替换成对应的命令</strong>。</p>
-<h3 id="1-下载-1"><a href="#1-下载-1" class="headerlink" title="1. 下载"></a>1. 下载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-安装（yum安装会自动配置好环境变量）"><a href="#2-安装（yum安装会自动配置好环境变量）" class="headerlink" title="2. 安装（yum安装会自动配置好环境变量）"></a>2. 安装（yum安装会自动配置好环境变量）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install yarn</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-测试（同样打印出版本号就说明安装成功）"><a href="#3-测试（同样打印出版本号就说明安装成功）" class="headerlink" title="3. 测试（同样打印出版本号就说明安装成功）"></a>3. 测试（同样打印出版本号就说明安装成功）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn -v</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="打包部署"><a href="#打包部署" class="headerlink" title="打包部署"></a>打包部署</h2><h3 id="1-打包"><a href="#1-打包" class="headerlink" title="1. 打包"></a>1. 打包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn build</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-部署，打包完成之后把下列文件和文件夹上传到服务器-我是放在-var-www"><a href="#2-部署，打包完成之后把下列文件和文件夹上传到服务器-我是放在-var-www" class="headerlink" title="2. 部署，打包完成之后把下列文件和文件夹上传到服务器(我是放在/var/www/)"></a>2. 部署，打包完成之后把下列文件和文件夹上传到服务器(我是放在/var/www/)</h3><ul>
-<li>.nuxt/ 文件夹</li>
-<li>static/ 文件夹</li>
-<li>package.json</li>
-<li>nuxt.config.js</li>
-</ul>
-<h3 id="3-安装项目依赖"><a href="#3-安装项目依赖" class="headerlink" title="3. 安装项目依赖"></a>3. 安装项目依赖</h3><p>首先，进入到上传到的服务器目录，然后执行安装命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-运行项目"><a href="#4-运行项目" class="headerlink" title="4. 运行项目"></a>4. 运行项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn start</span><br></pre></td></tr></table></figure>
-
-<p>项目默认运行在<code>127.0.0.1:3000</code>（如果开发过程中修改了端口配置，访问时也要修改），此时在服务器本地可以访问项目页面了。但是外部还不能通过网络访问，下面我们通过nginx做一个反向代理让我们的网页可以通过网络访问。</p>
-<h2 id="使用nginx做反向代理"><a href="#使用nginx做反向代理" class="headerlink" title="使用nginx做反向代理"></a>使用nginx做反向代理</h2><h3 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install nginx</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-测试"><a href="#2-测试" class="headerlink" title="2. 测试"></a>2. 测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -v</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-启动nginx"><a href="#3-启动nginx" class="headerlink" title="3. 启动nginx"></a>3. 启动nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx</span><br></pre></td></tr></table></figure>
-
-<p>启动之后就可以使用服务器ip访问nginx服务器欢迎页面了，默认启动在80端口，如果无法访问欢迎页面，请检查服务安全规则或者防火墙配置，看相应端口是否开放。</p>
-<h3 id="4-修改nginx配置，反向代理到nuxt项目页面"><a href="#4-修改nginx配置，反向代理到nuxt项目页面" class="headerlink" title="4. 修改nginx配置，反向代理到nuxt项目页面"></a>4. 修改nginx配置，反向代理到nuxt项目页面</h3><p>修改nginx.conf文件(按上述安装方式，该文件在/etc/nginx/目录下)。在 server 中添加如下配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">    expires 1h;</span><br><span class="line"></span><br><span class="line">    proxy_redirect                      off;</span><br><span class="line">    proxy_set_header Host               $host;</span><br><span class="line">    proxy_set_header X-Real-IP          $remote_addr;</span><br><span class="line">    proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;</span><br><span class="line">    proxy_set_header X-Forwarded-Proto  $scheme;</span><br><span class="line">    proxy_read_timeout          1m;</span><br><span class="line">    proxy_connect_timeout       1m;</span><br><span class="line">    proxy_pass                          http:&#x2F;&#x2F;127.0.0.1:3000; # nuxt项目运行的地址</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-测试配置是否正确"><a href="#5-测试配置是否正确" class="headerlink" title="5. 测试配置是否正确"></a>5. 测试配置是否正确</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
-
-<h3 id="6-重启nginx"><a href="#6-重启nginx" class="headerlink" title="6. 重启nginx"></a>6. 重启nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
-
-<p>重启之后就可以通过服务器IP访问到nuxt项目网页了。例如：<a href="http://56.121.30.89，默认是80端口。如果修改了端口号，需要加上端口号访问。例如：http://56.121.30.89:81。">http://56.121.30.89，默认是80端口。如果修改了端口号，需要加上端口号访问。例如：http://56.121.30.89:81。</a><br><strong>注意：此时nuxt项目要在运行中才能访问，如果上面打包部署完运行项目把nuxt项目停止运行了，要重新运行起来。</strong></p>
-<p>到现在虽然我们可以访问nuxt开发的项目了，但是如果我们关掉执行运行nuxt项目命令的窗口，那么nuxt项目就会停止运行，这样我们就没法访问了。所以下面我们要安装一个守护进程管理器——pm2（PM2 是一个守护进程管理器，它将帮助您管理和保持您的应用程序在线）。</p>
-<h2 id="使用PM2守护程序"><a href="#使用PM2守护程序" class="headerlink" title="使用PM2守护程序"></a>使用PM2守护程序</h2><h3 id="安装pm2"><a href="#安装pm2" class="headerlink" title="安装pm2"></a>安装pm2</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn global add pm2</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用PM2守护nuxt项目程序"><a href="#使用PM2守护nuxt项目程序" class="headerlink" title="使用PM2守护nuxt项目程序"></a>使用PM2守护nuxt项目程序</h3><p>进入nuxt项目部署目录，执行以下命令（project-name请替换成具体项目名称，意为指定进程名称）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start npm --name <span class="string">'project-name'</span> -- run start</span><br></pre></td></tr></table></figure>
-
-<p>查看进程，输入一下命令输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 list</span><br></pre></td></tr></table></figure>
-
-<p>┌─────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐<br>│ id  │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │<br>├─────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤<br>│ 0   │ project-name       │ default     │ N/A     │ fork    │ 6007     │ 54m    │ 0    │ online    │ 0%       │ 29.9mb   │ root     │ disabled │<br>└─────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘</p>
-<p>此时我们可以看到，我们的项目已经在运行了。更过pm2命令，请参考<a href="https://pm2.keymetrics.io/docs/usage/quick-start/" target="_blank" rel="noopener">pm2文档</a>。</p>
-<p>这样我们就完成了整个项目部署上线。</p>
-<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><ul>
-<li><a href="https://www.cnblogs.com/zezhou/p/14432439.html" target="_blank" rel="noopener">nuxt项目上线</a></li>
-<li><a href="https://yarn.bootcss.com/docs/install/#centos-stable" target="_blank" rel="noopener">yarn安装</a></li>
-<li><a href="https://www.nuxtjs.cn/faq/nginx-proxy" target="_blank" rel="noopener">nuxt中文官网常见问题——nginx 代理</a></li>
-<li><a href="https://pm2.keymetrics.io/docs/usage/quick-start/" target="_blank" rel="noopener">pm2文档</a></li>
-<li><a href="https://segmentfault.com/a/1190000012774650" target="_blank" rel="noopener">next.js、nuxt.js等服务端渲染框架构建的项目部署到服务器，并用PM2守护程序</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/29/%E9%97%AD%E5%8C%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/29/%E9%97%AD%E5%8C%85/" class="post-title-link" itemprop="url">闭包</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-29 13:42:18" itemprop="dateCreated datePublished" datetime="2021-07-29T13:42:18+08:00">2021-07-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/javascript/" itemprop="url" rel="index"><span itemprop="name">javascript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="闭包的概念"><a href="#闭包的概念" class="headerlink" title="闭包的概念"></a>闭包的概念</h2><p>一个函数和对其周围状态（lexical environment，词法环境）的引用组合在一起，就是闭包（closure）。闭包让我们可以在一个内层函数中访问到其外层函数的作用域。</p>
-<p>例如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeFunc</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name = <span class="string">"Mozilla"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">displayName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        alert(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> displayName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myFunc = makeFunc();</span><br><span class="line">myFunc();</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="闭包的作用"><a href="#闭包的作用" class="headerlink" title="闭包的作用"></a>闭包的作用</h2><ul>
-<li>用闭包模拟私有方法</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> makeCounter = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> privateCounter = <span class="number">0</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">changeBy</span>(<span class="params">val</span>) </span>&#123;</span><br><span class="line">    privateCounter += val;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    increment: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      changeBy(<span class="number">1</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    decrement: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      changeBy(<span class="number">-1</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> privateCounter;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> Counter1 = makeCounter();</span><br><span class="line"><span class="keyword">var</span> Counter2 = makeCounter();</span><br><span class="line"><span class="built_in">console</span>.log(Counter1.value()); <span class="comment">/* logs 0 */</span></span><br><span class="line">Counter1.increment();</span><br><span class="line">Counter1.increment();</span><br><span class="line"><span class="built_in">console</span>.log(Counter1.value()); <span class="comment">/* logs 2 */</span></span><br><span class="line">Counter1.decrement();</span><br><span class="line"><span class="built_in">console</span>.log(Counter1.value()); <span class="comment">/* logs 1 */</span></span><br><span class="line"><span class="built_in">console</span>.log(Counter2.value()); <span class="comment">/* logs 0 */</span></span><br></pre></td></tr></table></figure>
-
-
-<h2 id="使用闭包的时应注意的问题"><a href="#使用闭包的时应注意的问题" class="headerlink" title="使用闭包的时应注意的问题"></a>使用闭包的时应注意的问题</h2><ol>
-<li>在循环中创建闭包的常见错误–闭包只能取得它的包含函数（外层函数）的中变量的最后一个值</li>
-</ol>
-<p>例如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFunctions</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> <span class="built_in">Array</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">        result[i] = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个函数返回一个函数数组，由于数组中的函数中都保存着变量i，在createFunctions()函数执行完毕时，变量i的值是10，所以每个函数都返回10。</p>
-<p><strong>如果想让每个函数都返回其对应的索引值，可使用立即执行匿名函数(也是闭包)达到目的：</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFunctions</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> <span class="built_in">Array</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">        result[i] = (<span class="function"><span class="keyword">function</span> (<span class="params">n</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> n;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>如果不想使用过多的闭包，也可以用ES2015引入的let关键词：</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFunctions</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> <span class="built_in">Array</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">        result[i] = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个例子使用let而不是var，因此每个闭包都绑定了块作用域的变量，这样就不再需要额外的闭包。</p>
-<ol start="2">
-<li>闭包中的this</li>
-</ol>
-<p>this对象是指函数的执行环境对象，也就是函数的调用者。闭包函数中this同样指向它的调用者，但是我们常常不经意间就编写了一个闭包函数，这时候如果我们在闭包函数中使用了this，就容易和闭包的外层函数的this混淆。</p>
-<p>例如：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">'the window'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name,                                  </span><br><span class="line">    <span class="keyword">this</span>.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo(<span class="string">'my name'</span>);</span><br><span class="line">alert(obj.getName()()); <span class="comment">//'the window'(非严格模式下)</span></span><br></pre></td></tr></table></figure>
-
-<p>上述例子中的this指向window，但是我们很容易认为this指向obj，这很容易给我们的程序带来问题。为了避免这种问题。我们可以这样：</p>
-<p>留在北京：两年后，在北京买个两居室，可乐在北京上幼儿园，房子装修。再过几年在天津买个房子，可乐可以在北京或者天津上小学，如果在天津上，需要有人在天津照顾，应该会选择在北京上直到初中转学去天津参加中考和上高中。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">'the window'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name,</span><br><span class="line">    <span class="keyword">this</span>.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> self = <span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> self.name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo(<span class="string">'my name'</span>);</span><br><span class="line">alert(obj.getName()()); <span class="comment">//'my name'</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1492,7 +1495,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
