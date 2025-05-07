@@ -31,7 +31,7 @@ date: 2025-05-07 15:27:08
 <button class="large">Click Me</button>
 ```
 
-**透传的 attribute 会和子组件根元素的 attribute 合并。**
+**透传的 class 、 style 和 事件监听器会和子组件根元素的合并。**
 
 ## 深层组件继承
 
