@@ -156,6 +156,143 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/12/09/call%E3%80%81apply%E5%92%8Cbind%E7%9A%84%E7%94%A8%E6%B3%95%E5%92%8C%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/09/call%E3%80%81apply%E5%92%8Cbind%E7%9A%84%E7%94%A8%E6%B3%95%E5%92%8C%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">call、apply和bind的用法和区别</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-09 17:11:47" itemprop="dateCreated datePublished" datetime="2021-12-09T17:11:47+08:00">2021-12-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index"><span itemprop="name">javascript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="call方法"><a href="#call方法" class="headerlink" title="call方法"></a>call方法</h2><p>call()方法使用一个指定的 this 值（this指向执行环境上下文）和单独给出的一个或多个参数来<strong>调用一个函数</strong>。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><blockquote>
+<p>fun.call(thisArg[, arg1[, arg2[, …]]])</p>
+<ul>
+<li>fun：调用的函数。</li>
+<li>thisArg：必选的。函数运行时指定的this值（this指向执行环境上下文）。</li>
+<li>arg1, arg2, …：可选的。指定的参数列表。</li>
+</ul>
+</blockquote>
+<p><strong>注意：</strong> 指定的this值并不一定是该函数执行时真正的this值，如果这个函数处于非严格模式下，则指定为null和undefined的this值会自动指向全局对象(浏览器中就是window对象)，值为基本类型值(数字，字符串，布尔值)的this会指向该原始值的自动包装对象。</p>
+<h3 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h3><p>使用call方法调用函数并且指定this，<strong>借用自己没有的函数</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">speakName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'My name is '</span> + <span class="keyword">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person1 = &#123;</span><br><span class="line">    name: <span class="string">'chong'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">speakName(); <span class="comment">// speakName为全局函数，this指向全局对象window，由于全局作用域中不存在变量name，所以输出：My name is</span></span><br><span class="line">speakName.call(person1); <span class="comment">// 输出：My name is chong</span></span><br></pre></td></tr></table></figure>
+
+<p>使用call方法<strong>调用父构造函数，实现继承</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Product</span>(<span class="params">name, price</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.price = price;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (price &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">RangeError</span>(</span><br><span class="line">            <span class="string">'Cannot create product '</span> + <span class="keyword">this</span>.name + <span class="string">' with a negative price'</span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Food</span>(<span class="params">name, price</span>) </span>&#123;</span><br><span class="line">    Product.call(<span class="keyword">this</span>, name, price);</span><br><span class="line">    <span class="keyword">this</span>.category = <span class="string">'food'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 上面Food构造函数等同于以下代码</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Food</span>(<span class="params">name, price</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.price = price;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (price &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">RangeError</span>(</span><br><span class="line">            <span class="string">'Cannot create product '</span> + <span class="keyword">this</span>.name + <span class="string">' with a negative price'</span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.category = <span class="string">'food'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="apply方法"><a href="#apply方法" class="headerlink" title="apply方法"></a>apply方法</h2><p>apply() 方法用一个指定的 this 值，以及以一个数组（或类数组对象）的形式提供的参数<strong>调用一个函数</strong>。</p>
+<h3 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h3><blockquote>
+<p>func.apply(thisArg, [argsArray])</p>
+<ul>
+<li>fun：调用的函数。</li>
+<li>thisArg：必选的。函数运行时指定的this值。</li>
+<li>argsArray 可选的。一个数组或者类数组对象，其中的数组元素将作为单独的参数传给 func 函数。</li>
+</ul>
+</blockquote>
+<p><strong>apply方法用途和call方法相同，不再赘述</strong></p>
+<h2 id="bind方法"><a href="#bind方法" class="headerlink" title="bind方法"></a>bind方法</h2><p>bind() 方法<strong>用来创建一个新的函数</strong>。bind() 的第一个参数为这个新函数的 this ，其余参数将作为新函数的参数。</p>
+<h3 id="语法-2"><a href="#语法-2" class="headerlink" title="语法"></a>语法</h3><blockquote>
+<p>func.bind(thisArg[, arg1[, arg2[, …]]])</p>
+<ul>
+<li>fun：调用的函数。</li>
+<li>thisArg：必选的。<strong>调用新函数时作为新函数的 this 值。</strong>如果使用new运算符构造绑定函数，则忽略该值。当使用 bind 在 setTimeout 中创建一个函数（作为回调提供）时，作为 thisArg 传递的任何原始值都将转换为 object。如果 bind 函数的参数列表为空，或者thisArg是null或undefined，执行作用域的 this 将被视为新函数的 thisArg。</li>
+<li>arg1, arg2, …： 可选的。给新函数预设的初始参数列表。<br>返回值：<strong>返回一个原函数的拷贝，并拥有指定的 this 值和初始参数。</strong></li>
+</ul>
+</blockquote>
+<h2 id="用途-1"><a href="#用途-1" class="headerlink" title="用途"></a>用途</h2><ol>
+<li>创建绑定函数</li>
+<li>偏函数：使一个函数拥有预设的初始参数</li>
+</ol>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">9</span>;</span><br><span class="line"><span class="keyword">var</span> <span class="built_in">module</span> = &#123;</span><br><span class="line">    x: <span class="number">81</span>,</span><br><span class="line">    getX: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.x;</span><br><span class="line">    &#125;,</span><br><span class="line">    addX: <span class="function"><span class="keyword">function</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.x + n;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.getX(); <span class="comment">// 81</span></span><br><span class="line"><span class="built_in">module</span>.addX(<span class="number">9</span>); <span class="comment">// 90</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> _getX = <span class="built_in">module</span>.getX;</span><br><span class="line"><span class="keyword">var</span> _addX = <span class="built_in">module</span>.addX;</span><br><span class="line">_getX(); <span class="comment">// 返回 9, 因为函数是在全局作用域中调用的</span></span><br><span class="line">_addX(<span class="number">9</span>); <span class="comment">// 返回 18</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个新函数boundGetX，并把this绑定为module对象；</span></span><br><span class="line"><span class="keyword">var</span> boundGetX = _getX.bind(<span class="built_in">module</span>);</span><br><span class="line">boundGetX(); <span class="comment">// 81</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 创建绑定函数 boundAddX，把this绑定为module对象，并预设参数为 10；</span></span><br><span class="line"><span class="keyword">var</span> boundAddX = _addX.bind(<span class="built_in">module</span>, <span class="number">10</span>);</span><br><span class="line"><span class="comment">// 调用新函数时不用再传参数（传了也没用）</span></span><br><span class="line">boundAddX(); <span class="comment">// 91</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 创建一个新函数boundAddX，把this绑定为module对象，不预设参数；</span></span><br><span class="line"><span class="keyword">var</span> boundAddX = _addX.bind(<span class="built_in">module</span>);</span><br><span class="line"><span class="comment">// 调用新函数时需要传参数</span></span><br><span class="line">boundAddX(<span class="number">9</span>); <span class="comment">// 90</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>配合 setTimeout</li>
+</ol>
+<p>在默认情况下，使用 window.setTimeout() 时，this 关键字会指向 window （或 global）对象。当类的方法中需要 this 指向类的实例时，你可能需要显式地把 this 绑定到回调函数，就不会丢失该实例的引用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">LateBloomer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 花瓣数</span></span><br><span class="line">    <span class="keyword">this</span>.petalCount = <span class="built_in">Math</span>.ceil(<span class="built_in">Math</span>.random() * <span class="number">12</span>) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在调用bloom 1 秒钟后，调用declare</span></span><br><span class="line">LateBloomer.prototype.bloom = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">window</span>.setTimeout(<span class="keyword">this</span>.declare, <span class="number">1000</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">LateBloomer.prototype.declare = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'I am a beautiful flower with '</span> +</span><br><span class="line">    <span class="keyword">this</span>.petalCount + <span class="string">' petals!'</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flower = <span class="keyword">new</span> LateBloomer();</span><br><span class="line">flower.bloom();  <span class="comment">// 一秒钟后, 调用 'declare' 方法</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="call和apply比较"><a href="#call和apply比较" class="headerlink" title="call和apply比较"></a>call和apply比较</h3><ul>
+<li>相同点：它们都可以用一个指定的this值调用一个函数，并且可以给函数传递一个或者多个参数。<strong>简单来说，它们的用途就是一个对象调/借用自身没有的函数。如果这个函数是构造函数，就可以实现继承</strong>。</li>
+<li>不同点: 只在于传递参数的形式不同。call方法传递参数是通过参数列表，apply方法传递参数是通过数组/类数组。</li>
+</ul>
+<h3 id="call、apply和bind比较"><a href="#call、apply和bind比较" class="headerlink" title="call、apply和bind比较"></a>call、apply和bind比较</h3><ul>
+<li><p>相同点：它们都可以改变一个函数执行时的this，并且可以给函数传递一个或者多个参数。</p>
+</li>
+<li><p>不同点: bind方法返回一个新的函数，需要调用才会执行。而call和apply是立即执行。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2></li>
+<li><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/call" target="_blank" rel="noopener">Function.prototype.call()</a></p>
+</li>
+<li><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply" target="_blank" rel="noopener">Function.prototype.apply()</a></p>
+</li>
+<li><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind" target="_blank" rel="noopener">Function.prototype.bind()</a></p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/11/17/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E4%B8%8A%E7%BA%BFnuxt%E9%A1%B9%E7%9B%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1161,248 +1298,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/05/%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/05/%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0/" class="post-title-link" itemprop="url">函数的参数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-09-05 17:17:20" itemprop="dateCreated datePublished" datetime="2020-09-05T17:17:20+08:00">2020-09-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-02 12:07:12" itemprop="dateModified" datetime="2022-08-02T12:07:12+08:00">2022-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Python的函数定义非常简单，但灵活度却非常大。除了正常定义的<strong>必选参数</strong>外，还可以使用<strong>默认参数、可变参数和关键字参数</strong>，使得函数定义出来的接口，不但能处理复杂的参数，还可以简化调用者的代码。</p>
-<h2 id="位置参数"><a href="#位置参数" class="headerlink" title="位置参数"></a>位置参数</h2><p>先写一个计算x2的函数：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">power</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x * x</span><br></pre></td></tr></table></figure>
-
-<p>对于power(x)函数，<strong>参数x就是一个位置参数</strong>。</p>
-<p>当我们调用power函数时，必须传入有且仅有的一个参数x：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>power(<span class="number">5</span>)</span><br><span class="line"><span class="number">25</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>power(<span class="number">15</span>)</span><br><span class="line"><span class="number">225</span></span><br></pre></td></tr></table></figure>
-
-<p>如果我们要计算x3怎么办？可以再定义一个power3函数，但是如果要计算x4、x5……怎么办？我们不可能定义无限多个函数。</p>
-<p>你也许想到了，可以把power(x)修改为power(x, n)，用来计算x的n次方：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">power</span><span class="params">(x, n)</span>:</span></span><br><span class="line">    s = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> n &gt; <span class="number">0</span>:</span><br><span class="line">        n = n - <span class="number">1</span></span><br><span class="line">        s = s * x</span><br><span class="line">    <span class="keyword">return</span> s</span><br></pre></td></tr></table></figure>
-
-<p>对于这个修改后的power(x, n)函数，可以计算任意n次方：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>power(<span class="number">5</span>, <span class="number">2</span>)</span><br><span class="line"><span class="number">25</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>power(<span class="number">5</span>, <span class="number">3</span>)</span><br><span class="line"><span class="number">125</span></span><br></pre></td></tr></table></figure>
-
-<p>修改后的power(x, n)函数有两个参数：<strong>x和n，这两个参数都是位置参数，调用函数时，传入的两个值按照位置顺序依次赋给参数x和n</strong>。</p>
-<h2 id="默认参数"><a href="#默认参数" class="headerlink" title="默认参数"></a>默认参数</h2><p>新的power(x, n)函数定义没有问题，但是，旧的调用代码失败了，原因是我们增加了一个参数，导致旧的代码因为缺少一个参数而无法正常调用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; power(5)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span><br><span class="line">TypeError: power() missing 1 required positional argument: &#39;n&#39;</span><br></pre></td></tr></table></figure>
-
-<p>这个时候，默认参数就排上用场了。由于我们经常计算x2，所以，完全可以把第二个参数n的默认值设定为2：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">power</span><span class="params">(x, n=<span class="number">2</span>)</span>:</span></span><br><span class="line">    s = <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> n &gt; <span class="number">0</span>:</span><br><span class="line">        n = n - <span class="number">1</span></span><br><span class="line">        s = s * x</span><br><span class="line">    <span class="keyword">return</span> s</span><br></pre></td></tr></table></figure>
-
-<p>这样，当我们调用power(5)时，相当于调用power(5, 2)：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>power(<span class="number">5</span>)</span><br><span class="line"><span class="number">25</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>power(<span class="number">5</span>, <span class="number">2</span>)</span><br><span class="line"><span class="number">25</span></span><br></pre></td></tr></table></figure>
-
-<p>而对于n &gt; 2的其他情况，就必须明确地传入n，比如<code>power(5, 3)</code>。</p>
-<p>从上面的例子可以看出，<strong>默认参数可以简化函数的调用</strong>。设置默认参数时，有几点要注意：</p>
-<ul>
-<li>一是必选参数在前，默认参数在后，否则Python的解释器会报错</li>
-<li>二是如何设置默认参数</li>
-<li>当函数有多个参数时，把变化大的参数放前面，变化小的参数放后面。变化小的参数就可以作为默认参数</li>
-</ul>
-<h3 id="多个默认参数"><a href="#多个默认参数" class="headerlink" title="多个默认参数"></a>多个默认参数</h3><p>再写个一年级小学生注册的函数，需要传入name和gender两个参数：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">enroll</span><span class="params">(name, gender)</span>:</span></span><br><span class="line">    print(<span class="string">'name:'</span>, name)</span><br><span class="line">    print(<span class="string">'gender:'</span>, gender)</span><br></pre></td></tr></table></figure>
-
-<p>这样，调用enroll()函数只需要传入两个参数。</p>
-<p>如果要继续传入年龄、城市等信息怎么办？这样会使得调用函数的复杂度大大增加。这时我们可以把年龄和城市设为默认参数：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">enroll</span><span class="params">(name, gender, age=<span class="number">6</span>, city=<span class="string">'Beijing'</span>)</span>:</span></span><br><span class="line">    print(<span class="string">'name:'</span>, name)</span><br><span class="line">    print(<span class="string">'gender:'</span>, gender)</span><br><span class="line">    print(<span class="string">'age:'</span>, age)</span><br><span class="line">    print(<span class="string">'city:'</span>, city)</span><br></pre></td></tr></table></figure>
-
-<p>这样，大多数学生注册时不需要提供年龄和城市，只提供必须的两个参数，只有与默认参数不符的学生才需要提供额外的信息：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">enroll(<span class="string">'Bob'</span>, <span class="string">'M'</span>, <span class="number">7</span>)</span><br><span class="line">enroll(<span class="string">'Adam'</span>, <span class="string">'M'</span>, city=<span class="string">'Tianjin'</span>)</span><br></pre></td></tr></table></figure>
-
-<p>可见，默认参数降低了函数调用的难度，而一旦需要更复杂的调用时，又可以传递更多的参数来实现。</p>
-<p><strong>有多个默认参数，调用的时候，既可以按顺序提供默认参数，也可以不按顺序提供部分默认参数。当不按顺序提供部分默认参数时，需要把参数名写上</strong>。</p>
-<h3 id="默认参数必须指向不变对象"><a href="#默认参数必须指向不变对象" class="headerlink" title="默认参数必须指向不变对象"></a>默认参数必须指向不变对象</h3><p>默认参数很有用，但使用不当，也会掉坑里。默认参数有个最大的坑，演示如下：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_end</span><span class="params">(L=[])</span>:</span></span><br><span class="line">    L.append(<span class="string">'END'</span>)</span><br><span class="line">    <span class="keyword">return</span> L</span><br></pre></td></tr></table></figure>
-
-<p>当你正常调用时，结果似乎不错：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>add_end([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="string">'END'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>add_end([<span class="string">'x'</span>, <span class="string">'y'</span>, <span class="string">'z'</span>])</span><br><span class="line">[<span class="string">'x'</span>, <span class="string">'y'</span>, <span class="string">'z'</span>, <span class="string">'END'</span>]</span><br></pre></td></tr></table></figure>
-
-<p>当你使用默认参数调用时，一开始结果也是对的：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>add_end()</span><br><span class="line">[<span class="string">'END'</span>]</span><br></pre></td></tr></table></figure>
-
-<p>但是，再次调用add_end()时，结果就不对了：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>add_end()</span><br><span class="line">[<span class="string">'END'</span>, <span class="string">'END'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>add_end()</span><br><span class="line">[<span class="string">'END'</span>, <span class="string">'END'</span>, <span class="string">'END'</span>]</span><br></pre></td></tr></table></figure>
-
-<p>原因解释如下：</p>
-<p>Python函数在定义的时候，默认参数L的值就被计算出来了，即[]，因为默认参数L也是一个变量，它指向对象[]，每次调用该函数，如果改变了L的内容，则下次调用时，默认参数的内容就变了，不再是函数定义时的[]了。</p>
-<p><strong>所以，定义默认参数要牢记一点：默认参数必须指向不变对象！</strong></p>
-<p>要修改上面的例子，我们可以用None这个不变对象来实现：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_end</span><span class="params">(L=None)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> L <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        L = []</span><br><span class="line">    L.append(<span class="string">'END'</span>)</span><br><span class="line">    <span class="keyword">return</span> L</span><br><span class="line"></span><br><span class="line">现在，无论调用多少次，都不会有问题：</span><br><span class="line"></span><br><span class="line">```py</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>add_end()</span><br><span class="line">[<span class="string">'END'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>add_end()</span><br><span class="line">[<span class="string">'END'</span>]</span><br></pre></td></tr></table></figure>
-
-<p>为什么要设计str、None这样的不变对象呢？</p>
-<p>因为<strong>不变对象一旦创建，对象内部的数据就不能修改，这样就减少了由于修改数据导致的错误。此外，由于对象不变，多任务环境下同时读取对象不需要加锁</strong>，同时读一点问题都没有。<br>我们<strong>在编写程序时，如果可以设计一个不变对象，那就尽量设计成不变对象</strong>。</p>
-<h2 id="可变参数"><a href="#可变参数" class="headerlink" title="可变参数"></a>可变参数</h2><p>在Python函数中，还可以定义可变参数。顾名思义，可变参数允许你传入0个或任意个参数。这些可变参数在函数调用时自动组装为一个tuple。</p>
-<p>以数学题为例子，给定一组数字a，b，c……，请计算a^2 + b^2 + c^2 + ……。</p>
-<p>要定义出这个函数，由于参数个数不确定，我们首先想到可以把a，b，c……作为一个list或tuple传进来，这样，函数可以定义如下：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc</span><span class="params">(numbers)</span>:</span></span><br><span class="line">    sum = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> numbers:</span><br><span class="line">        sum = sum + n * n</span><br><span class="line">    <span class="keyword">return</span> sum</span><br></pre></td></tr></table></figure>
-
-<p>但是调用的时候，需要先组装出一个list或tuple：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>calc([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line"><span class="number">14</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>calc((<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>))</span><br><span class="line"><span class="number">84</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>如果我们把函数的参数改为可变参数，参数前面加上一个星号<code>*</code></strong>：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc</span><span class="params">(*numbers)</span>:</span></span><br><span class="line">    sum = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> numbers:</span><br><span class="line">        sum = sum + n * n</span><br><span class="line">    <span class="keyword">return</span> sum</span><br></pre></td></tr></table></figure>
-
-<p>调用函数的方式可以简化成这样：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>calc(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"><span class="number">14</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>calc(<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>)</span><br><span class="line"><span class="number">84</span></span><br></pre></td></tr></table></figure>
-
-<p>定义可变参数和定义一个list或tuple参数相比，仅仅在参数前面加了一个<code>*</code>号。在函数内部，参数numbers接收到的是一个tuple，因此，函数代码完全不变。但是，调用该函数时，可以传入任意个参数。</p>
-<p>如果已经有一个list或者tuple，调用一个可变参数函数，只需要在调用的时候在参数前加一个<code>*</code>：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>nums = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>calc(*nums)</span><br><span class="line"><span class="number">14</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="可变参数和传入list或tuple的区别"><a href="#可变参数和传入list或tuple的区别" class="headerlink" title="可变参数和传入list或tuple的区别"></a>可变参数和传入list或tuple的区别</h3><p>我们现在还以上面的calc函数为例，在进行完求和运算之后修改传入的numbers：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc</span><span class="params">(numbers)</span>:</span></span><br><span class="line">	sum = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> n <span class="keyword">in</span> numbers:</span><br><span class="line">		sum = sum + n * n</span><br><span class="line">	numbers.append(<span class="number">4</span>)</span><br><span class="line">	print(numbers)</span><br><span class="line">	<span class="keyword">return</span> sum</span><br></pre></td></tr></table></figure>
-
-<p>然后，我们调用calc：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>L = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>res = calc(L)</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(res)</span><br><span class="line"><span class="number">14</span></span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(L)</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>结果表明：我们在calc函数内部修改传入的numbers之后，函数外部的L也发生了相应的变化。</p>
-<p>那么，可变参数呢？我们用可变参数重新定义一下上面的函数：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc</span><span class="params">(*numbers)</span>:</span></span><br><span class="line">	sum = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> n <span class="keyword">in</span> numbers:</span><br><span class="line">		sum = sum + n * n</span><br><span class="line">	numbers.append(<span class="number">4</span>)</span><br><span class="line">	print(numbers)</span><br><span class="line">	<span class="keyword">return</span> sum</span><br></pre></td></tr></table></figure>
-
-<p>然后同样去调用：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>L = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>res = calc(*L)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">5</span>, <span class="keyword">in</span> calc</span><br><span class="line">AttributeError: <span class="string">'tuple'</span> object has no attribute <span class="string">'add'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(res)</span><br><span class="line"><span class="number">14</span></span><br><span class="line">&gt;&gt;&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(L)</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br></pre></td></tr></table></figure>
-
-<p>唉呀，报错了。怎么会报错了呢？上面我们提到过，在函数内部，参数numbers接收到的是一个tuple，而元组的元素是不能改变的。这下，我们就明白了：<strong>列表作为可变参数传入函数，在函数内部被组装成了元组，所以列表不能被改变；而把一个列表作为参数传入，在函数内部可有改变列表的元素。</strong>这一点在开发过程中要引起注意。</p>
-<h2 id="关键字参数"><a href="#关键字参数" class="headerlink" title="关键字参数"></a>关键字参数</h2><p>关键字参数允许你传入0个或任意个含参数名的参数，这些关键字参数在函数内部自动组装为一个dict。</p>
-<p>定义关键字参数只需要在参数前面加两个星号<code>**</code>，请看示例：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">person</span><span class="params">(name, age, **kw)</span>:</span></span><br><span class="line">    print(<span class="string">'name:'</span>, name, <span class="string">'age:'</span>, age, <span class="string">'other:'</span>, kw)</span><br></pre></td></tr></table></figure>
-
-<p>函数person除了必选参数name和age外，还接受关键字参数kw。在调用该函数时，可以只传入必选参数：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>person(<span class="string">'Michael'</span>, <span class="number">30</span>)</span><br><span class="line">name: Michael age: <span class="number">30</span> other: &#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>也可以传入任意个数的关键字参数：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>person(<span class="string">'Bob'</span>, <span class="number">35</span>, city=<span class="string">'Beijing'</span>)</span><br><span class="line">name: Bob age: <span class="number">35</span> other: &#123;<span class="string">'city'</span>: <span class="string">'Beijing'</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>person(<span class="string">'Adam'</span>, <span class="number">45</span>, gender=<span class="string">'M'</span>, job=<span class="string">'Engineer'</span>)</span><br><span class="line">name: Adam age: <span class="number">45</span> other: &#123;<span class="string">'gender'</span>: <span class="string">'M'</span>, <span class="string">'job'</span>: <span class="string">'Engineer'</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>关键字参数有什么用？它可以扩展函数的功能。比如，在person函数里，我们保证能接收到name和age这两个参数，但是，如果调用者愿意提供更多的参数，我们也能收到。</p>
-<p>和可变参数类似，也可以先组装出一个dict，然后，把该dict转换为关键字参数传进去：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>extra = &#123;<span class="string">'city'</span>: <span class="string">'Beijing'</span>, <span class="string">'job'</span>: <span class="string">'Engineer'</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>person(<span class="string">'Jack'</span>, <span class="number">24</span>, **extra)</span><br><span class="line">name: Jack age: <span class="number">24</span> other: &#123;<span class="string">'city'</span>: <span class="string">'Beijing'</span>, <span class="string">'job'</span>: <span class="string">'Engineer'</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>**extra</code>表示把extra这个dict的所有key-value用关键字参数传入到函数的<code>**kw</code>参数，kw将获得一个dict。</p>
-<h3 id="关键字参数和dict直接作为参数的区别"><a href="#关键字参数和dict直接作为参数的区别" class="headerlink" title="关键字参数和dict直接作为参数的区别"></a>关键字参数和dict直接作为参数的区别</h3><p>我们看一下这个例子：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">person</span><span class="params">(name, age, **kw)</span>:</span></span><br><span class="line">	kw[<span class="string">'gender'</span>] = <span class="string">'F'</span></span><br><span class="line">	print(<span class="string">'name:'</span>, name, <span class="string">'age:'</span>, age, <span class="string">'other:'</span>, kw)</span><br></pre></td></tr></table></figure>
-
-<p>下面我们调用一下person这个函数：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>extra = &#123;</span><br><span class="line"><span class="meta">... </span>    <span class="string">'gender'</span>: <span class="string">'M'</span></span><br><span class="line"><span class="meta">... </span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>person(<span class="string">'wan'</span>, <span class="number">18</span>, **extra)</span><br><span class="line">name: wan age: <span class="number">18</span> other: &#123;<span class="string">'gender'</span>: <span class="string">'F'</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(extra)</span><br><span class="line">&#123;<span class="string">'gender'</span>: <span class="string">'M'</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在上面的代码里，我们调用person时把extra作为参数传给了person，在person内部修改了kw的gender，然后分别在函数内部打印了kw，调用函数之后又打印了extra。 但是变量extra的gender没有改变。这就说明：<strong>关键字参数是对外部变量的一份拷贝。对关键子参数的改动不会影响函数外的变量。而字典直接作为参数传入函数内部，对参数的改动则会影响函数外的变量。</strong></p>
-<h3 id="命名关键字参数"><a href="#命名关键字参数" class="headerlink" title="命名关键字参数"></a>命名关键字参数</h3><p><strong>对于关键字参数，函数的调用者可以传入任意不受限制的关键字参数。如果要限制关键字参数的名字，就可以用命名关键字参数。</strong></p>
-<p>例如，只接收city和job作为关键字参数。这种方式定义的函数如下：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">person</span><span class="params">(name, age, *, city, job)</span>:</span></span><br><span class="line">    print(name, age, city, job)</span><br></pre></td></tr></table></figure>
-
-<p>和关键字参数<code>**kw</code>不同，命名关键字参数需要一个特殊分隔符<em>，</em>后面的参数被视为命名关键字参数。</p>
-<p>调用方式如下：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>person(<span class="string">'Jack'</span>, <span class="number">24</span>, city=<span class="string">'Beijing'</span>, job=<span class="string">'Engineer'</span>)</span><br><span class="line">Jack <span class="number">24</span> Beijing Engineer</span><br></pre></td></tr></table></figure>
-
-<p>如果函数定义中已经有了一个可变参数，后面跟着的命名关键字参数就不再需要一个特殊分隔符*了：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">person</span><span class="params">(name, age, *args, city, job)</span>:</span></span><br><span class="line">    print(name, age, args, city, job)</span><br></pre></td></tr></table></figure>
-
-<p>命名关键字参数必须传入参数名，这和位置参数不同。如果没有传入参数名，调用将报错。</p>
-<p>命名关键字参数可以有缺省值（相当于默认参数的默认值），从而简化调用：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">person</span><span class="params">(name, age, *, city=<span class="string">'Beijing'</span>, job)</span>:</span></span><br><span class="line">    print(name, age, city, job)</span><br></pre></td></tr></table></figure>
-
-<p>由于命名关键字参数city具有默认值，调用时，可不传入city参数：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>person(<span class="string">'Jack'</span>, <span class="number">24</span>, job=<span class="string">'Engineer'</span>)</span><br><span class="line">Jack <span class="number">24</span> Beijing Engineer</span><br></pre></td></tr></table></figure>
-
-<h2 id="参数组合"><a href="#参数组合" class="headerlink" title="参数组合"></a>参数组合</h2><p>在Python中定义函数，可以用必选参数、默认参数、可变参数、关键字参数和命名关键字参数，这5种参数都可以组合使用。但是请注意，<strong>参数定义的顺序必须是：必选参数、默认参数、可变参数、命名关键字参数和关键字参数。</strong>虽然可以组合多达5种参数，但不要同时使用太多的组合，否则函数接口的可理解性很差。</p>
-<p>比如定义一个函数，包含上述若干种参数：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f1</span><span class="params">(a, b, c=<span class="number">0</span>, *args, **kw)</span>:</span></span><br><span class="line">    print(<span class="string">'a ='</span>, a, <span class="string">'b ='</span>, b, <span class="string">'c ='</span>, c, <span class="string">'args ='</span>, args, <span class="string">'kw ='</span>, kw)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f2</span><span class="params">(a, b, c=<span class="number">0</span>, *, d, **kw)</span>:</span></span><br><span class="line">    print(<span class="string">'a ='</span>, a, <span class="string">'b ='</span>, b, <span class="string">'c ='</span>, c, <span class="string">'d ='</span>, d, <span class="string">'kw ='</span>, kw)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f1</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">'ok'</span>)</span><br></pre></td></tr></table></figure>
-
-<p>在函数调用的时候，Python解释器自动按照参数位置和参数名把对应的参数传进去。</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>f1(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">a = <span class="number">1</span> b = <span class="number">2</span> c = <span class="number">0</span> args = () kw = &#123;&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f1(<span class="number">1</span>, <span class="number">2</span>, c=<span class="number">3</span>)</span><br><span class="line">a = <span class="number">1</span> b = <span class="number">2</span> c = <span class="number">3</span> args = () kw = &#123;&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f1(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="string">'a'</span>, <span class="string">'b'</span>)</span><br><span class="line">a = <span class="number">1</span> b = <span class="number">2</span> c = <span class="number">3</span> args = (<span class="string">'a'</span>, <span class="string">'b'</span>) kw = &#123;&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f1(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, x=<span class="number">99</span>)</span><br><span class="line">a = <span class="number">1</span> b = <span class="number">2</span> c = <span class="number">3</span> args = (<span class="string">'a'</span>, <span class="string">'b'</span>) kw = &#123;<span class="string">'x'</span>: <span class="number">99</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f2(<span class="number">1</span>, <span class="number">2</span>, d=<span class="number">99</span>, ext=<span class="literal">None</span>)</span><br><span class="line">a = <span class="number">1</span> b = <span class="number">2</span> c = <span class="number">0</span> d = <span class="number">99</span> kw = &#123;<span class="string">'ext'</span>: <span class="literal">None</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>最神奇的是通过一个tuple和dict，你也可以调用上述函数：</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>args = (<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>kw = &#123;<span class="string">'d'</span>: <span class="number">99</span>, <span class="string">'x'</span>: <span class="string">'#'</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f1(*args, **kw)</span><br><span class="line">a = <span class="number">1</span> b = <span class="number">2</span> c = <span class="number">3</span> args = (<span class="number">4</span>,) kw = &#123;<span class="string">'d'</span>: <span class="number">99</span>, <span class="string">'x'</span>: <span class="string">'#'</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>args = (<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>kw = &#123;<span class="string">'d'</span>: <span class="number">88</span>, <span class="string">'x'</span>: <span class="string">'#'</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f2(*args, **kw)</span><br><span class="line">a = <span class="number">1</span> b = <span class="number">2</span> c = <span class="number">3</span> d = <span class="number">88</span> kw = &#123;<span class="string">'x'</span>: <span class="string">'#'</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>从上面的调用结果可以看出：<strong>在给函数传参的时候，<em>args 和 *</em>kw 类似于js的扩展运算。*和</strong>分别会把元组和字典展开**</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Python的函数具有非常灵活的参数形态，既可以实现简单的调用，又可以传入非常复杂的参数。</p>
-<ul>
-<li><p>默认参数一定要用不可变对象，如果是可变对象，程序运行时会有逻辑错误！</p>
-</li>
-<li><p>要注意定义可变参数和关键字参数的语法：</p>
-<p>  *args是可变参数，args接收的是一个tuple；</p>
-<p>  **kw是关键字参数，kw接收的是一个dict。</p>
-</li>
-<li><p>以及调用函数时如何传入可变参数和关键字参数的语法：</p>
-<p>  可变参数既可以直接传入：func(1, 2, 3)，又可以先组装list或tuple，再通过<em>args传入：func(</em>(1, 2, 3))；</p>
-<p>  关键字参数既可以直接传入：func(a=1, b=2)，又可以先组装dict，再通过<strong>kw传入：func(</strong>{‘a’: 1, ‘b’: 2})。</p>
-</li>
-<li><p>使用<em>args和*</em>kw是Python的习惯写法，当然也可以用其他参数名，但最好使用习惯用法。</p>
-</li>
-<li><p>命名的关键字参数是为了限制调用者可以传入的参数名，同时可以提供默认值。</p>
-</li>
-<li><p>定义命名的关键字参数在没有可变参数的情况下不要忘了写分隔符*，否则定义的将是位置参数。</p>
-</li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017261630425888" target="_blank" rel="noopener">廖雪峰Python教程——函数的参数</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1474,7 +1369,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

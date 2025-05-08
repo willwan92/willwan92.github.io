@@ -156,6 +156,117 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/05/08/Vue3%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/05/08/Vue3%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" class="post-title-link" itemprop="url">Vue3依赖注入</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-05-08 17:51:50 / 修改时间：18:26:24" itemprop="dateCreated datePublished" datetime="2025-05-08T17:51:50+08:00">2025-05-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="依赖注入的作用"><a href="#依赖注入的作用" class="headerlink" title="依赖注入的作用"></a>依赖注入的作用</h2><p>解决 Prop 逐级透传很麻烦的问题。</p>
+<h2 id="Provide（提供）"><a href="#Provide（提供）" class="headerlink" title="Provide（提供）"></a>Provide（提供）</h2><p>要为组件后代提供数据，需要使用到 provide() 函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; provide &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">provide(&#x2F;* 注入名 *&#x2F; &#39;message&#39;, &#x2F;* 值 *&#x2F; &#39;hello!&#39;)</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果不使用 <code>&lt;script setup&gt;</code>，请确保 provide() 是在 setup() 同步调用的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import &#123; provide &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">export default &#123;</span><br><span class="line">  setup() &#123;</span><br><span class="line">    provide(&#x2F;* 注入名 *&#x2F; &#39;message&#39;, &#x2F;* 值 *&#x2F; &#39;hello!&#39;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>provide() 函数接收两个参数。第一个参数被称为注入名，可以是一个字符串或是一个 Symbol。后代组件会用注入名来查找期望注入的值。一个组件可以多次调用 provide()，使用不同的注入名，注入不同的依赖值。</p>
+<p>第二个参数是提供的值，值可以是任意类型，包括响应式的状态，比如一个 ref：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import &#123; ref, provide &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const count &#x3D; ref(0)</span><br><span class="line">provide(&#39;key&#39;, count)</span><br></pre></td></tr></table></figure>
+
+<h2 id="应用层-Provide"><a href="#应用层-Provide" class="headerlink" title="应用层 Provide"></a>应用层 Provide</h2><p>除了在一个组件中提供依赖，我们还可以在整个应用层面提供依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createApp &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const app &#x3D; createApp(&#123;&#125;)</span><br><span class="line"></span><br><span class="line">app.provide(&#x2F;* 注入名 *&#x2F; &#39;message&#39;, &#x2F;* 值 *&#x2F; &#39;hello!&#39;)</span><br></pre></td></tr></table></figure>
+
+<p>在应用级别提供的数据在该应用内的所有组件中都可以注入。</p>
+<h2 id="Inject-注入"><a href="#Inject-注入" class="headerlink" title="Inject (注入)"></a>Inject (注入)</h2><p>要注入上层组件提供的数据，需使用 inject() 函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; inject &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const message &#x3D; inject(&#39;message&#39;)</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果提供的值是一个 ref，注入进来的也是该 ref 对象，保持了和供给方的响应性链接。</p>
+<p>同样的，如果没有使用 <code>&lt;script setup&gt;</code>，inject() 需要在 setup() 内同步调用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import &#123; inject &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">export default &#123;</span><br><span class="line">  setup() &#123;</span><br><span class="line">    const message &#x3D; inject(&#39;message&#39;)</span><br><span class="line">    return &#123; message &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="注入默认值"><a href="#注入默认值" class="headerlink" title="注入默认值"></a>注入默认值</h2><p>如果在注入一个值时不要求必须有提供者，那么可以声明一个默认值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 如果没有祖先组件提供 &quot;message&quot;</span><br><span class="line">&#x2F;&#x2F; &#96;value&#96; 会是 &quot;这是默认值&quot;</span><br><span class="line">const value &#x3D; inject(&#39;message&#39;, &#39;这是默认值&#39;)</span><br></pre></td></tr></table></figure>
+
+<p>默认值可能需要通过调用一个函数或初始化一个类来取得。为了避免在用不到默认值的情况下进行不必要的计算或产生副作用，我们可以使用工厂函数来创建默认值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const value &#x3D; inject(&#39;key&#39;, () &#x3D;&gt; new ExpensiveClass(), true)</span><br></pre></td></tr></table></figure>
+
+<p>第三个参数表示默认值应该被当作一个工厂函数。</p>
+<h2 id="和响应式数据配合使用"><a href="#和响应式数据配合使用" class="headerlink" title="和响应式数据配合使用"></a>和响应式数据配合使用</h2><p>当提供 / 注入响应式的数据时，建议尽可能将任何对响应式状态的变更都保持在供给方组件中。</p>
+<p>如果需要在注入方组件中更改数据，我们推荐在供给方组件内声明并提供一个更改数据的方法函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 在供给方组件内 --&gt;</span><br><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; provide, ref &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const location &#x3D; ref(&#39;North Pole&#39;)</span><br><span class="line"></span><br><span class="line">function updateLocation() &#123;</span><br><span class="line">  location.value &#x3D; &#39;South Pole&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">provide(&#39;location&#39;, &#123;</span><br><span class="line">  location,</span><br><span class="line">  updateLocation</span><br><span class="line">&#125;)</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 在注入方组件 --&gt;</span><br><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; inject &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const &#123; location, updateLocation &#125; &#x3D; inject(&#39;location&#39;)</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;button @click&#x3D;&quot;updateLocation&quot;&gt;&#123;&#123; location &#125;&#125;&lt;&#x2F;button&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果你想确保提供的数据不能被注入方的组件更改，你可以使用 readonly() 来包装提供的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; ref, provide, readonly &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const count &#x3D; ref(0)</span><br><span class="line">provide(&#39;read-only-count&#39;, readonly(count))</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用-Symbol-作注入名"><a href="#使用-Symbol-作注入名" class="headerlink" title="使用 Symbol 作注入名"></a>使用 Symbol 作注入名</h2><p>如果正在构建大型的应用，包含非常多的依赖提供，或者你正在编写提供给其他开发者使用的组件库，建议最好使用 Symbol 来作为注入名以避免潜在的冲突。</p>
+<p>推荐在一个单独的文件中导出这些注入名 Symbol：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; keys.js</span><br><span class="line">export const myInjectionKey &#x3D; Symbol()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 在供给方组件中</span><br><span class="line">import &#123; provide &#125; from &#39;vue&#39;</span><br><span class="line">import &#123; myInjectionKey &#125; from &#39;.&#x2F;keys.js&#39;</span><br><span class="line"></span><br><span class="line">provide(myInjectionKey, &#123; </span><br><span class="line">  &#x2F;* 要提供的数据 *&#x2F;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 注入方组件</span><br><span class="line">import &#123; inject &#125; from &#39;vue&#39;</span><br><span class="line">import &#123; myInjectionKey &#125; from &#39;.&#x2F;keys.js&#39;</span><br><span class="line"></span><br><span class="line">const injected &#x3D; inject(myInjectionKey)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/05/07/Vue3%E6%8F%92%E6%A7%BDSlots/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1303,212 +1414,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/06/vue3%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Will Wan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Will's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/06/vue3%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">vue3项目总结</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-06 19:43:30" itemprop="dateCreated datePublished" datetime="2022-04-06T19:43:30+08:00">2022-04-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-22 16:19:51" itemprop="dateModified" datetime="2025-04-22T16:19:51+08:00">2025-04-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="基础变化"><a href="#基础变化" class="headerlink" title="基础变化"></a>基础变化</h2><ul>
-<li><p>vue3 全家桶使用：和 vue2 的相比变化是 new 实例化改为 creatXXX，例如：new Vue() 改为 createApp()</p>
-</li>
-<li><p>注册组件：和 vue2 的相比变化是 Vue.component() 改为 根应用 app.component()</p>
-</li>
-</ul>
-<h2 id="composition-组合式-API"><a href="#composition-组合式-API" class="headerlink" title="composition(组合式) API"></a>composition(组合式) API</h2><p>将同一个逻辑关注点相关代码放在一起。</p>
-<h3 id="组合式API入口：setup"><a href="#组合式API入口：setup" class="headerlink" title="组合式API入口：setup"></a>组合式API入口：setup</h3><p>setup：在组件创建之前执行，setup 选项是一个接收 props 和 context 两个参数的函数。</p>
-<h4 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h4><ul>
-<li>props：</li>
-</ul>
-<p>和vue2一样，setup 函数中的 props 是响应式的，当传入新的 prop 时，它将被更新。</p>
-<p><strong>因为是响应式的，所以不能使用 ES6 解构，它会消除 prop 的响应性。</strong></p>
-<p>如果需要解构 prop，可以在 setup 函数中使用 toRefs 函数来完成此操作：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyBook.vue</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; toRefs &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line">setup(props) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; title &#125; = toRefs(props)</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(title.value)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果 title 是可选的 prop，则传入的 props 中可能没有 title 。在这种情况下，toRefs 将不会为 title 创建一个 ref 。你需要使用 toRef 替代它：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyBook.vue</span></span><br><span class="line"><span class="keyword">import</span> &#123; toRef &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line">setup(props) &#123;</span><br><span class="line">  <span class="keyword">const</span> title = toRef(props, <span class="string">'title'</span>)</span><br><span class="line">  <span class="built_in">console</span>.log(title.value)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Context</li>
-</ul>
-<p>context 是一个普通 JavaScript 对象，暴露了其它可能在 setup 中有用的值：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyBook.vue</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  setup(props, context) &#123;</span><br><span class="line">    <span class="comment">// Attribute (非响应式对象，等同于 $attrs)</span></span><br><span class="line">    <span class="built_in">console</span>.log(context.attrs)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 插槽 (非响应式对象，等同于 $slots)</span></span><br><span class="line">    <span class="built_in">console</span>.log(context.slots)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 触发事件 (方法，等同于 $emit)</span></span><br><span class="line">    <span class="built_in">console</span>.log(context.emit)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 暴露公共 property (函数)</span></span><br><span class="line">    <span class="built_in">console</span>.log(context.expose)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>context 是一个普通的 JavaScript 对象，它不是响应式的，这意味着可以安全地对 context 使用 ES6 解构。</p>
-<p>执行 setup 时，无法访问以下组件选项：</p>
-<ul>
-<li>data</li>
-<li>computed</li>
-<li>methods</li>
-<li>refs (模板 ref)</li>
-</ul>
-<p><a href="https://v3.cn.vuejs.org/guide/composition-api-setup.html" target="_blank" rel="noopener">setup详细指南</a></p>
-<h3 id="响应式变量"><a href="#响应式变量" class="headerlink" title="响应式变量"></a>响应式变量</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- MyBook.vue --&gt;</span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;&#123;&#123; collectionName &#125;&#125;: &#123;&#123; readersNumber &#125;&#125; &#123;&#123; book.title &#125;&#125;&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">  <span class="keyword">import</span> &#123; ref, reactive &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    props: &#123;</span><br><span class="line">      collectionName: <span class="built_in">String</span></span><br><span class="line">    &#125;,</span><br><span class="line">    setup(props) &#123;</span><br><span class="line">      <span class="comment">// 单个值</span></span><br><span class="line">      <span class="keyword">const</span> readersNumber = ref(<span class="number">0</span>)</span><br><span class="line">      <span class="comment">// 单个值取值要通过.value，在模板里会自动解包，可以不用手动获取。</span></span><br><span class="line">      <span class="built_in">console</span>.log(count.value) <span class="comment">// 0</span></span><br><span class="line">      <span class="comment">// 对象</span></span><br><span class="line">      <span class="keyword">const</span> book = reactive(&#123; <span class="attr">title</span>: <span class="string">'Vue 3 Guide'</span> &#125;)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 暴露给 template</span></span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        readersNumber,</span><br><span class="line">        book</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><a href="https://v3.cn.vuejs.org/api/reactivity-api.html" target="_blank" rel="noopener">更多响应性基础API</a></p>
-<h3 id="在-setup-内定义和使用方法"><a href="#在-setup-内定义和使用方法" class="headerlink" title="在 setup 内定义和使用方法"></a>在 setup 内定义和使用方法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/components/UserRepositories.vue</span></span><br><span class="line"><span class="keyword">import</span> &#123; ref, onMounted &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在我们的组件中</span></span><br><span class="line">setup (props) &#123;</span><br><span class="line">  <span class="keyword">const</span> name = ref(<span class="string">''</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">const</span> setName = <span class="function">(<span class="params">str</span>) =&gt;</span> &#123;</span><br><span class="line">    name.value = str</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  setName(<span class="string">'wan'</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    name,</span><br><span class="line">    setName</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="在-setup-内注册生命周期钩子"><a href="#在-setup-内注册生命周期钩子" class="headerlink" title="在 setup 内注册生命周期钩子"></a>在 setup 内注册生命周期钩子</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/components/UserRepositories.vue</span></span><br><span class="line"><span class="keyword">import</span> &#123; ref, onMounted &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在我们的组件中</span></span><br><span class="line">setup (props) &#123;</span><br><span class="line">  <span class="keyword">const</span> repositories = ref([])</span><br><span class="line">  <span class="keyword">const</span> getUserRepositories = <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    repositories.value = <span class="keyword">await</span> fetchUserRepositories(props.user)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  onMounted(getUserRepositories) <span class="comment">// 在 `mounted` 时调用 `getUserRepositories`</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    repositories,</span><br><span class="line">    getUserRepositories</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>下表包含如何在 setup () 内部调用生命周期钩子：</p>
-<table>
-<thead>
-<tr>
-<th>选项式 API</th>
-<th>Hook inside setup</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>beforeCreate</td>
-<td>Not needed*</td>
-</tr>
-<tr>
-<td>created</td>
-<td>Not needed*</td>
-</tr>
-<tr>
-<td>beforeMount</td>
-<td>onBeforeMount</td>
-</tr>
-<tr>
-<td>mounted</td>
-<td>onMounted</td>
-</tr>
-<tr>
-<td>beforeUpdate</td>
-<td>onBeforeUpdate</td>
-</tr>
-<tr>
-<td>updated</td>
-<td>onUpdated</td>
-</tr>
-<tr>
-<td>beforeUnmount</td>
-<td>onBeforeUnmount</td>
-</tr>
-<tr>
-<td>unmounted</td>
-<td>onUnmounted</td>
-</tr>
-<tr>
-<td>errorCaptured</td>
-<td>onErrorCaptured</td>
-</tr>
-<tr>
-<td>renderTracked</td>
-<td>onRenderTracked</td>
-</tr>
-<tr>
-<td>renderTriggered</td>
-<td>onRenderTriggered</td>
-</tr>
-<tr>
-<td>activated</td>
-<td>onActivated</td>
-</tr>
-<tr>
-<td>deactivated</td>
-<td>onDeactivated</td>
-</tr>
-</tbody></table>
-<h3 id="在-setup-内计算属性和侦听器"><a href="#在-setup-内计算属性和侦听器" class="headerlink" title="在 setup 内计算属性和侦听器"></a>在 setup 内计算属性和侦听器</h3><h4 id="computed：独立的计算属性"><a href="#computed：独立的计算属性" class="headerlink" title="computed：独立的计算属性"></a>computed：独立的计算属性</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ref, computed &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> counter = ref(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">const</span> twiceTheCounter = computed(<span class="function"><span class="params">()</span> =&gt;</span> counter.value * <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">counter.value++</span><br><span class="line"><span class="built_in">console</span>.log(counter.value) <span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(twiceTheCounter.value) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<p><a href="https://v3.cn.vuejs.org/api/computed-watch-api.html#computed" target="_blank" rel="noopener">更多computed属性说明</a></p>
-<h4 id="watchEffect-侦听器"><a href="#watchEffect-侦听器" class="headerlink" title="watchEffect 侦听器"></a>watchEffect 侦听器</h4><p>为了根据响应式状态自动应用和重新应用副作用，我们可以使用 watchEffect 函数。它立即执行传入的一个函数，同时响应式追踪其依赖，并在其依赖变更时重新运行该函数。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> count = ref(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">watchEffect(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(count.value))</span><br><span class="line"><span class="comment">// -&gt; logs 0</span></span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  count.value++</span><br><span class="line">  <span class="comment">// -&gt; logs 1</span></span><br><span class="line">&#125;, <span class="number">100</span>)</span><br></pre></td></tr></table></figure>
-
-<h4 id="watch-侦听器"><a href="#watch-侦听器" class="headerlink" title="watch 侦听器"></a>watch 侦听器</h4><p>watch API 与选项式 API this.$watch (以及相应的 watch 选项) 完全等效。watch 需要侦听特定的数据源，并在单独的回调函数中执行副作用。默认情况下，它也是惰性的——即回调仅在侦听源发生变化时被调用。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ref, watch &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> counter = ref(<span class="number">0</span>)</span><br><span class="line">watch(counter, (newValue, oldValue) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'The new counter value is: '</span> + counter.value)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>与 watchEffect 比较，watch 允许我们：</p>
-<blockquote>
-<p>懒执行副作用；<br>更具体地说明什么状态应该触发侦听器重新运行；<br>访问侦听状态变化前后的值。</p>
-</blockquote>
-<p><a href="https://v3.cn.vuejs.org/guide/reactivity-computed-watchers.html" target="_blank" rel="noopener">计算属性和侦听器详细指南</a></p>
-<h3 id="模板引用"><a href="#模板引用" class="headerlink" title="模板引用"></a>模板引用</h3><p>在使用组合式 API 时，响应式引用和模板引用的概念是统一的。为了获得对模板内元素或组件实例的引用，我们可以像往常一样声明 ref 并从 setup() 返回：</p>
-<p><strong>注意：板引用只会在初始渲染之后可以使用</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt; </span><br><span class="line">  &lt;div ref=<span class="string">"root"</span>&gt;This is a root element&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">  <span class="keyword">import</span> &#123; ref, onMounted &#125; <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    setup() &#123;</span><br><span class="line">      <span class="keyword">const</span> root = ref(<span class="literal">null</span>)</span><br><span class="line"></span><br><span class="line">      onMounted(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// DOM 元素将在初始渲染后分配给 ref</span></span><br><span class="line">        <span class="built_in">console</span>.log(root.value) <span class="comment">// &lt;div&gt;This is a root element&lt;/div&gt;</span></span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        root</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这里我们在渲染上下文中暴露 root，并通过 ref=”root”，将其绑定到 div 作为其 ref。</p>
-<p>在虚拟 DOM 补丁算法中，如果 VNode 的 ref 键对应于渲染上下文中的 ref，则 VNode 的相应元素或组件实例将被分配给该 ref 的值。这是在虚拟 DOM 挂载/打补丁过程中执行的，因此<strong>模板引用只会在初始渲染之后获得赋值</strong>。</p>
-<p>作为模板使用的 ref 的行为与任何其他 ref 一样：它们是响应式的，可以传递到 (或从中返回) 复合函数中。</p>
-<p><a href="https://v3.cn.vuejs.org/guide/composition-api-template-refs.html" target="_blank" rel="noopener">模板引用详细指南</a></p>
-<h3 id="在-setup-内使用vuex"><a href="#在-setup-内使用vuex" class="headerlink" title="在 setup 内使用vuex"></a>在 setup 内使用vuex</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useStore &#125; <span class="keyword">from</span> <span class="string">'vuex'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (&#123;</span><br><span class="line">  setup() &#123;</span><br><span class="line">    <span class="keyword">const</span> store = useStore()</span><br><span class="line">    <span class="keyword">const</span> onSubmit = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      store.dispatch(<span class="string">'user/Login'</span>, formState).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        router.push(<span class="string">'/index'</span>)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h3 id="在-setup-内使用vue-router"><a href="#在-setup-内使用vue-router" class="headerlink" title="在 setup 内使用vue-router"></a>在 setup 内使用vue-router</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useRouter, useRoute &#125; <span class="keyword">from</span> <span class="string">'vue-router'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (&#123;</span><br><span class="line">  setup() &#123;</span><br><span class="line">    <span class="comment">// 使用 router</span></span><br><span class="line">    <span class="keyword">const</span> router = useRouter();</span><br><span class="line">    router.push(<span class="string">"/user/login"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 route</span></span><br><span class="line">    <span class="keyword">const</span> route = useRoute();</span><br><span class="line">    <span class="built_in">console</span>.log(route.query)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1580,7 +1485,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

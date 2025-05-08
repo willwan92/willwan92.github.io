@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="依赖注入的作用解决 Prop 逐级透传很麻烦的问题。 Provide（提供）要为组件后代提供数据，需要使用到 provide() 函数： 12345&lt;script setup&gt;import &amp;#123; provide &amp;#125; from &#39;vue&#39;provide(&#x2F;* 注入名 *&#x2F; &#39;message&#39;, &#x2F;* 值 *&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue3依赖注入">
+<meta property="og:url" content="http://yoursite.com/2025/05/08/Vue3%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:site_name" content="Will&#39;s Blog">
+<meta property="og:description" content="依赖注入的作用解决 Prop 逐级透传很麻烦的问题。 Provide（提供）要为组件后代提供数据，需要使用到 provide() 函数： 12345&lt;script setup&gt;import &amp;#123; provide &amp;#125; from &#39;vue&#39;provide(&#x2F;* 注入名 *&#x2F; &#39;message&#39;, &#x2F;* 值 *&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-08T09:51:50.000Z">
+<meta property="article:modified_time" content="2025-05-08T10:26:24.178Z">
+<meta property="article:author" content="Will Wan">
+<meta property="article:tag" content="Vue3">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2025/05/08/Vue3%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Vue3依赖注入 | Will's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Will's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where there is a will, there is a way</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/05/08/Vue3%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Will Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Will's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vue3依赖注入
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-05-08 17:51:50 / 修改时间：18:26:24" itemprop="dateCreated datePublished" datetime="2025-05-08T17:51:50+08:00">2025-05-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="依赖注入的作用"><a href="#依赖注入的作用" class="headerlink" title="依赖注入的作用"></a>依赖注入的作用</h2><p>解决 Prop 逐级透传很麻烦的问题。</p>
+<h2 id="Provide（提供）"><a href="#Provide（提供）" class="headerlink" title="Provide（提供）"></a>Provide（提供）</h2><p>要为组件后代提供数据，需要使用到 provide() 函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; provide &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">provide(&#x2F;* 注入名 *&#x2F; &#39;message&#39;, &#x2F;* 值 *&#x2F; &#39;hello!&#39;)</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果不使用 <code>&lt;script setup&gt;</code>，请确保 provide() 是在 setup() 同步调用的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import &#123; provide &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">export default &#123;</span><br><span class="line">  setup() &#123;</span><br><span class="line">    provide(&#x2F;* 注入名 *&#x2F; &#39;message&#39;, &#x2F;* 值 *&#x2F; &#39;hello!&#39;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>provide() 函数接收两个参数。第一个参数被称为注入名，可以是一个字符串或是一个 Symbol。后代组件会用注入名来查找期望注入的值。一个组件可以多次调用 provide()，使用不同的注入名，注入不同的依赖值。</p>
+<p>第二个参数是提供的值，值可以是任意类型，包括响应式的状态，比如一个 ref：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import &#123; ref, provide &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const count &#x3D; ref(0)</span><br><span class="line">provide(&#39;key&#39;, count)</span><br></pre></td></tr></table></figure>
+
+<h2 id="应用层-Provide"><a href="#应用层-Provide" class="headerlink" title="应用层 Provide"></a>应用层 Provide</h2><p>除了在一个组件中提供依赖，我们还可以在整个应用层面提供依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createApp &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const app &#x3D; createApp(&#123;&#125;)</span><br><span class="line"></span><br><span class="line">app.provide(&#x2F;* 注入名 *&#x2F; &#39;message&#39;, &#x2F;* 值 *&#x2F; &#39;hello!&#39;)</span><br></pre></td></tr></table></figure>
+
+<p>在应用级别提供的数据在该应用内的所有组件中都可以注入。</p>
+<h2 id="Inject-注入"><a href="#Inject-注入" class="headerlink" title="Inject (注入)"></a>Inject (注入)</h2><p>要注入上层组件提供的数据，需使用 inject() 函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; inject &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const message &#x3D; inject(&#39;message&#39;)</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果提供的值是一个 ref，注入进来的也是该 ref 对象，保持了和供给方的响应性链接。</p>
+<p>同样的，如果没有使用 <code>&lt;script setup&gt;</code>，inject() 需要在 setup() 内同步调用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import &#123; inject &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">export default &#123;</span><br><span class="line">  setup() &#123;</span><br><span class="line">    const message &#x3D; inject(&#39;message&#39;)</span><br><span class="line">    return &#123; message &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="注入默认值"><a href="#注入默认值" class="headerlink" title="注入默认值"></a>注入默认值</h2><p>如果在注入一个值时不要求必须有提供者，那么可以声明一个默认值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 如果没有祖先组件提供 &quot;message&quot;</span><br><span class="line">&#x2F;&#x2F; &#96;value&#96; 会是 &quot;这是默认值&quot;</span><br><span class="line">const value &#x3D; inject(&#39;message&#39;, &#39;这是默认值&#39;)</span><br></pre></td></tr></table></figure>
+
+<p>默认值可能需要通过调用一个函数或初始化一个类来取得。为了避免在用不到默认值的情况下进行不必要的计算或产生副作用，我们可以使用工厂函数来创建默认值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const value &#x3D; inject(&#39;key&#39;, () &#x3D;&gt; new ExpensiveClass(), true)</span><br></pre></td></tr></table></figure>
+
+<p>第三个参数表示默认值应该被当作一个工厂函数。</p>
+<h2 id="和响应式数据配合使用"><a href="#和响应式数据配合使用" class="headerlink" title="和响应式数据配合使用"></a>和响应式数据配合使用</h2><p>当提供 / 注入响应式的数据时，建议尽可能将任何对响应式状态的变更都保持在供给方组件中。</p>
+<p>如果需要在注入方组件中更改数据，我们推荐在供给方组件内声明并提供一个更改数据的方法函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 在供给方组件内 --&gt;</span><br><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; provide, ref &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const location &#x3D; ref(&#39;North Pole&#39;)</span><br><span class="line"></span><br><span class="line">function updateLocation() &#123;</span><br><span class="line">  location.value &#x3D; &#39;South Pole&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">provide(&#39;location&#39;, &#123;</span><br><span class="line">  location,</span><br><span class="line">  updateLocation</span><br><span class="line">&#125;)</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 在注入方组件 --&gt;</span><br><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; inject &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const &#123; location, updateLocation &#125; &#x3D; inject(&#39;location&#39;)</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;button @click&#x3D;&quot;updateLocation&quot;&gt;&#123;&#123; location &#125;&#125;&lt;&#x2F;button&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果你想确保提供的数据不能被注入方的组件更改，你可以使用 readonly() 来包装提供的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; ref, provide, readonly &#125; from &#39;vue&#39;</span><br><span class="line"></span><br><span class="line">const count &#x3D; ref(0)</span><br><span class="line">provide(&#39;read-only-count&#39;, readonly(count))</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用-Symbol-作注入名"><a href="#使用-Symbol-作注入名" class="headerlink" title="使用 Symbol 作注入名"></a>使用 Symbol 作注入名</h2><p>如果正在构建大型的应用，包含非常多的依赖提供，或者你正在编写提供给其他开发者使用的组件库，建议最好使用 Symbol 来作为注入名以避免潜在的冲突。</p>
+<p>推荐在一个单独的文件中导出这些注入名 Symbol：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; keys.js</span><br><span class="line">export const myInjectionKey &#x3D; Symbol()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 在供给方组件中</span><br><span class="line">import &#123; provide &#125; from &#39;vue&#39;</span><br><span class="line">import &#123; myInjectionKey &#125; from &#39;.&#x2F;keys.js&#39;</span><br><span class="line"></span><br><span class="line">provide(myInjectionKey, &#123; </span><br><span class="line">  &#x2F;* 要提供的数据 *&#x2F;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 注入方组件</span><br><span class="line">import &#123; inject &#125; from &#39;vue&#39;</span><br><span class="line">import &#123; myInjectionKey &#125; from &#39;.&#x2F;keys.js&#39;</span><br><span class="line"></span><br><span class="line">const injected &#x3D; inject(myInjectionKey)</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Vue3/" rel="tag"># Vue3</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/05/07/Vue3%E6%8F%92%E6%A7%BDSlots/" rel="prev" title="Vue3插槽Slots">
+      <i class="fa fa-chevron-left"></i> Vue3插槽Slots
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖注入的作用"><span class="nav-number">1.</span> <span class="nav-text">依赖注入的作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Provide（提供）"><span class="nav-number">2.</span> <span class="nav-text">Provide（提供）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用层-Provide"><span class="nav-number">3.</span> <span class="nav-text">应用层 Provide</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Inject-注入"><span class="nav-number">4.</span> <span class="nav-text">Inject (注入)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注入默认值"><span class="nav-number">5.</span> <span class="nav-text">注入默认值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#和响应式数据配合使用"><span class="nav-number">6.</span> <span class="nav-text">和响应式数据配合使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-Symbol-作注入名"><span class="nav-number">7.</span> <span class="nav-text">使用 Symbol 作注入名</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Will Wan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Will Wan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Will Wan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
